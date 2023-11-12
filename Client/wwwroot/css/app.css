@@ -292,7 +292,7 @@ a {
         background: #5DAB02;
         scale: var(--blazor-load-percentage, 0%) 100%;
         transform-origin: left top;
-        transition: scale ease-out 0.5s;
+        transition: scale 4s ease-out;
     }
 #app {
     display: flex;
