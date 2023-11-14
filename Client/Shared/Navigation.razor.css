@@ -1,0 +1,98 @@
+﻿/*Css dla Navigationbar
+
+      /* Style dla paska nawigacji */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Rozstawia elementy na obu końcach kontenera */
+    background-color: #fff;
+    padding: 5px 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.logo img {
+    height: 30px; /* Zmniejszona wysokość logo */
+}
+
+/* Klasa dla lewego kontenera, który zawiera logo i przycisk menu */
+.left-content {
+    display: flex;
+    align-items: center;
+}
+
+/* Klasa dla prawego kontenera, który zawiera pole wyszukiwania i ikony */
+.right-content {
+    display: flex;
+    align-items: center;
+}
+
+.search-box {
+    border: 2px solid #ccc;
+    border-radius: 20px;
+    padding: 3px 10px;
+    outline: none;
+    width: 180px; /* Dostosowana szerokość */
+}
+
+.nav-icons .icon-link {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.logout-button {
+    background-color: #5DAB02;
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+
+.logo {
+    /* Dla pewności, że logo będzie po lewej stronie */
+    margin-right: auto; /* Powoduje, że wszystkie elementy po prawej stronie zostaną przesunięte na sam koniec kontenera flex */
+}
+
+/* ... reszta stylów ... */
+
+.search-box {
+    margin-left: auto; /* Powoduje, że pole wyszukiwania zostanie przesunięte na sam koniec kontenera flex */
+    /* ... */
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Rozpoczynamy z menu poza widokiem */
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    overflow-x: hidden;
+    transition: 0.5s; /* Dodaj płynne przejście */
+    padding-top: 60px; /* Dopasuj do wysokości paska nawigacji */
+}
+
+    .side-menu a {
+        padding: 15px 20px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+
+        .side-menu a:hover {
+            color: #f1f1f1;
+        }

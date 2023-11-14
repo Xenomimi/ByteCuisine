@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteCuisine.Server", "Server\ByteCuisine.Server.csproj", "{468BF94E-6C26-4D6E-95CE-9571D6CB2CF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteCuisine.Server", "Server\ByteCuisine.Server.csproj", "{468BF94E-6C26-4D6E-95CE-9571D6CB2CF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteCuisine.Client", "Client\ByteCuisine.Client.csproj", "{AB8142C3-4D0F-4E16-A133-C5F02772D16D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteCuisine.Client", "Client\ByteCuisine.Client.csproj", "{AB8142C3-4D0F-4E16-A133-C5F02772D16D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteCuisine.Shared", "Shared\ByteCuisine.Shared.csproj", "{0CF00A3A-91E8-4371-8544-D8840BAF1DAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteCuisine.Shared", "Shared\ByteCuisine.Shared.csproj", "{0CF00A3A-91E8-4371-8544-D8840BAF1DAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

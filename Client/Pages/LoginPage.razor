@@ -1,8 +1,10 @@
 ﻿@layout LoginLayout
 @page "/"
+@inject NavigationManager Navigation
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
 <div class="login-page">
     <div class="login-container">
         <div class="login-brand">
@@ -25,7 +27,7 @@
                     </span>
                     <InputText id="password" @bind-Value="@loginModel.Password" class="input" placeholder="Password" type="password" />
                 </div>
-                <button type="submit" class="btn-login">Login</button>
+                <button type="submit" onclick="@NavigateToNewPage" class="btn-login">Login</button>
             </EditForm>
             <div class="forgot-password">
                 <a href="#">Forgot your password?</a>
@@ -56,6 +58,12 @@
 </div>
 
 @code {
+
+    private void NavigateToNewPage()
+    {
+        Navigation.NavigateTo("/index");
+    }
+
     private LoginModel loginModel = new LoginModel();
 
     private void HandleLogin()

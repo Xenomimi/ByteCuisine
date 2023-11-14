@@ -1,0 +1,45 @@
+﻿@page "/Navigation";
+
+<div>
+    <!-- Struktura paska nawigacyjnego -->
+    <div class="navbar">
+        <button class="menu-button" @onclick="ToggleSideMenu">☰</button>
+        <div class="logo">
+            <img src="/images/Logo+Napis.png" />
+        </div>
+        <input type="text" class="search-box" placeholder="Search">
+        <div class="nav-icons">
+            <NavLink class="icon-link" href="/profile">
+                <i class="profile-icon"></i>
+            </NavLink>
+            <button class="logout-button">Logout</button>
+        </div>
+    </div>
+
+    <!-- Struktura wysuwanego menu -->
+    <div class="side-menu">
+        <a href="#" @onclick="CloseSideMenu">Link 1</a>
+        <a href="#" @onclick="CloseSideMenu">Link 2</a>
+        <a href="#" @onclick="CloseSideMenu">Link 3</a>
+        <!-- Dodaj więcej linków w zależności od potrzeb -->
+    </div>
+</div>
+
+
+@code {
+    private bool isSideMenuOpen = false;
+
+    // Funkcja do otwierania/zamykania menu
+    private void ToggleSideMenu()
+    {
+        isSideMenuOpen = !isSideMenuOpen;
+    }
+
+    // Funkcja zamykająca menu (używana w linkach menu)
+    private void CloseSideMenu()
+    {
+        isSideMenuOpen = false;
+    }
+}
+
+
