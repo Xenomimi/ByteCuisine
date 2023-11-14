@@ -17,7 +17,7 @@
         transform-origin: left top;
         transition: scale 4s ease-out;
     }
-#app {
+#loading {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,7 +27,7 @@
 
 .loading_logo {
     display: block;
-    margin-bottom: 20px; /* Dla odstêpu miêdzy logo a paskiem ³adowania */
+    margin-bottom: 20px;
 }
 
 .loader-container {
@@ -35,3 +35,6 @@
     justify-content: center;
     align-items: center;
 }
+
+
+
