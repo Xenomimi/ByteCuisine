@@ -74,14 +74,18 @@
 
 .side-menu {
     position: fixed;
-    top: 0;
-    left: -250px; /* Rozpoczynamy z menu poza widokiem */
+    top: 44px; /* Wysokość paska nawigacyjnego */
+    left: -250px; /* Początkowe położenie poza widokiem */
     width: 250px;
-    height: 100%;
-    background-color: #333;
+    height: calc(100vh - 44px); /* Dostosowanie wysokości, aby uwzględnić pasek nawigacyjny */
+    background-color: white;
     overflow-x: hidden;
-    transition: 0.5s; /* Dodaj płynne przejście */
-    padding-top: 60px; /* Dopasuj do wysokości paska nawigacji */
+    overflow-y: auto; /* Umożliwia przewijanie, jeśli zawartość jest za długa */
+    transition: left 0.5s; /* Animacja dla właściwości left */
+    z-index: 999; /* Upewniamy się, że menu jest nad innymi elementami */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 5px -2px rgba(0, 0, 0, 0.5); /* Dodaje cień po prawej stronie menu */
 }
 
     .side-menu a {
@@ -90,9 +94,72 @@
         font-size: 18px;
         color: #818181;
         display: block;
-        transition: 0.3s;
+        transition: color 0.3s;
     }
 
         .side-menu a:hover {
             color: #f1f1f1;
         }
+
+.side-menu-overlay {
+    position: fixed;
+    top: 44px; /* Wysokość paska nawigacyjnego */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px); /* Wysokość overlayu pomniejszona o wysokość paska nawigacyjnego */
+    background-color: transparent;
+    z-index: 500; /* Z-index niższy niż menu, ale wyższy niż inne elementy */
+}
+
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    transition: background-color 0.3s;
+    cursor: pointer; /* Dodaj wskaźnik, aby użytkownik wiedział, że może kliknąć */
+}
+
+
+
+    .menu-item.active, .menu-item:hover {
+        background-color: #50ac3b; /* Kolor tła aktywnego elementu */
+    }
+
+
+.icon-placeholder {
+    margin-right: 15px; /* Odstęp między ikoną a tekstem */
+    /* Dodaj style dla ikon, np. używając Font Awesome */
+}
+
+.menu-text {
+    /* Style dla tekstu w menu */
+}
+
+
+.menu-footer .menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%; /* Rozciąga elementy menu na całą szerokość */
+    padding: 15px 20px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+    .menu-footer .menu-item:hover {
+        background-color: #50ac3b; /* Podświetlenie tła na hover */
+    }
+
+.menu-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* To sprawi, że dzieci będą rozciągać się, aby wypełnić dostępną przestrzeń */
+    width: 100%; /* Upewnij się, że .menu-footer rozciąga się na całą szerokość */
+    padding: 0; /* Usuwamy padding z .menu-footer, aby .menu-item mógł wypełnić przestrzeń */
+    margin-bottom: 0;
+}
+    .menu-item,
+    .menu-footer .menu-item {
+        box-sizing: border-box; /* Zapewnia, że padding i border są wliczane w szerokość i wysokość */
+    }
