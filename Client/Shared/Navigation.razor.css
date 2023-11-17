@@ -86,6 +86,7 @@
     display: flex;
     flex-direction: column;
     box-shadow: 4px 0 5px -2px rgba(0, 0, 0, 0.5); /* Dodaje cień po prawej stronie menu */
+
 }
 
     .side-menu a {
@@ -118,6 +119,7 @@
     padding: 15px 20px;
     transition: background-color 0.3s;
     cursor: pointer; /* Dodaj wskaźnik, aby użytkownik wiedział, że może kliknąć */
+    
 }
 
 
@@ -128,12 +130,13 @@
 
 
 .icon-placeholder {
-    margin-right: 15px; /* Odstęp między ikoną a tekstem */
+    margin-right: 20px; /* Odstęp między ikoną a tekstem */
     /* Dodaj style dla ikon, np. używając Font Awesome */
 }
 
 .menu-text {
     /* Style dla tekstu w menu */
+
 }
 
 
@@ -144,11 +147,14 @@
     padding: 15px 20px;
     transition: background-color 0.3s;
     cursor: pointer;
+    margin-right: 20px;
 }
 
     .menu-footer .menu-item:hover {
+        margin-right: 20px;
         background-color: #50ac3b; /* Podświetlenie tła na hover */
     }
+
 
 .menu-footer {
     margin-top: auto;
@@ -158,8 +164,15 @@
     width: 100%; /* Upewnij się, że .menu-footer rozciąga się na całą szerokość */
     padding: 0; /* Usuwamy padding z .menu-footer, aby .menu-item mógł wypełnić przestrzeń */
     margin-bottom: 0;
+    margin-right: 20px;
 }
+
     .menu-item,
     .menu-footer .menu-item {
         box-sizing: border-box; /* Zapewnia, że padding i border są wliczane w szerokość i wysokość */
+        
     }
+.material-symbols-outlined {
+    margin-right: 20px;
+    cursor: pointer;
+}
