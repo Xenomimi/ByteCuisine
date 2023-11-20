@@ -18,7 +18,7 @@
 }
 
 .logo img {
-    height: 30px; /* Zmniejszona wysokość logo */
+    height: 50px; /* Zmniejszona wysokość logo */
 }
 
 /* Klasa dla lewego kontenera, który zawiera logo i przycisk menu */
@@ -47,10 +47,11 @@
 }
 
 .logout-button {
+    margin-right: 0px;
     background-color: #5DAB02;
     border: none;
     color: white;
-    padding: 5px 15px;
+    padding: 6px 17px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -68,6 +69,7 @@
 /* ... reszta stylów ... */
 
 .search-box {
+    margin-right: 20px;
     margin-left: auto; /* Powoduje, że pole wyszukiwania zostanie przesunięte na sam koniec kontenera flex */
     /* ... */
 }
