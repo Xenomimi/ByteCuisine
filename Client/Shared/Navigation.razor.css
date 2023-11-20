@@ -76,10 +76,10 @@
 
 .side-menu {
     position: fixed;
-    top: 44px; /* Wysokość paska nawigacyjnego */
+    top: 60px; /* Wysokość paska nawigacyjnego */
     left: -250px; /* Początkowe położenie poza widokiem */
     width: 250px;
-    height: calc(100vh - 44px); /* Dostosowanie wysokości, aby uwzględnić pasek nawigacyjny */
+    height: calc(100vh - 60px); /* Dostosowanie wysokości, aby uwzględnić pasek nawigacyjny */
     background-color: white;
     overflow-x: hidden;
     overflow-y: auto; /* Umożliwia przewijanie, jeśli zawartość jest za długa */
