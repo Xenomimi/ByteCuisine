@@ -1,0 +1,79 @@
+﻿#container {
+    padding: 20px;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    flex-wrap: wrap; /* Dodane flex-wrap */
+    justify-content: center;
+    width: 100%;
+    max-width: 1100px;
+    padding: 20px;
+    margin: 0 auto;
+}
+
+#hrow {
+    clear: both;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#window1 {
+    background-color: #3498db;
+    color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    margin-right: 10px;
+    height: 400px;
+    float: left;
+    width: 60%;
+}
+
+#window2 {
+    background-color: #2ecc71;
+    color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    margin-left: 10px;
+    height: 400px;
+    float: left;
+    width: 30%;
+}
+
+main {
+    padding: 20px;
+}
+
+.carousel {
+    margin: 0 auto;
+    max-width: 1100px;
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
+
+.card {
+    flex: 0 0 auto;
+    width: 300px;
+    margin-right: 20px;
+    scroll-snap-align: start;
+}
+
+@media screen and (max-width: 600px) {
+    #window1, #window2 {
+        width: 100%;
+        margin: 20px 0; /* Zerowanie marginesów */
+        float: none; /* Usunięcie float */
+    }
+
+    header {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #hrow {
+        display: block; /* Dodane */
+    }
+}
