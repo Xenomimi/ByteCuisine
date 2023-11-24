@@ -1,7 +1,7 @@
 ﻿#container {
     width: 90vw;
     margin: auto;
-    padding: 20px;
+    padding: 10px;
     flex-direction: column;
     justify-content: space-around;
 }
@@ -9,12 +9,12 @@
 #top-section {
     display: flex;
     justify-content: space-between;
-    height:450px;
+    height: 350px; /* Zachowana zwiększona wysokość sekcji */
 }
 
 #featured-recipe, #popular-chefs {
     background-color: #f5f5f5;
-    padding: 20px;
+    padding: 15px;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -32,31 +32,30 @@
 
 .chef {
     background-color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    font-size: 1.2em; /* Zwiększony rozmiar czcionki */
+    font-size: 1.2em;
 }
 
 .carousel-container {
     position: relative;
-    
+    overflow: hidden;
 }
 
 .carousel {
     display: flex;
-    justify-content: center; /* Dodane dla wyśrodkowania kart */
+    justify-content: center;
     align-items: center;
     scroll-behavior: smooth;
-    padding: 20px 0;
 }
 
 .card {
     flex: 0 0 auto;
-    width: 15%; /* Zmniejszona szerokość kart */
-    height: 200px;
-    margin-right: 20px;
+    width: 200px; /* Szerokość karty */
+    height: 200px; /* Wysokość karty */
+    margin: 0 15px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -67,11 +66,9 @@
     font-weight: bold;
 }
 
-    /* Ostatnia karta nie powinna mieć prawego marginesu */
     .card:last-child {
         margin-right: 0;
     }
-
 
 .carousel-button {
     position: absolute;
@@ -79,22 +76,67 @@
     transform: translateY(-50%);
     background: none;
     border: none;
-    padding: 5px;
+    padding: 2px;
     cursor: pointer;
     z-index: 10;
 }
 
     .carousel-button.left-button {
-        left: 0;
+        left: 10px; /* Zwiększenie odstępu dla lewego przycisku */
     }
 
     .carousel-button.right-button {
-        right: 0;
+        right: 10px; /* Zwiększenie odstępu dla prawego przycisku */
     }
 
 h2 {
-    font-size: 2em; /* Zwiększony rozmiar czcionki */
+    font-size: 1.5em;
     color: #333;
-    padding: 40px 0;
-   
+    padding: 20px 0;
+}
+
+/* Responsywność dla telefonów komórkowych (małe ekrany) */
+@media (max-width: 600px) {
+    #container {
+        width: 100vw;
+        padding: 5px;
+    }
+
+    #top-section {
+        flex-direction: column;
+        height: auto;
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+
+    #featured-recipe, #popular-chefs {
+        margin-right: 0;
+        flex-basis: 100%;
+        margin-bottom:10px;
+    }
+
+    .chef, .card {
+        margin-bottom: 10px;
+    }
+
+    .carousel-container, .carousel {
+        overflow-x: auto;
+    }
+
+    .card {
+        width: 50%;
+        height: auto;
+        margin: 10px;
+        padding-bottom: 50%; /* Wysokość jako padding-bottom, aby zachować proporcje */
+        box-sizing: border-box; /* Włącza box-sizing, aby padding był częścią wysokości */
+    }
+
+    .carousel-button {
+        display: none;
+    }
+
+    h2 {
+        font-size: 1.2em;
+        padding: 10px 0;
+    }
 }
