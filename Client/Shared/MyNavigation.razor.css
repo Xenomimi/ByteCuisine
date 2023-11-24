@@ -129,6 +129,7 @@
 
     .menu-item.active, .menu-item:hover {
         background-color: #50ac3b; /* Kolor tła aktywnego elementu */
+
     }
 
 
@@ -178,4 +179,9 @@
 .material-symbols-outlined {
     margin-right: 20px;
     cursor: pointer;
+}
+
+
+::deep a{
+    text-decoration:none;
 }
