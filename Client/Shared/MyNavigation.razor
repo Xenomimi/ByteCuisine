@@ -1,4 +1,6 @@
-﻿<link rel="stylesheet" href="/css/navi.css" />
+﻿@inject NavigationManager Navigation
+
+<link rel="stylesheet" href="/css/navi.css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
 <div>
@@ -52,7 +54,7 @@
                 <span class="material-symbols-outlined">settings</span>
                 <span class="menu-text">Settings</span>
             </div>
-            <div class="menu-item">
+                <div class="menu-item" onclick="@NavigateToNewPage">
                 <span class="material-symbols-outlined">account_circle</span>
                 <span class="menu-text">User</span>
             </div>
@@ -62,6 +64,11 @@
 </div>
 @code {
     private bool isMenuOpen = false;
+
+    private void NavigateToNewPage()
+    {
+        Navigation.NavigateTo("/userprofile");
+    }
 
     void ToggleMenu()
     {
