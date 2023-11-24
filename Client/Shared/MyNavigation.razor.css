@@ -121,7 +121,8 @@
     padding: 15px 20px;
     transition: background-color 0.3s;
     cursor: pointer; /* Dodaj wskaźnik, aby użytkownik wiedział, że może kliknąć */
-    
+    text-decoration: none;
+    color: black;
 }
 
 
@@ -136,9 +137,9 @@
     /* Dodaj style dla ikon, np. używając Font Awesome */
 }
 
-.menu-text {
+.menu-text::after {
     /* Style dla tekstu w menu */
-
+    text-decoration: none;
 }
 
 

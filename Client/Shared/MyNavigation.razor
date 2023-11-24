@@ -21,18 +21,19 @@
         </div>
         <input type="text" class="search-box" placeholder="Search">
         <div class="nav-icons">
-            <NavLink class="icon-link" href="/profile">
-                <i class="profile-icon"></i>
+            <NavLink href="/">
+                <button class="logout-button">Logout</button>
             </NavLink>
-            <button class="logout-button">Logout</button>
         </div>
     </div>
 <div @onclick="HandleGlobalClick">
     <div class="side-menu" style="@(isMenuOpen ? "left:0" : "left:-250px")">
-        <div class="menu-item">
-            <span class="material-symbols-outlined">home</span>
-            <span class="menu-text">Home</span>
-        </div>
+        <NavLink href="/index">
+            <div class="menu-item">
+                <span class="material-symbols-outlined">home</span>
+                <span class="menu-text">Home</span>
+            </div>
+        </NavLink>
         <div class="menu-item">
             <span class="material-symbols-outlined">calendar_month</span>
             <span class="menu-text">Calendar</span>
@@ -54,21 +55,18 @@
                 <span class="material-symbols-outlined">settings</span>
                 <span class="menu-text">Settings</span>
             </div>
-                <div class="menu-item" onclick="@NavigateToNewPage">
-                <span class="material-symbols-outlined">account_circle</span>
-                <span class="menu-text">User</span>
-            </div>
+            <NavLink href="/userprofile">
+                <div class="menu-item">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <span class="menu-text">User</span>
+                </div>
+            </NavLink>
         </div>
     </div> <!-- Zamknięcie side-menu -->
 </div> <!-- Zamknięcie zewnętrznego diva -->
 </div>
 @code {
     private bool isMenuOpen = false;
-
-    private void NavigateToNewPage()
-    {
-        Navigation.NavigateTo("/userprofile");
-    }
 
     void ToggleMenu()
     {
