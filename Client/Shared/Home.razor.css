@@ -1,86 +1,100 @@
 ﻿#container {
+    width: 90vw;
+    margin: auto;
     padding: 20px;
-    width: 100%;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
-header {
+#top-section {
     display: flex;
-    flex-wrap: wrap; /* Dodane flex-wrap */
-    justify-content: center;
-    width: 100%;
-    max-width: 1100px;
-    padding: 20px;
-    margin: 0 auto;
+    justify-content: space-between;
+    height:450px;
 }
 
-#hrow {
-    clear: both;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-#window1 {
-    background-color: #3498db;
-    color: #fff;
+#featured-recipe, #popular-chefs {
+    background-color: #f5f5f5;
     padding: 20px;
     border-radius: 20px;
-    margin-right: 10px;
-    height: 400px;
-    float: left;
-    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-#window2 {
-    background-color: #2ecc71;
-    color: #fff;
-    padding: 20px;
-    border-radius: 20px;
-    margin-left: 10px;
-    height: 400px;
-    float: left;
-    width: 30%;
+#featured-recipe {
+    flex-grow: 2;
+    margin-right: 20px;
 }
 
-main {
-    padding: 20px;
+#popular-chefs {
+    flex-basis: 30%;
+}
+
+.chef {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 1.2em; /* Zwiększony rozmiar czcionki */
+}
+
+.carousel-container {
+    position: relative;
+    
 }
 
 .carousel {
-    margin: 0 auto;
-    width: 90%;
     display: flex;
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
+    justify-content: center; /* Dodane dla wyśrodkowania kart */
+    align-items: center;
+    scroll-behavior: smooth;
+    padding: 20px 0;
 }
 
 .card {
     flex: 0 0 auto;
-    width: 300px;
+    width: 15%; /* Zmniejszona szerokość kart */
+    height: 200px;
     margin-right: 20px;
-    scroll-snap-align: start;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    font-weight: bold;
 }
 
-@media screen and (max-width: 600px) {
-    #window1, #window2 {
-        width: 100%;
-        margin: 20px 0; /* Zerowanie marginesów */
-        float: none; /* Usunięcie float */
+    /* Ostatnia karta nie powinna mieć prawego marginesu */
+    .card:last-child {
+        margin-right: 0;
     }
 
-    header {
-        display: flex;
-        flex-direction: column;
-    }
 
-    #hrow {
-        display: block; /* Dodane */
-    }
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    z-index: 10;
 }
 
-h2{
-    margin-left:6%;
-    margin-top:2%;
-    margin-bottom:2%;
+    .carousel-button.left-button {
+        left: 0;
+    }
 
+    .carousel-button.right-button {
+        right: 0;
+    }
+
+h2 {
+    font-size: 2em; /* Zwiększony rozmiar czcionki */
+    color: #333;
+    padding: 40px 0;
+   
 }

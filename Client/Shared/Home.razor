@@ -1,51 +1,65 @@
-﻿<div id="container">
-    <header>
-        <div id="hrow">
-            <div id="window1">
-                <!-- Treść okna 1 -->
-                <h1>Okno 1</h1>
-                <p>Zawartość okna 1</p>
-            </div>
-            <div id="window2">
-                <!-- Treść okna 2 -->
-                <h1>Okno 2</h1>
-                <p>Zawartość okna 2</p>
-            </div>
+﻿<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<div id="container">
+    <div id="top-section">
+        <div id="featured-recipe">
+            <!-- Treść wyróżnionego przepisu -->
+            <h1>Spaghetti</h1>
+            <p>Lorem Ipsum jest tylko fikcyjnym tekstem drukarskim i poligraficznym...</p>
+            <!-- Inne szczegóły -->
         </div>
-    </header>
+        <div id="popular-chefs">
+            <!-- Popularni Szefowie Kuchni -->
+            <div class="chef">Nick Patterson</div>
+            <div class="chef">Emma Highley</div>
+            <div class="chef">Tim Robertson</div>
+        </div>
+    </div>
+
     <h2>Recommended recipes based on your preferences</h2>
-    <main>
+    <div class="carousel-container">
+        <button @onclick="PrzewinWLewo" class="carousel-button left-button">
+            <span class="material-symbols-outlined">arrow_back_ios</span>
+        </button>        
         <div class="carousel">
-            <div class="card">
-                <!-- Zawartość karty 1 -->
-                <h2>Karta 1</h2>
-                <p>Zawartość karty 1</p>
-            </div>
-            <div class="card">
-                <!-- Zawartość karty 2 -->
-                <h2>Karta 2</h2>
-                <p>Zawartość karty 2</p>
-            </div>
-            <div class="card">
-                <!-- Zawartość karty 3 -->
-                <h2>Karta 3</h2>
-                <p>Zawartość karty 3</p>
-            </div>
-            <div class="card">
-                <!-- Zawartość karty 3 -->
-                <h2>Karta 3</h2>
-                <p>Zawartość karty 3</p>
-            </div>
-            <div class="card">
-                <!-- Zawartość karty 3 -->
-                <h2>Karta 3</h2>
-                <p>Zawartość karty 3</p>
-            </div>
-            <!-- Dodaj kolejne karty według potrzeb -->
+            <!-- Widoczne karty przepisów -->
+            @foreach (var przepis in WidocznePrzepisy)
+            {
+                <div class="card">@przepis</div>
+            }
         </div>
-    </main>
+        <button @onclick="PrzewinWPrawo" class="carousel-button right-button">
+            <span class="material-symbols-outlined">arrow_forward_ios</span>
+        </button>
+
+    </div>
 </div>
 
 @code {
+    private List<string> WszystkiePrzepisy = new List<string>
+    {
+        "Stek", "Jedzenie Wegetariańskie", "Posiłek", "Stek", "Stek", "Stek", "Stek", "Stek"
+    };
+    private int aktualnyIndeks = 0;
+    private int widocznaIlosc = 6;
+    private List<string> WidocznePrzepisy => WszystkiePrzepisy
+        .Skip(aktualnyIndeks)
+        .Take(widocznaIlosc)
+        .ToList();
 
+    private void PrzewinWLewo()
+    {
+        if (aktualnyIndeks > 0)
+        {
+            aktualnyIndeks--;
+        }
+    }
+
+    private void PrzewinWPrawo()
+    {
+        if (aktualnyIndeks < WszystkiePrzepisy.Count - widocznaIlosc)
+        {
+            aktualnyIndeks++;
+        }
+    }
 }
+
