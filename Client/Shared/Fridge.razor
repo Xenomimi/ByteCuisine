@@ -1,0 +1,65 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <h2>Virtual Fridge</h2>
+        <ul>
+            @foreach (var product in products)
+            {
+                <li>@product</li>
+            }
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <div>
+            <h2>Wyszukiwanie Składnika</h2>
+            <input type="text" @bind="searchIngredient" placeholder="Wyszukaj składnik" />
+            <button @onclick="SearchIngredient">Wyszukaj</button>
+            <ul>
+                @foreach (var foundIngredient in foundIngredients)
+                {
+                    <li>@foundIngredient</li>
+                }
+            </ul>
+        </div>
+
+        <div>
+            <h2>Wyszukiwanie Przepisu</h2>
+            <input type="text" @bind="searchRecipe" placeholder="Wyszukaj przepis" />
+            <button @onclick="SearchRecipe">Wyszukaj</button>
+            <ul>
+                @foreach (var requiredIngredient in requiredIngredients)
+                {
+                    <li>@requiredIngredient</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<string> products = new List<string> { "Produkt 1", "Produkt 2", "Produkt 3" };
+
+    private string searchIngredient;
+    private List<string> foundIngredients = new List<string>();
+
+    private string searchRecipe;
+    private List<string> requiredIngredients = new List<string>();
+
+    private void SearchIngredient()
+    {
+        // Implement your logic to search for ingredients based on the entered searchIngredient
+        // Dummy logic for demonstration purposes
+        foundIngredients.Clear();
+        foundIngredients.Add("Found Ingredient 1");
+        foundIngredients.Add("Found Ingredient 2");
+    }
+
+    private void SearchRecipe()
+    {
+        // Implement your logic to search for recipes based on the entered searchRecipe
+        // Dummy logic for demonstration purposes
+        requiredIngredients.Clear();
+        requiredIngredients.Add("Required Ingredient 1");
+        requiredIngredients.Add("Required Ingredient 2");
+    }
+}

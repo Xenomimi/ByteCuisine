@@ -69,6 +69,7 @@
             if (user.Username == loginModel.Username && user.Password == loginModel.Password)
             {
                 Navigation.NavigateTo("/index");
+                return;
             }
         }
     }

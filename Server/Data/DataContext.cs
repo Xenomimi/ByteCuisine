@@ -12,6 +12,10 @@ namespace ByteCuisine.Server.Controllers.Data
 
         public DbSet<Account> Accounts { get; set; }
 
+        public DbSet<Dish> Dishes { get; set; }
+
+        public DbSet<Ingridient> Ingridients { get; set; }
+
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -20,6 +24,12 @@ namespace ByteCuisine.Server.Controllers.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>().HasKey(x => x.User_id);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Dish>().HasKey(x => x.Dish_id);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Ingridient>().HasKey(x => x.Ingridient_id);
             base.OnModelCreating(modelBuilder);
         }
     }
