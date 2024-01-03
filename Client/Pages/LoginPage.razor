@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using ByteCuisine.Shared
+@inject HttpClient Http
 @inject NavigationManager Navigation
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -55,19 +57,27 @@
     <div class="login-side">
         <img src="images/side1.png" alt="Side Image" />
     </div>
+
 </div>
 
 @code {
 
     private void NavigateToNewPage()
     {
-        Navigation.NavigateTo("/index");
+        foreach (var user in users)
+        {
+            if (user.Username == loginModel.Username && user.Password == loginModel.Password)
+            {
+                Navigation.NavigateTo("/index");
+            }
+        }
     }
 
     private LoginModel loginModel = new LoginModel();
 
     private void HandleLogin()
     {
+        
         // Logika logowania
     }
 
@@ -75,5 +85,12 @@
     {
         public string Username { get; set; }
         public string Password { get; set; }
+    }
+
+    List<Account> users = new List<Account>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await Http.GetFromJsonAsync<List<Account>>("api/account");
     }
 }
