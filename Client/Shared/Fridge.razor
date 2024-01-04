@@ -1,40 +1,90 @@
-﻿<div class="row">
-    <div class="col-md-6">
-        <h2>Virtual Fridge</h2>
-        <ul>
-            @foreach (var product in products)
-            {
-                <li>@product</li>
-            }
-        </ul>
+﻿<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<div class ="background-container">
+    <div class="tlo-pudlo">
+        <div class="tlo"></div>
     </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <h2 class="section-title">Virtual Fridge</h2>
+                
+                @* Tutaj lista *@
 
-    <div class="col-md-6">
-        <div>
-            <h2>Wyszukiwanie Składnika</h2>
-            <input type="text" @bind="searchIngredient" placeholder="Wyszukaj składnik" />
-            <button @onclick="SearchIngredient">Wyszukaj</button>
-            <ul>
-                @foreach (var foundIngredient in foundIngredients)
-                {
-                    <li>@foundIngredient</li>
-                }
-            </ul>
-        </div>
+                <div class="list-back">
+                    <ul class="product-list">
+						@foreach (var product in products)
+						{
+							<li>@product</li>
+						}
+					</ul>
+                </div>
+            </div>
 
-        <div>
-            <h2>Wyszukiwanie Przepisu</h2>
-            <input type="text" @bind="searchRecipe" placeholder="Wyszukaj przepis" />
-            <button @onclick="SearchRecipe">Wyszukaj</button>
-            <ul>
-                @foreach (var requiredIngredient in requiredIngredients)
-                {
-                    <li>@requiredIngredient</li>
-                }
-            </ul>
+            <div class="col-md-6 d-flex flex-column align-items-center">
+                <div class="search-section">
+                    <h2 class="section-title">Wyszukiwanie Składnika</h2>
+                    <div class="search-container">
+                        <i class="material-icons search-icon">search</i>
+                        <input type="text" id="search-igri" @bind="searchRecipe" placeholder="Wyszukaj przepis" />
+                    </div>
+                    <button class="search-button" @onclick="Search">Add ingreadients</button>
+                    
+                    @* Tutaj lista *@
+
+                    <div class="list-back">
+                        <ul class="product-list">
+                            @foreach (var product in products)
+                            {
+                                <li class="list-item">@product</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="search-section">
+                    <h2 class="section-title">Search recipes</h2>
+                    <div class="search-container">
+                        <i class="material-icons search-icon">search</i>
+                        <input type="text" id="search-igri" @bind="searchRecipe" placeholder="Wyszukaj przepis" />
+                    </div>
+                    <button class="search-button" @onclick="Search">Wyszukaj</button>
+
+                    @* Tutaj lista *@
+
+                    <div class="list-back">
+                        <ul class="product-list">
+                            @foreach (var product in products)
+                            {
+                                <li class="list-item">@product</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="search-section">
+                    <h2 class="section-title">What you need:</h2>
+                    <div class="search-container">
+                        <i class="material-icons search-icon">search</i>
+                        <input type="text" id="search-igri" @bind="searchRecipe" placeholder="Wyszukaj przepis" />
+                    </div>
+                    <button class="search-button" @onclick="Search">Wyszukaj</button>
+                    
+                    @* Tutaj lista *@
+                    
+                    <div class="list-back">
+                        <ul class="product-list">
+                            @foreach (var product in products)
+                            {
+                                <li class="list-item">@product</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 
 @code {
     private List<string> products = new List<string> { "Produkt 1", "Produkt 2", "Produkt 3" };
@@ -45,21 +95,17 @@
     private string searchRecipe;
     private List<string> requiredIngredients = new List<string>();
 
-    private void SearchIngredient()
+    private void Search()
     {
         // Implement your logic to search for ingredients based on the entered searchIngredient
         // Dummy logic for demonstration purposes
         foundIngredients.Clear();
-        foundIngredients.Add("Found Ingredient 1");
-        foundIngredients.Add("Found Ingredient 2");
-    }
-
-    private void SearchRecipe()
-    {
-        // Implement your logic to search for recipes based on the entered searchRecipe
-        // Dummy logic for demonstration purposes
-        requiredIngredients.Clear();
-        requiredIngredients.Add("Required Ingredient 1");
-        requiredIngredients.Add("Required Ingredient 2");
+        products.Add("Found1");
+        products.Add("Found2");
+        products.Add("Found2");
+        products.Add("Found2");
+        products.Add("Found2");
+        products.Add("Found2");
+        products.Add("Found2");
     }
 }

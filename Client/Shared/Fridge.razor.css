@@ -1,0 +1,176 @@
+﻿* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+/*
+   Tło
+*/
+
+.background-container {
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.tlo-pudlo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.container-fluid {
+    position: relative;
+    z-index: 2;
+}
+
+.tlo {
+    background-image: url("https://c0.wallpaperflare.com/path/652/943/804/close-up-fresh-freshness-garden-7ccccc72fd9ca313ed27c332fc51855c.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    filter: blur(8px);
+    transform: scale(1.1);
+}
+
+    .tlo::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+/*
+   Napisy główne
+*/
+
+.section-title {
+    margin-top: 100px;
+    margin-bottom: 20px;
+    color: #E6E6E6;
+    font-size: 2rem;
+    font-family: 'Quicksand-Semibold';
+}
+
+.product-list, .ingredient-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+    .product-list li, .ingredient-list li {
+        margin-bottom: 5px;
+    }
+
+.search-section {
+    margin-bottom: 20px;
+}
+
+/*
+   Searchbary
+*/
+
+::deep .search-container {
+    position: relative;
+    display: inline-block;
+}
+
+::deep #search-igri {
+    border-radius: 50px;
+    border: 0;
+    padding: 3px 10px;
+    outline: none;
+    width: 250px; /* dostosuj szerokość do potrzeb */
+    height: 38px;
+    font-family: 'Quicksand-Semibold';
+    font-size: 13px;
+    padding-left: 40px; /* dodaj padding po lewej stronie dla ikony */
+}
+
+::deep .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px; /* dostosuj odległość od lewej krawędzi */
+    transform: translateY(-50%);
+    font-size: 18px; /* dostosuj wielkość do potrzeb */
+    color: #555; /* dostosuj kolor do potrzeb */
+}
+
+/*
+   Przyciski
+*/
+.search-button {
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-family: 'Quicksand-Medium';
+    font-size: 13px;
+    margin-left: 10px;
+    background: linear-gradient(120deg, #5DAB02, #0f7909);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 0.5s, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .search-button:hover {
+        color: #fff;
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-position: 0 0;
+    }
+
+/*
+   Listy
+*/
+
+.list-back {
+    margin-top: 20px;
+}
+
+.product-list {
+    width: 600px;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+    height: 100px;
+    overflow-x: scroll;
+}
+
+.list-item {
+    display: flex;
+    height: 70px;
+    width: auto;
+    border-radius: 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 10px;
+    padding: 0 20px;
+    background-color: white;
+}
+
+.product-list::-webkit-scrollbar {
+    width: 12px; /* szerokość paska przewijania */
+}
+
+.product-list::-webkit-scrollbar-thumb {
+    background-color: #5DAB02; /* kolor paska przewijania */
+    border-radius: 10px; /* zaokrąglenie narożników paska przewijania */
+}
+
+.product-list::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0.1); /* kolor tła paska przewijania */
+}
