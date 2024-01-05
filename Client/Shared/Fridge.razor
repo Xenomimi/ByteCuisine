@@ -22,7 +22,7 @@
 
             <div class="col-md-6 d-flex flex-column align-items-center">
                 <div class="search-section">
-                    <h2 class="section-title">Wyszukiwanie Składnika</h2>
+                    <h2 class="section-title">Search for ingridients</h2>
                     <div class="search-container">
                         <i class="material-icons search-icon">search</i>
                         <input type="text" id="search-igri" @bind="searchRecipe" placeholder="Wyszukaj przepis" />
@@ -42,7 +42,7 @@
                 </div>
 
                 <div class="search-section">
-                    <h2 class="section-title">Search recipes</h2>
+                    <h2 class="section-title">Search for recipes</h2>
                     <div class="search-container">
                         <i class="material-icons search-icon">search</i>
                         <input type="text" id="search-igri" @bind="searchRecipe" placeholder="Wyszukaj przepis" />
@@ -51,11 +51,11 @@
 
                     @* Tutaj lista *@
 
-                    <div class="list-back">
-                        <ul class="product-list">
+                    <div class="list-back-pion">
+                        <ul class="product-list-pion">
                             @foreach (var product in products)
                             {
-                                <li class="list-item">@product</li>
+                                <li class="list-item-pion">@product</li>
                             }
                         </ul>
                     </div>
@@ -87,7 +87,7 @@
 
 
 @code {
-    private List<string> products = new List<string> { "Produkt 1", "Produkt 2", "Produkt 3" };
+    private List<string> products = new List<string> { "PNG", "PNG", "PNG" };
 
     private string searchIngredient;
     private List<string> foundIngredients = new List<string>();
@@ -100,12 +100,12 @@
         // Implement your logic to search for ingredients based on the entered searchIngredient
         // Dummy logic for demonstration purposes
         foundIngredients.Clear();
-        products.Add("Found1");
-        products.Add("Found2");
-        products.Add("Found2");
-        products.Add("Found2");
-        products.Add("Found2");
-        products.Add("Found2");
-        products.Add("Found2");
+        products.Add("PNG");
+        products.Add("PNG");
+        products.Add("PNG");
+        products.Add("PNG");
+        products.Add("PNG");
+        products.Add("PNG");
+        products.Add("PNG");
     }
 }

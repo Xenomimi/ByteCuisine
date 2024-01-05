@@ -54,7 +54,7 @@
 */
 
 .section-title {
-    margin-top: 100px;
+    margin-top: 50px;
     margin-bottom: 20px;
     color: #E6E6E6;
     font-size: 2rem;
@@ -116,14 +116,13 @@
     font-family: 'Quicksand-Medium';
     font-size: 13px;
     margin-left: 10px;
-    background: linear-gradient(120deg, #5DAB02, #0f7909);
+    background: linear-gradient(120deg, #0f7909, #5DAB02);
     background-size: 200% 100%;
     background-position: 100% 0;
     transition: background-position 0.5s, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
     .search-button:hover {
-        color: #fff;
         transform: scale(1.1);
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         background-position: 0 0;
@@ -134,19 +133,18 @@
 */
 
 .list-back {
+    width: 600px;
     margin-top: 20px;
+    height: 120px;
+    overflow-x: scroll;
+    border-radius: 20px 20px 5px 5px;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .product-list {
-    width: 600px;
-    border-radius: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    list-style: none;
     height: 100px;
-    overflow-x: scroll;
+    display: flex;
+    align-items: center;
 }
 
 .list-item {
@@ -157,20 +155,22 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-left: 10px;
+    margin: 10px;
     padding: 0 20px;
     background-color: white;
+    position: relative;
 }
 
-.product-list::-webkit-scrollbar {
-    width: 12px; /* szerokość paska przewijania */
+.list-back::-webkit-scrollbar {
+    width: 50px;
 }
 
-.product-list::-webkit-scrollbar-thumb {
+.list-back::-webkit-scrollbar-thumb {
     background-color: #5DAB02; /* kolor paska przewijania */
-    border-radius: 10px; /* zaokrąglenie narożników paska przewijania */
+    border-radius: 50px; /* zaokrąglenie narożników paska przewijania */
 }
 
-.product-list::-webkit-scrollbar-track {
+.list-back::-webkit-scrollbar-track {
+    border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.1); /* kolor tła paska przewijania */
 }
