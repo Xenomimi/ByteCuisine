@@ -11,7 +11,7 @@
 .background-container {
     position: relative;
     overflow: hidden;
-    height: 100vh;
+    height: auto;
 }
 
 .tlo-pudlo {
@@ -70,10 +70,6 @@
         margin-bottom: 5px;
     }
 
-.search-section {
-    margin-bottom: 20px;
-}
-
 /*
    Searchbary
 */
@@ -88,20 +84,20 @@
     border: 0;
     padding: 3px 10px;
     outline: none;
-    width: 250px; /* dostosuj szerokość do potrzeb */
+    width: 250px;
     height: 38px;
     font-family: 'Quicksand-Semibold';
     font-size: 13px;
-    padding-left: 40px; /* dodaj padding po lewej stronie dla ikony */
+    padding-left: 40px;
 }
 
 ::deep .search-icon {
     position: absolute;
     top: 50%;
-    left: 15px; /* dostosuj odległość od lewej krawędzi */
+    left: 15px;
     transform: translateY(-50%);
-    font-size: 18px; /* dostosuj wielkość do potrzeb */
-    color: #555; /* dostosuj kolor do potrzeb */
+    font-size: 18px;
+    color: #555;
 }
 
 /*
@@ -166,11 +162,111 @@
 }
 
 .list-back::-webkit-scrollbar-thumb {
-    background-color: #5DAB02; /* kolor paska przewijania */
-    border-radius: 50px; /* zaokrąglenie narożników paska przewijania */
+    background-color: #5DAB02;
+    border-radius: 50px;
 }
 
 .list-back::-webkit-scrollbar-track {
     border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.1); /* kolor tła paska przewijania */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/*
+   Listy pionowe
+*/
+
+.list-back-pion {
+    width: 600px;
+    height: 250px;
+    margin-top: 20px;
+    overflow-y: scroll;
+    border-radius: 20px 5px 5px 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+}
+
+.product-list-pion {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-item-pion {
+    display: flex;
+    height: auto;
+    width: 100%;
+    border-radius: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px 0;
+    padding: 20px 0;
+    background-color: white;
+    position: relative;
+}
+
+.list-back-pion::-webkit-scrollbar {
+    height: 50px;
+}
+
+.list-back-pion::-webkit-scrollbar-thumb {
+    background-color: #5DAB02;
+    border-radius: 50px;
+}
+
+.list-back-pion::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/*
+   Lista lodowki
+*/
+
+.list-back-fridge {
+    width: 600px;
+    height: 60vh;
+    margin-top: 20px;
+    overflow-y: scroll;
+    border-radius: 20px 5px 5px 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+}
+
+.product-list-fridge {
+    list-style-type: none;
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.product-fridge {
+    display: flex;
+    height: 75px;
+    width: 100%;
+    border-radius: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px 0;
+    padding: 20px 0;
+    background-color: white;
+    position: relative;
+}
+
+.list-back-fridge::-webkit-scrollbar {
+    width: auto;
+}
+
+.list-back-fridge::-webkit-scrollbar-thumb {
+    background-color: #5DAB02;
+    border-radius: 20px;
+}
+
+.list-back-fridge::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
 }
