@@ -155,7 +155,12 @@
     padding: 0 20px;
     background-color: white;
     position: relative;
+    transition: transform 0.3s ease
 }
+
+    .list-item:hover {
+        transform: scale(1.1);
+    }
 
 .list-back::-webkit-scrollbar {
     width: 50px;
@@ -197,13 +202,20 @@
     height: auto;
     width: 100%;
     border-radius: 20px;
-    flex-direction: column;
     align-items: center;
     justify-content: space-around;
     margin: 10px 0;
     padding: 20px 0;
     background-color: white;
     position: relative;
+    font-family: 'Quicksand-Semibold';
+    font-size: 16px;
+    color: #676767;
+    transition: transform 0.3s ease
+}
+
+.list-item-pion:hover {
+        transform: scale(1.02);
 }
 
 .list-back-pion::-webkit-scrollbar {
@@ -255,11 +267,16 @@
     padding: 20px 0;
     background-color: white;
     position: relative;
+    transition: transform 0.3s ease
 }
 
-.list-back-fridge::-webkit-scrollbar {
-    width: auto;
-}
+    .product-fridge:hover {
+        transform: scale(1.1);
+    }
+
+    .list-back-fridge::-webkit-scrollbar {
+        width: auto;
+    }
 
 .list-back-fridge::-webkit-scrollbar-thumb {
     background-color: #5DAB02;

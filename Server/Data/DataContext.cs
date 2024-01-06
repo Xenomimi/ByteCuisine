@@ -1,20 +1,18 @@
-﻿using ByteCuisine.Shared;
+﻿using ByteCuisine.Client;
+using ByteCuisine.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 namespace ByteCuisine.Server.Controllers.Data
 {
     public class DataContext : DbContext
     {
-        //W ten sposób dodajecie modele, np.
-        //public DbSet<Account> Accounts { get; set; }
-        //potem w package manager console wywołujecie add-migration Nazwa_migracji i jeżeli stworzy się migracja w folderze Migrations
-        //to wywołujecie w package manager console update-database i powinna się pojawić nowa tabela
-        //
-
         public DbSet<Account> Accounts { get; set; }
 
         public DbSet<Dish> Dishes { get; set; }
 
         public DbSet<Ingridient> Ingridients { get; set; }
+
+        public DbSet<VirtualFridge> VirtualFridges { get; set; }
 
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -24,12 +22,9 @@ namespace ByteCuisine.Server.Controllers.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>().HasKey(x => x.User_id);
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Dish>().HasKey(x => x.Dish_id);
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Ingridient>().HasKey(x => x.Ingridient_id);
+            modelBuilder.Entity<VirtualFridge>().HasKey(x => x.VirtualFridge_id);
             base.OnModelCreating(modelBuilder);
         }
     }
