@@ -1,0 +1,116 @@
+﻿@page "/"
+
+<MyNavigation />
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined">
+
+<div class="container">
+    <div class="left-column">
+        <section class="user-profile">
+            <img src="avatar.jpg" alt="User Avatar" class="avatar">
+            <h1 class="username">Nick Patterson</h1>
+            <!-- Placeholder for User Statistics -->
+        </section>
+
+        <section class="favorites">
+            <h2>Favorites</h2>
+            <button class="carousel-control prev" @onclick="()=>ScrollCarousel(-1)">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <div class="favorites-carousel">
+                @foreach (var favorite in VisibleFavorites)
+                {
+                    <div class="carousel-item">@favorite.Name</div>
+                }
+            </div>
+            <button class="carousel-control next" @onclick="()=>ScrollCarousel(1)">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </section>
+    </div>
+
+    <section class="my-kitchen">
+        <h2>My Kitchen</h2>
+        <button class="vertical-control prev" @onclick="()=>ScrollList(-1)">
+            <span class="material-symbols-outlined">expand_less</span>
+        </button>
+        <div class="recipes-list">
+            @foreach (var recipe in VisibleRecipes)
+            {
+                <div class="list-item">@recipe.Name</div>
+            }
+        </div>
+        <button class="vertical-control next" @onclick="()=>ScrollList(1)">
+            <span class="material-symbols-outlined">expand_more</span>
+        </button>
+    </section>
+</div>
+
+@code {
+    private int currentFavoriteIndex = 0;
+    private int currentRecipeIndex = 0;
+    private List<FavoriteDish> Favorites = new List<FavoriteDish>
+    {
+        new FavoriteDish { Name = "Pasta" },
+        new FavoriteDish { Name = "Steak" },
+        new FavoriteDish { Name = "Ramen" },
+        new FavoriteDish { Name = "Curry" },
+        new FavoriteDish { Name = "Spaghetti" },
+        new FavoriteDish { Name = "Chicken Curry" },
+        new FavoriteDish { Name = "Pasta" },
+        new FavoriteDish { Name = "Steak" },
+        new FavoriteDish { Name = "Ramen" },
+        new FavoriteDish { Name = "Curry" },
+        new FavoriteDish { Name = "Spaghetti" },
+        new FavoriteDish { Name = "Chicken Curry" },
+    };
+
+    private List<Recipe> Recipes = new List<Recipe>
+    {
+        new Recipe { Name = "Curry" },
+        new Recipe { Name = "Spaghetti" },
+        new Recipe { Name = "Chicken Curry" },
+        new Recipe { Name = "Curry" },
+        new Recipe { Name = "Spaghetti" },
+        new Recipe { Name = "Chicken Curry" },
+        new Recipe { Name = "Curry" },
+        new Recipe { Name = "Spaghetti" },
+        new Recipe { Name = "Chicken Curry" },
+        new Recipe { Name = "Curry" },
+        new Recipe { Name = "Spaghetti" },
+    };
+
+    private void ScrollCarousel(int direction)
+    {
+        currentFavoriteIndex += direction;
+        if (currentFavoriteIndex >= Favorites.Count) currentFavoriteIndex = 0;
+        if (currentFavoriteIndex < 0) currentFavoriteIndex = Favorites.Count - 1;
+
+        StateHasChanged(); // Odświeżenie UI
+    }
+
+    private void ScrollList(int direction)
+    {
+        currentRecipeIndex += direction;
+        if (currentRecipeIndex >= Recipes.Count) currentRecipeIndex = 0;
+        if (currentRecipeIndex < 0) currentRecipeIndex = Recipes.Count - 1;
+
+        StateHasChanged(); // Odświeżenie UI
+    }
+
+    private IEnumerable<FavoriteDish> VisibleFavorites =>
+        Favorites.Skip(currentFavoriteIndex).Take(5); // Wyświetla 5 elementów
+
+    private IEnumerable<Recipe> VisibleRecipes =>
+        Recipes.Skip(currentRecipeIndex).Take(5); // Wyświetla 5 elementów
+
+    public class FavoriteDish
+    {
+        public string Name { get; set; }
+    }
+
+    public class Recipe
+    {
+        public string Name { get; set; }
+    }
+}
