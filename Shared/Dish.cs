@@ -14,6 +14,6 @@ namespace ByteCuisine.Shared
         public byte[] DishImage { get; set; }
         public string Category { get; set; }
         public double Callories { get; set; }
-        public List<Ingridient> Ingridients { get; set; }
+        public List<DishIngredient> DishIngredients { get; set; }
     }
 }

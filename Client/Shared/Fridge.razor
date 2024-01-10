@@ -36,7 +36,7 @@
 
                     <div class="list-back">
                         <ul class="product-list">
-                            @foreach (var ingri in ingridients)
+                            @foreach (var ingri in ingredients)
                             {
                                 <li class="list-item">
                                     <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(ingri.Image)" alt="Food" />
@@ -98,13 +98,13 @@
 
     @* Ładowanie elementów z bazy *@
 
-    private List<Ingridient> ingridients = new List<Ingridient>();
+    private List<Ingredient> ingredients = new List<Ingredient>();
     private List<Dish> dishes = new List<Dish>();
     private List<VirtualFridge> virtual_products = new List<VirtualFridge>();
 
     protected override async Task OnInitializedAsync()
     {
-        ingridients = await Http.GetFromJsonAsync<List<Ingridient>>("api/ingridient");
+        ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
         dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
         virtual_products = await Http.GetFromJsonAsync<List<VirtualFridge>>("api/virtualfridge");
     }

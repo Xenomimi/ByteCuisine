@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ByteCuisine.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240106171018_Test")]
+    [Migration("20240110192247_Test")]
     partial class Test
     {
         /// <inheritdoc />
@@ -86,13 +86,28 @@ namespace ByteCuisine.Server.Migrations
                     b.ToTable("Dishes");
                 });
 
-            modelBuilder.Entity("ByteCuisine.Shared.Ingridient", b =>
+            modelBuilder.Entity("ByteCuisine.Shared.DishIngredient", b =>
                 {
-                    b.Property<int>("Ingridient_id")
+                    b.Property<int>("Dish_Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Ingredient_Id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Dish_Id", "Ingredient_Id");
+
+                    b.HasIndex("Ingredient_Id");
+
+                    b.ToTable("DishIngredients");
+                });
+
+            modelBuilder.Entity("ByteCuisine.Shared.Ingredient", b =>
+                {
+                    b.Property<int>("Ingredient_id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Ingridient_id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Ingredient_id"));
 
                     b.Property<double>("Callories")
                         .HasColumnType("float");
@@ -105,9 +120,6 @@ namespace ByteCuisine.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Dish_id")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("Image")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
@@ -116,11 +128,9 @@ namespace ByteCuisine.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Ingridient_id");
+                    b.HasKey("Ingredient_id");
 
-                    b.HasIndex("Dish_id");
-
-                    b.ToTable("Ingridients");
+                    b.ToTable("Ingredients");
                 });
 
             modelBuilder.Entity("ByteCuisine.Shared.VirtualFridge", b =>
@@ -148,16 +158,33 @@ namespace ByteCuisine.Server.Migrations
                     b.ToTable("VirtualFridges");
                 });
 
-            modelBuilder.Entity("ByteCuisine.Shared.Ingridient", b =>
+            modelBuilder.Entity("ByteCuisine.Shared.DishIngredient", b =>
                 {
-                    b.HasOne("ByteCuisine.Shared.Dish", null)
-                        .WithMany("Ingridients")
-                        .HasForeignKey("Dish_id");
+                    b.HasOne("ByteCuisine.Shared.Dish", "Dish")
+                        .WithMany("DishIngredients")
+                        .HasForeignKey("Dish_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ByteCuisine.Shared.Ingredient", "Ingredient")
+                        .WithMany("DishIngredients")
+                        .HasForeignKey("Ingredient_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dish");
+
+                    b.Navigation("Ingredient");
                 });
 
             modelBuilder.Entity("ByteCuisine.Shared.Dish", b =>
                 {
-                    b.Navigation("Ingridients");
+                    b.Navigation("DishIngredients");
+                });
+
+            modelBuilder.Entity("ByteCuisine.Shared.Ingredient", b =>
+                {
+                    b.Navigation("DishIngredients");
                 });
 #pragma warning restore 612, 618
         }

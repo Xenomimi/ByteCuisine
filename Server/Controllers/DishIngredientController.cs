@@ -6,24 +6,24 @@ using System;
 
 namespace ByteCuisine.Server.Controllers
 {
-    [Route("api/ingridient")]
+    [Route("api/dishingredient")]
     [ApiController]
-    public class IngridientController : ControllerBase
+    public class DishIngredientController : ControllerBase
     {
         private readonly DataContext _dataContext;
 
 
-        public IngridientController(DataContext dataContext)
+        public DishIngredientController(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Ingridient>>> Get()
+        public async Task<ActionResult<List<DishIngredient>>> Get()
         {
             try
             {
-                var list = await _dataContext.Ingridients.ToListAsync();
+                var list = await _dataContext.DishIngredients.ToListAsync();
                 return Ok(list);
             }
             catch (Exception ex)
