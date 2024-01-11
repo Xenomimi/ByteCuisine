@@ -13,10 +13,11 @@
 
                 <div class="list-back-fridge">
                     <ul class="product-list-fridge">
-                        @foreach (var product in products)
+                        @foreach (var product in virtual_products)
                         {
+                            var ingredientImage = ingredients.FirstOrDefault(x => x.Ingredient_id == product.Ingridient_id)?.Image;
                             <li class="product-fridge">
-                                <img src="@product"/>
+                                <img src="data:image/png;base64,@Convert.ToBase64String(ingredientImage)" />
                             </li>
                         }
                     </ul>
@@ -38,12 +39,18 @@
                         <ul class="product-list">
                             @foreach (var ingri in ingredients)
                             {
-                                <li class="list-item">
-                                    <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(ingri.Image)" alt="Food" />
+                                <li class="list-item" @onclick="() => ToggleIngredientSelection(ingri.Ingredient_id)">
+                                    <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(ingri.Image)" alt="@ingri.Name" />
+                                    @if (selectedIngredientIds.Contains(ingri.Ingredient_id))
+                                    {
+                                        <span class="selected-indicator">Selected</span>
+                                    }
                                 </li>
                             }
                         </ul>
                     </div>
+                    <button class="search-button" @onclick="AddSelectedIngredients">Add Ingredients</button>
+
                 </div>
 
                 <div class="search-section">
@@ -95,6 +102,40 @@
 
 
 @code {
+    private HashSet<int> selectedIngredientIds = new HashSet<int>();
+
+    private void ToggleIngredientSelection(int ingredientId)
+    {
+        if (!selectedIngredientIds.Add(ingredientId))
+        {
+            selectedIngredientIds.Remove(ingredientId);
+        }
+    }
+
+    private async Task AddSelectedIngredients()
+    {
+        // Example: User ID and quantity could be dynamically determined based on user interaction or defaults
+        int userId = 1; // Example user ID
+        int defaultQuantity = 1; // Default quantity
+
+        foreach (var ingredientId in selectedIngredientIds)
+        {
+            var virtualFridgeModel = new VirtualFridge
+                {
+                    User_id = userId,
+                    Ingridient_id = ingredientId,
+                    Quantity = defaultQuantity,
+                    ExpirationDate = DateTime.Now.AddDays(7) // Example expiration date
+                };
+
+            await Http.PostAsJsonAsync("api/virtualfridge", virtualFridgeModel);
+        }
+
+        // Refresh the list of products in the virtual fridge
+        virtual_products = await Http.GetFromJsonAsync<List<VirtualFridge>>("api/virtualfridge");
+    }
+
+
 
     @* Ładowanie elementów z bazy *@
 
