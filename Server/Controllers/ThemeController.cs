@@ -5,24 +5,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ByteCuisine.Server.Controllers
 {
-    [Route("api/virtualfridge")]
+    [Route("api/theme")]
     [ApiController]
-    public class VirtualFridgeController : ControllerBase
+    public class ThemeController : ControllerBase
     {
         private readonly DataContext _dataContext;
 
 
-        public VirtualFridgeController(DataContext dataContext)
+        public ThemeController(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<VirtualFridge>>> Get()
+        public async Task<ActionResult<List<Theme>>> Get()
         {
             try
             {
-                var list = await _dataContext.VirtualFridges.ToListAsync();
+                var list = await _dataContext.Themes.ToListAsync();
                 return Ok(list);
             }
             catch (Exception ex)

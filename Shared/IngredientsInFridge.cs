@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ByteCuisine.Shared
 {
-    public class DishIngredient
+    public class IngredientsInFridge
     {
-        public int DishIngredient_Id { get; set; }
-        public int Dish_Id { get; set; }
-        public Dish Dish { get; set; }
-
+        public int IngredientsInFridge_Id { get; set; }
         public int Ingredient_Id { get; set; }
         public Ingredient Ingredient { get; set; }
+
+        public int VirtualFridge_Id { get; set; }
+        public VirtualFridge VirtualFridge { get; set; }
     }
 }

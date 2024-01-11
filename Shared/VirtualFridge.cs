@@ -8,10 +8,10 @@ namespace ByteCuisine.Shared
 {
     public class VirtualFridge
     {
-        public int VirtualFridge_id { get; set; }
-        public int User_id { get; set; }
-        public int Ingridient_id { get; set; }
-        public int Quantity { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public int VirtualFridge_Id { get; set; }
+        public List<IngredientsInFridge> IngredientsInFridge { get; set; }
+        public Account Account { get; set; }
+        public int Theme_Id { get; set; }
+        public Theme Theme { get; set; }
     }
 }

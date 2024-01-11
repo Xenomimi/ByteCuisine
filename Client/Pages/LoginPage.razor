@@ -1,7 +1,9 @@
 ﻿@page "/"
 @using ByteCuisine.Shared
+@using ByteCuisine.Client.Services
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject UserStateService UserState
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -69,6 +71,10 @@
             if (user.Username == loginModel.Username && user.Password == loginModel.Password)
             {
                 Navigation.NavigateTo("/index");
+
+                // Przekazanie obiektu user do komponentu Fridge.razor
+                UserState.SetCurrentUser(user.User_Id);
+                
                 return;
             }
         }

@@ -16,6 +16,9 @@ namespace ByteCuisine.Server.Controllers.Data
 
         public DbSet<VirtualFridge> VirtualFridges { get; set; }
 
+        public DbSet<IngredientsInFridge> IngredientsInFridges { get; set; }
+
+        public DbSet<Theme> Themes { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -23,21 +26,56 @@ namespace ByteCuisine.Server.Controllers.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Dish>().HasKey(d => d.Dish_id);
-            modelBuilder.Entity<Ingredient>().HasKey(i => i.Ingredient_id);
-            modelBuilder.Entity<Account>().HasKey(x => x.User_id);
-            modelBuilder.Entity<VirtualFridge>().HasKey(x => x.VirtualFridge_id);
+            modelBuilder.Entity<Dish>().HasKey(d => d.Dish_Id);
+            modelBuilder.Entity<Ingredient>().HasKey(i => i.Ingredient_Id);
+            modelBuilder.Entity<VirtualFridge>().HasKey(x => x.VirtualFridge_Id);
+            modelBuilder.Entity<Account>().HasKey(x => x.User_Id);
+            modelBuilder.Entity<Theme>().HasKey(x => x.Theme_Id);
+            modelBuilder.Entity<IngredientsInFridge>().HasKey(x => x.IngredientsInFridge_Id);
+            modelBuilder.Entity<DishIngredient>().HasKey(x => x.DishIngredient_Id);
 
-            // Konfiguracja klucza złożonego dla tabeli DishIngredient
-            modelBuilder.Entity<DishIngredient>()
-                .HasKey(di => new { di.Dish_Id, di.Ingredient_Id });
+            // Konfiguracja relacji jeden-do-wielu między VirtualFridge i Theme
+            modelBuilder.Entity<VirtualFridge>()
+                .HasOne(vf => vf.Theme)
+                .WithMany(t => t.VirtualFridges)
+                .HasForeignKey(vf => vf.Theme_Id);
 
-            // Konfiguracja relacji wiele-do-wielu między Dish i Ingredient poprzez DishIngredient
+            // Relacja IngredientsInFridge - Ingredient
+            modelBuilder.Entity<IngredientsInFridge>()
+                .HasOne(iif => iif.Ingredient)
+                .WithMany(i => i.IngredientsInFridge)
+                .HasForeignKey(iif => iif.Ingredient_Id);
+
+            // Relacja IngredientsInFridge - VirtualFridge
+            modelBuilder.Entity<IngredientsInFridge>()
+                .HasOne(iif => iif.VirtualFridge)
+                .WithMany(vf => vf.IngredientsInFridge)
+                .HasForeignKey(iif => iif.VirtualFridge_Id);
+
+            // Konfiguracja relacji wiele-do-wielu między VirtualFridge i Ingredient poprzez IngredientsInFridge
+            modelBuilder.Entity<IngredientsInFridge>()
+                .HasOne(iif => iif.VirtualFridge)
+                .WithMany(vf => vf.IngredientsInFridge)
+                .HasForeignKey(iif => iif.VirtualFridge_Id);
+
+            modelBuilder.Entity<IngredientsInFridge>()
+                .HasOne(iif => iif.Ingredient)
+                .WithMany(i => i.IngredientsInFridge)
+                .HasForeignKey(iif => iif.Ingredient_Id);
+
+            // Konfiguracja relacji jeden-do-jednego między Account i VirtualFridge
+            modelBuilder.Entity<Account>()
+                .HasOne(a => a.VirtualFridge)
+                .WithOne(v => v.Account)
+                .HasForeignKey<VirtualFridge>(v => v.VirtualFridge_Id);
+
+            // Relacja DishIngredient - Dish
             modelBuilder.Entity<DishIngredient>()
                 .HasOne(di => di.Dish)
                 .WithMany(d => d.DishIngredients)
                 .HasForeignKey(di => di.Dish_Id);
 
+            // Relacja DishIngredient - Ingredient
             modelBuilder.Entity<DishIngredient>()
                 .HasOne(di => di.Ingredient)
                 .WithMany(i => i.DishIngredients)

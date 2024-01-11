@@ -162,6 +162,10 @@
         transform: scale(1.1);
     }
 
+.list-item.selected {
+    background-color: #5DAB02;
+}
+
 .list-back::-webkit-scrollbar {
     width: 50px;
 }
