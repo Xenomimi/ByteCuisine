@@ -15,25 +15,28 @@ namespace ByteCuisine.Server.Controllers
             _dataContext = dataContext;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] IngredientsInFridge model)
+        [HttpPost("user/{currentUser}")]
+        public async Task<IActionResult> AddProduct([FromBody] IngredientsInFridgeDTO model)
         {
             try
             {
-                var fridgeModel1 = new IngredientsInFridge
+                var fridgeModel = new IngredientsInFridge
                 {
                     Ingredient_Id = model.Ingredient_Id,
                     VirtualFridge_Id = model.VirtualFridge_Id,
                 };
-                _dataContext.IngredientsInFridges.Add(fridgeModel1);
+                _dataContext.IngredientsInFridges.Add(fridgeModel);
                 await _dataContext.SaveChangesAsync();
-                return Ok(model);
+                return Ok(fridgeModel);
             }
             catch (Exception ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+
+
 
         [HttpGet]
         public async Task<ActionResult<List<IngredientsInFridge>>> Get()

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ByteCuisine.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240111202823_Test")]
+    [Migration("20240111235914_Test")]
     partial class Test
     {
         /// <inheritdoc />

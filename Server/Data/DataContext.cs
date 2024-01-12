@@ -52,17 +52,6 @@ namespace ByteCuisine.Server.Controllers.Data
                 .WithMany(vf => vf.IngredientsInFridge)
                 .HasForeignKey(iif => iif.VirtualFridge_Id);
 
-            // Konfiguracja relacji wiele-do-wielu między VirtualFridge i Ingredient poprzez IngredientsInFridge
-            modelBuilder.Entity<IngredientsInFridge>()
-                .HasOne(iif => iif.VirtualFridge)
-                .WithMany(vf => vf.IngredientsInFridge)
-                .HasForeignKey(iif => iif.VirtualFridge_Id);
-
-            modelBuilder.Entity<IngredientsInFridge>()
-                .HasOne(iif => iif.Ingredient)
-                .WithMany(i => i.IngredientsInFridge)
-                .HasForeignKey(iif => iif.Ingredient_Id);
-
             // Konfiguracja relacji jeden-do-jednego między Account i VirtualFridge
             modelBuilder.Entity<Account>()
                 .HasOne(a => a.VirtualFridge)

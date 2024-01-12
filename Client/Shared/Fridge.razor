@@ -121,11 +121,11 @@
 
         foreach (var ingredientId in selectedIngredientIds)
         {
-            var fridgeModel = new IngredientsInFridge
-                {
-                    Ingredient_Id = ingredientId,
-                    VirtualFridge_Id = currentUser
-                };
+            var fridgeModel = new IngredientsInFridgeDTO 
+            { 
+                Ingredient_Id = ingredientId,
+                VirtualFridge_Id = currentUser,
+            };
             using var response = await Http.PostAsJsonAsync($"api/ingredientsInFridge/user/{currentUser}", fridgeModel);
             if (!response.IsSuccessStatusCode)
             {   
