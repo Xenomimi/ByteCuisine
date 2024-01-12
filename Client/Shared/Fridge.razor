@@ -57,20 +57,28 @@
                     <h2 class="section-title">Search for recipes</h2>
                     <div class="search-container">
                         <i class="material-icons search-icon">search</i>
-                        <input type="text" id="search-igri" @bind="searchRecipe" placeholder="Search for recipes" />
+                        <input type="text" id="search-igri" @bind="searchText" placeholder="Search for recipes" />
                     </div>
-                    <button class="search-button" @onclick="SearchRecipe">Search</button>
+                    <button class="search-button" @onclick="SearchDishes">Search</button>
 
                     @* Wyszukiwanie przepisów *@
 
                     <div class="list-back-pion">
                         <ul class="product-list-pion">
-                            @foreach (var dish in dishes)
+
+                            @if (dishesWithIngredientsFromFridge.Any())
                             {
-                                <li class="list-item-pion">
-                                    <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="Dish" />
-                                    @dish.Name
-                                </li>
+                                foreach (var dish in dishesWithIngredientsFromFridge)
+                                {
+                                    <li class="list-item-pion">
+                                        <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="Dish" />
+                                        @dish.Name
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <div>No dishes found.</div>
                             }
                         </ul>
                     </div>
@@ -148,22 +156,42 @@
         fridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
     }
 
+    @* Funkcja Dodająca Przepisy Zawierające Składniki z Lodówki *@
+    
+    List<Dish> dishesWithIngredientsFromFridge = new List<Dish>();
+
+    private async Task LoadDishesWithIngredientsFromFridge()
+    {
+        var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
+        var ingredientsInFridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
+        var allDishIngredients = await Http.GetFromJsonAsync<List<DishIngredient>>("api/dishingredient");
+
+        var dishIdsWithIngredientsFromFridge = allDishIngredients
+            .Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id))
+            .Select(di => di.Dish_Id)
+            .Distinct();
+
+        foreach (var dishId in dishIdsWithIngredientsFromFridge)
+        {
+            var dish = await Http.GetFromJsonAsync<Dish>($"api/dish/dishes/{dishId}");
+            dishesWithIngredientsFromFridge.Add(dish);
+        }
+
+        StateHasChanged();
+    }
 
     @* Ładowanie elementów z bazy *@
 
     private List<Ingredient> ingredients = new List<Ingredient>();
     private List<Ingredient> products = new List<Ingredient>();
-
-    private List<Dish> dishes = new List<Dish>();
     private List<IngredientsInFridge> fridge = new List<IngredientsInFridge>();
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadDishesWithIngredientsFromFridge();
+
         ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
         products = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
-
-        dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
-
         // Pobranie z bazy produktów wirtualnej lodówki
         int currentUser = UserState.CurrentUser;
         fridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
@@ -179,6 +207,9 @@
 
     private List<string> recipes = new List<string>();
     private List<string> missing_products = new List<string>();
+
+    string searchText = string.Empty;
+    List<Dish> filteredDishes = new List<Dish>();
 
     @* Funkcje wyszukujące kliknięciu przycisku *@
 
@@ -204,9 +235,14 @@
         }
 
     }
-    private void SearchRecipe()
+    void SearchDishes()
     {
-        return;
+        filteredDishes = dishesWithIngredientsFromFridge
+            .Where(dish => dish.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                        || dish.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        StateHasChanged();
     }
     private void SearchMissing()
     {

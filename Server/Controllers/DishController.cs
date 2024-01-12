@@ -31,5 +31,20 @@ namespace ByteCuisine.Server.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        [HttpGet("dishes/{dishId}")]
+        public async Task<ActionResult<Dish>> GetDish(int dishId)
+        {
+            try
+            {
+                var dish = await _dataContext.Dishes.FirstOrDefaultAsync(d => d.Dish_Id == dishId);
+                return Ok(dish);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
     }
 }
