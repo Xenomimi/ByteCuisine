@@ -33,13 +33,13 @@
                         <i class="material-icons search-icon">search</i>
                         <input type="text" id="search-igri" @bind="searchIngri" placeholder="Search for ingredients" />
                     </div>
-                    <button class="search-button" @onclick="SearchIngri">Add ingreadients</button>
-                    
+                    <button class="search-button" @onclick="SearchIngri">Search</button>
+                    <button class="search-button" @onclick="AddSelectedIngredients">Add Ingredients</button>
                     @* Lista składników *@
 
                     <div class="list-back">
                         <ul class="product-list">
-                            @foreach (var ingri in ingredients)
+                            @foreach (var ingri in products)
                             {
                                 <li class="@GetItemClass(ingri.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingri.Ingredient_Id)">
                                     <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(ingri.Image)" alt="@ingri.Name" />
@@ -47,8 +47,6 @@
                             }
                         </ul>
                     </div>
-                    <button class="search-button" @onclick="AddSelectedIngredients">Add Ingredients</button>
-
                 </div>
 
                 <div class="search-section">
@@ -100,6 +98,8 @@
 
 
 @code {
+    @* Funkcje zaznaczania składników *@
+
     private string GetItemClass(int ingredientId)
     {
         return selectedIngredientIds.Contains(ingredientId) ? "list-item selected" : "list-item";
@@ -115,6 +115,8 @@
         }
     }
 
+    @* Dodawanie składników do wirtualnej lodówki *@
+
     private async Task AddSelectedIngredients()
     {
         var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
@@ -129,14 +131,16 @@
             using var response = await Http.PostAsJsonAsync($"api/ingredientsInFridge/user/{currentUser}", fridgeModel);
             if (!response.IsSuccessStatusCode)
             {   
-                // set error message for display, log to console and return         
+                // Wypisz wiadomość z błędem         
                 var errorMessage = response.ReasonPhrase;         
                 Console.WriteLine($"There was an error! {errorMessage}");         
                 return;     
             }
         }
+        // Wyczyszczenie listy zaznaczonych składników
+        selectedIngredientIds.Clear();
 
-        // Refresh the list of products in the virtual fridge
+        // Odświeżenie listy produktów w wirtualnej lodówce
         fridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
     }
 
@@ -165,7 +169,7 @@
 
     @* Wyniki wyszukiwania *@
 
-    private List<string> products = new List<string>();
+    private List<Ingredient> products = new List<Ingredient>();
     private List<string> recipes = new List<string>();
     private List<string> missing_products = new List<string>();
 
@@ -173,14 +177,32 @@
 
     private void SearchIngri()
     {
-        products.Add("PNG");
+        products.Clear();
+
+        // Wyszukiwanie składników
+
+        if (string.IsNullOrEmpty(searchIngri))
+        {
+            products = ingredients;
+        }
+        else
+        {
+            foreach (var ingredient in ingredients)
+            {
+                if (ingredient.Description.Contains(searchIngri) || ingredient.Name.Contains(searchIngri))
+                {
+                    products.Add(ingredient);
+                }
+            }
+        }
+
     }
     private void SearchRecipe()
     {
-        products.Add("PNG");
+        return;
     }
     private void SearchMissing()
-	{
-		products.Add("PNG");
-	}
+    {
+        return;
+    }
 }
