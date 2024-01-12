@@ -41,9 +41,13 @@
                         <ul class="product-list">
                             @foreach (var ingri in products)
                             {
-                                <li class="@GetItemClass(ingri.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingri.Ingredient_Id)">
-                                    <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(ingri.Image)" alt="@ingri.Name" />
-                                </li>
+                                var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == ingri.Ingredient_Id);
+                                if (ingredient != null)
+                                {
+                                    <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
+                                        <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name"/>
+                                    </li>
+                                }
                             }
                         </ul>
                     </div>
@@ -148,12 +152,16 @@
     @* Ładowanie elementów z bazy *@
 
     private List<Ingredient> ingredients = new List<Ingredient>();
+    private List<Ingredient> products = new List<Ingredient>();
+
     private List<Dish> dishes = new List<Dish>();
     private List<IngredientsInFridge> fridge = new List<IngredientsInFridge>();
 
     protected override async Task OnInitializedAsync()
     {
         ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
+        products = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
+
         dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
 
         // Pobranie z bazy produktów wirtualnej lodówki
@@ -169,7 +177,6 @@
 
     @* Wyniki wyszukiwania *@
 
-    private List<Ingredient> products = new List<Ingredient>();
     private List<string> recipes = new List<string>();
     private List<string> missing_products = new List<string>();
 
@@ -177,9 +184,9 @@
 
     private void SearchIngri()
     {
-        products.Clear();
-
         // Wyszukiwanie składników
+
+        products.Clear();
 
         if (string.IsNullOrEmpty(searchIngri))
         {
