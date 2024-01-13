@@ -1,0 +1,23 @@
+﻿@using ByteCuisine.Shared
+@using ByteCuisine.Client.Services
+@inject HttpClient Http
+@inject UserStateService UserState
+
+<div class="showdata">
+<h1>Data In Aplication</h1>
+<QuickGrid Items="users.AsQueryable()">
+    <PropertyColumn Property="u=>u.User_Id"/>
+    <PropertyColumn Property="u=>u.Username"/>
+    <PropertyColumn Property="u=>u.Role"/>
+    <PropertyColumn Property="u=>u.PictureData"/>
+</QuickGrid>
+</div>
+
+@code {
+    List<Account> users = new List<Account>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await Http.GetFromJsonAsync<List<Account>>("api/account");
+    }
+}
