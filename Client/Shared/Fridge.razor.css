@@ -218,6 +218,10 @@
     transition: transform 0.3s ease
 }
 
+    .list-item-pion.selected {
+        box-shadow: inset 0px 0px 0px 5px rgba(93, 171, 2, 1)
+    }
+
 .list-item-pion:hover {
         transform: scale(1.02);
 }
