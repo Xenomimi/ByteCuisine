@@ -2,6 +2,7 @@
 @using ByteCuisine.Client.Services
 @inject HttpClient Http
 @inject UserStateService UserState
+@inject NavigationManager Navigation
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <div class ="background-container">
@@ -19,7 +20,14 @@
                         {
                             var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == product.Ingredient_Id)?.Image;
                             <li class="product-fridge">
-                                <img src="data:image/png;base64,@Convert.ToBase64String(ingredient)" />
+                                @if (ingredient != null)
+                                {
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(ingredient)" />
+                                }
+                                else
+                                {
+                                    <span>No image available</span>
+                                }
                             </li>
                         }
                     </ul>
@@ -68,11 +76,13 @@
 
                             @if (dishesWithIngredientsFromFridge.Any())
                             {
-                                foreach (var dish in dishesWithIngredientsFromFridge)
+                                foreach (var di in dishesWithIngredientsFromFridge)
                                 {
-                                    <li class="list-item-pion">
-                                        <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="Dish" />
+                                    var dish = dishesWithIngredientsFromFridge.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
+                                    <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
+                                        <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
                                         @dish.Name
+                                        <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
                                     </li>
                                 }
                             }
@@ -90,7 +100,7 @@
                         <i class="material-icons search-icon">search</i>
                         <input type="text" id="search-igri" @bind="searchMissing" placeholder="Search for what you need" />
                     </div>
-                    <button class="search-button" @onclick="SearchMissing">Search</button>
+                    <button class="search-button">Search</button>
                     
                     @* Wyszukiwanie brakujących składników *@
                     
@@ -127,6 +137,29 @@
         }
     }
 
+    @* Nawigacja do przepisu *@
+    private void NavigateToRecipe(int dish_id)
+    {
+        Navigation.NavigateTo($"/recipepage/{dish_id}");
+    }
+
+    private HashSet<int> selectedDishIds = new HashSet<int>();
+
+    @* Funkcje zaznaczania przepisów *@
+    private string GetDishClass(int dishId)
+	{
+        return selectedDishIds.Contains(dishId) ? "list-item-pion selected" : "list-item-pion";
+	}
+
+    private void ToggleDishSelection(int dishId)
+    {
+        if (!selectedDishIds.Add(dishId))
+        {
+            selectedDishIds.Remove(dishId);
+        }
+    }
+
+
     @* Dodawanie składników do wirtualnej lodówki *@
 
     private async Task AddSelectedIngredients()
@@ -154,6 +187,10 @@
 
         // Odświeżenie listy produktów w wirtualnej lodówce
         fridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
+
+        // Odświeżenie listy przepisów
+        dishesWithIngredientsFromFridge.Clear();
+        await LoadDishesWithIngredientsFromFridge();
     }
 
     @* Funkcja Dodająca Przepisy Zawierające Składniki z Lodówki *@
@@ -198,25 +235,24 @@
     }
 
     @* Wartości z pól wyszukiwania *@
-
     private string searchIngri;
     private string searchRecipe;
     private string searchMissing;
-
     @* Wyniki wyszukiwania *@
-
     private List<string> recipes = new List<string>();
     private List<string> missing_products = new List<string>();
-
     string searchText = string.Empty;
     List<Dish> filteredDishes = new List<Dish>();
+
+
+
+
+
 
     @* Funkcje wyszukujące kliknięciu przycisku *@
 
     private void SearchIngri()
     {
-        // Wyszukiwanie składników
-
         products.Clear();
 
         if (string.IsNullOrEmpty(searchIngri))
@@ -233,7 +269,6 @@
                 }
             }
         }
-
     }
     void SearchDishes()
     {
