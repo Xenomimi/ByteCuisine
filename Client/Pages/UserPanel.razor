@@ -1,54 +1,73 @@
-﻿@page "/userpanel"
-
-<MyNavigation />
-
+﻿
+@page "/userpanel"
+@using System.Text
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined">
-
+<MyNavigation />
 <div class="container">
-    <div class="left-column">
-        <section class="user-profile">
-            <img src="avatar.jpg" alt="User Avatar" class="avatar">
-            <h1 class="username">Nick Patterson</h1>
-            <!-- Placeholder for User Statistics -->
+    <section class="content">
+        <section class="user-section">
+            <div class="user-profile">
+                <img src="xx.png" alt="Avatar użytkownika" class="avatar">
+                <p>Statystyki użytkownika</p>
+            </div>
         </section>
 
-        <section class="favorites">
-            <h2>Favorites</h2>
-            <button class="carousel-control prev" @onclick="()=>ScrollCarousel(-1)">
-                <span class="material-symbols-outlined">chevron_left</span>
+        <section class="my-kitchen">
+            <h2>Moja Kuchnia</h2>
+            <div class="scroll-buttons top">
+                <button class="carousel-control prev" @onclick="() => ScrollList(-1)">
+                    <span class="material-symbols-outlined">expand_less</span>
+                </button>
+            </div>
+
+            <ul class="recipe-list">
+                @foreach (var recipe in VisibleRecipes)
+                {
+                    <li class="recipe-item">
+                        @recipe.Name @DisplayStars(recipe.Rating)
+                    </li>
+                }
+            </ul>
+
+
+            <div class="scroll-buttons bottom">
+                <button class="carousel-control next" @onclick="() => ScrollList(1)">
+                    <span class="material-symbols-outlined">expand_more</span>
+                </button>
+            </div>
+        </section>
+    </section>
+
+    <section class="favorites">
+        <h2>Ulubione</h2>
+        <div class="carousel">
+            <button class="carousel-control prev" @onclick="() => ScrollCarousel(-1)">
+                <span class="material-symbols-outlined">
+                    chevron_left
+                </span>
             </button>
             <div class="favorites-carousel">
-                @foreach (var favorite in VisibleFavorites)
+                @foreach (var dish in VisibleFavorites)
                 {
-                    <div class="carousel-item">@favorite.Name</div>
+                    <div class="carousel-item">
+                        <div class="carousel-image-wrapper">
+                            <img src="@dish.ImageUrl" alt="@dish.Name" class="favorite-image">
+                        </div>
+                        <div class="carousel-text">@dish.Name</div>
+                    </div>
                 }
             </div>
-            <button class="carousel-control next" @onclick="()=>ScrollCarousel(1)">
+            <button class="carousel-control next" @onclick="() => ScrollCarousel(1)">
                 <span class="material-symbols-outlined">chevron_right</span>
             </button>
-        </section>
-    </div>
-
-    <section class="my-kitchen">
-        <h2>My Kitchen</h2>
-        <button class="vertical-control prev" @onclick="()=>ScrollList(-1)">
-            <span class="material-symbols-outlined">expand_less</span>
-        </button>
-        <div class="recipes-list">
-            @foreach (var recipe in VisibleRecipes)
-            {
-                <div class="list-item">@recipe.Name</div>
-            }
         </div>
-        <button class="vertical-control next" @onclick="()=>ScrollList(1)">
-            <span class="material-symbols-outlined">expand_more</span>
-        </button>
     </section>
 </div>
 
 @code {
     private int currentFavoriteIndex = 0;
     private int currentRecipeIndex = 0;
+
     private List<FavoriteDish> Favorites = new List<FavoriteDish>
     {
         new FavoriteDish { Name = "Pasta" },
@@ -57,60 +76,67 @@
         new FavoriteDish { Name = "Curry" },
         new FavoriteDish { Name = "Spaghetti" },
         new FavoriteDish { Name = "Chicken Curry" },
-        new FavoriteDish { Name = "Pasta" },
-        new FavoriteDish { Name = "Steak" },
-        new FavoriteDish { Name = "Ramen" },
-        new FavoriteDish { Name = "Curry" },
-        new FavoriteDish { Name = "Spaghetti" },
-        new FavoriteDish { Name = "Chicken Curry" },
+        new FavoriteDish { Name = "Pizza" },
+        new FavoriteDish { Name = "Sushi" },
     };
 
     private List<Recipe> Recipes = new List<Recipe>
     {
-        new Recipe { Name = "Curry" },
-        new Recipe { Name = "Spaghetti" },
-        new Recipe { Name = "Chicken Curry" },
-        new Recipe { Name = "Curry" },
-        new Recipe { Name = "Spaghetti" },
-        new Recipe { Name = "Chicken Curry" },
-        new Recipe { Name = "Curry" },
-        new Recipe { Name = "Spaghetti" },
-        new Recipe { Name = "Chicken Curry" },
-        new Recipe { Name = "Curry" },
-        new Recipe { Name = "Spaghetti" },
+        new Recipe { Name = "Curry", Rating = 5 },
+        new Recipe { Name = "Spaghetti", Rating = 4 },
+        new Recipe { Name = "Chicken Curry", Rating = 5 },
+        new Recipe { Name = "Lasagna", Rating = 4 }, 
+        new Recipe { Name = "Burger", Rating = 5 },
     };
 
     private void ScrollCarousel(int direction)
     {
+        int maxIndex = Favorites.Count - 1;
         currentFavoriteIndex += direction;
-        if (currentFavoriteIndex >= Favorites.Count) currentFavoriteIndex = 0;
-        if (currentFavoriteIndex < 0) currentFavoriteIndex = Favorites.Count - 1;
-
-        StateHasChanged(); // Odświeżenie UI
+        if (currentFavoriteIndex < 0)
+        {
+            currentFavoriteIndex = 0;
+        }
+        else if (currentFavoriteIndex > maxIndex)
+        {
+            currentFavoriteIndex = maxIndex;
+        }
     }
+
 
     private void ScrollList(int direction)
     {
         currentRecipeIndex += direction;
-        if (currentRecipeIndex >= Recipes.Count) currentRecipeIndex = 0;
-        if (currentRecipeIndex < 0) currentRecipeIndex = Recipes.Count - 1;
-
-        StateHasChanged(); // Odświeżenie UI
+        // ... (Logika przewijania dla przepisów) ...
     }
 
     private IEnumerable<FavoriteDish> VisibleFavorites =>
-        Favorites.Skip(currentFavoriteIndex).Take(5); // Wyświetla 5 elementów
+    Favorites.Skip(currentFavoriteIndex).Take(3);
+
 
     private IEnumerable<Recipe> VisibleRecipes =>
-        Recipes.Skip(currentRecipeIndex).Take(5); // Wyświetla 5 elementów
+        Recipes.Skip(currentRecipeIndex).Take(5);
+
+    private MarkupString DisplayStars(int rating)
+    {
+        var stars = new StringBuilder();
+        for (int i = 0; i < rating; i++)
+        {
+            stars.Append("<span class='material-symbols-outlined'>star</span>");
+        }
+        return new MarkupString(stars.ToString());
+    }
 
     public class FavoriteDish
     {
         public string Name { get; set; }
+        public string ImageUrl { get; set; } // Adres URL obrazka dania
     }
+
 
     public class Recipe
     {
         public string Name { get; set; }
+        public int Rating { get; set; }
     }
 }
