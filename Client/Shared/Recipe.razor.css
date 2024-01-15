@@ -1,0 +1,111 @@
+﻿
+ 
+.tlo {
+    background-image: url('/images/tlo.jpg');
+    background-size: cover; /* Zapewnia, że tło pokryje całą stronę */
+    background-repeat: no-repeat; /* Zapobiega powtarzaniu się tła */
+    padding-top: 20px;
+}
+
+.recipe-container {
+    max-width: 768px;
+    margin: auto;
+    color: #fff;
+    background-color: rgba(26, 26, 26, 0.85); /* Półprzezroczyste tło */
+    backdrop-filter: blur(10px); /* Rozmycie tła */
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+    .recipe-header h1 {
+        font-size: 24px;
+    }
+
+.search-button {
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-family: 'Quicksand-Medium';
+    font-size: 13px;
+    margin-left: 10px;
+    background: linear-gradient(120deg, #0f7909, #5DAB02);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 0.5s, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .search-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-position: 0 0;
+    }
+
+.recipe-body {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .recipe-body {
+        flex-direction: row;
+    }
+}
+
+.preparation, .ingredients {
+    flex: 1;
+    padding: 15px;
+    background-color: #333;
+    border-radius: 8px;
+}
+
+.preparation {
+    margin-bottom: 20px; /* Poprawka: usunięto błąd w oryginalnym kodzie */
+}
+
+.ingredients {
+    margin-left: 20px;
+}
+
+    .preparation h2, .ingredients h2 {
+        font-size: 18px;
+        border-bottom: 2px solid #4CAF50;
+        padding-bottom: 5px;
+        margin-bottom: 15px;
+    }
+
+.recipe-body p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.recipe-image {
+    margin-top: 20px;
+}
+
+    .recipe-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+@media (min-width: 768px) {
+    .recipe-image {
+        margin-top: 0;
+    }
+
+    .preparation, .ingredients {
+        margin-bottom: 0;
+    }
+}
