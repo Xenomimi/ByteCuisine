@@ -4,47 +4,47 @@
 @inject UserStateService UserState
 
 <div class="showdata">
-<div class="users">
-<h1>Data In Aplication</h1>
- <QuickGrid Items="users.AsQueryable()" Pagination="paginationAccount">
-    <PropertyColumn TGridItem="Account" TProp="int" Property="u=>u.User_Id" />
-    <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Username" />
-    <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Role" />
-    <PropertyColumn TGridItem="Account" TProp="byte[]" Property="u=>u.PictureData"/>
-</QuickGrid>
-
-<Paginator Value="paginationAccount"/>
-
-</div>
-<div class ="dishes">
+    <h1>Data In Aplication</h1>
+    <div class="users">
+         <QuickGrid Items="users.AsQueryable()" Pagination="paginationAccount">
+            <PropertyColumn TGridItem="Account" TProp="int" Property="u=>u.User_Id" />
+            <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Username" />
+            <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Role" />
+            <PropertyColumn TGridItem="Account" TProp="byte[]" Property="u=>u.PictureData"/>
+        </QuickGrid>
+        <Paginator Value="paginationAccount"/>
+    </div>
+    <hr />
+    <div class ="dishes">
         <QuickGrid Items="dishes.AsQueryable()" Pagination="paginationDish">
-        <PropertyColumn Property="d=>d.Dish_Id" />
-        <PropertyColumn Property="d=>d.Name" />
-        <PropertyColumn Property="d=>d.Category" />
-        <PropertyColumn Property="d=>d.Description" />
-        <PropertyColumn Property="d=>d.DishImage" />
-</QuickGrid>
+            <PropertyColumn Property="d=>d.Dish_Id" />
+            <PropertyColumn Property="d=>d.Name" />
+            <PropertyColumn Property="d=>d.Category" />
+            <PropertyColumn Property="d=>d.Description" />
+            <PropertyColumn Property="d=>d.DishImage" />
+        </QuickGrid>
         <Paginator Value="paginationDish" />
+    </div>
+    <hr />
+    <div class="ingredients">
+        <QuickGrid Items="ingredients.AsQueryable()" Pagination="paginationIngredient">
+            <PropertyColumn Property="i=>i.Ingredient_Id" />
+            <PropertyColumn Property="i=>i.Name" />
+            <PropertyColumn Property="i=>i.Category" />
+            <PropertyColumn Property="i=>i.Description" />
+            <PropertyColumn Property="i=>i.Callories" />
+            <PropertyColumn Property="i=>i.Image" />
+        </QuickGrid>
+        <Paginator Value="paginationIngredient" />
+    </div>
+    <hr />
 </div>
-<div class="ingredients">
-</div>
-    <QuickGrid Items="ingredients.AsQueryable()" Pagination="paginationIngredient">
-        <PropertyColumn Property="i=>i.Ingredient_Id" />
-        <PropertyColumn Property="i=>i.Name" />
-        <PropertyColumn Property="i=>i.Category" />
-        <PropertyColumn Property="i=>i.Description" />
-        <PropertyColumn Property="i=>i.Callories" />
-        <PropertyColumn Property="i=>i.Image" />
-    </QuickGrid>
-    <Paginator Value="paginationIngredient" />
-</div>
+
 
 @code {
     List<Account> users = new List<Account>();
     List<Dish> dishes = new List<Dish>();
     List<Ingredient> ingredients = new List<Ingredient>();
-
-
 
     private PaginationState paginationAccount = new PaginationState { ItemsPerPage = 10 };
     private PaginationState paginationDish = new PaginationState { ItemsPerPage = 10 };

@@ -1,1 +1,21 @@
-﻿
+﻿.showdata {
+    padding: 50px;
+}
+
+.showdata h1 {
+    color: #5DAB02;
+    font-size: 50px;
+    font-weight: 700;
+    text-align: center;
+    font-family: 'Quicksand-Semibold';
+}
+
+.users, .dishes, .ingredients {
+    margin: 50px 0px 50px 0px;
+}
+
+hr {
+    border: 5px solid #5DAB02;
+    border-radius: 5px;
+    width: 100%;
+}

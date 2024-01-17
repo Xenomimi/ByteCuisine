@@ -8,7 +8,7 @@
    Tło
 */
 
-.background-container {
+/*.background-container {
     position: relative;
     overflow: hidden;
     height: auto;
@@ -21,14 +21,19 @@
     width: 100%;
     height: 100%;
     z-index: 1;
-}
+}*/
 
 .container-fluid {
     position: relative;
     z-index: 2;
+    background-image: url('/images/tlo.jpg');
+    background-size: cover; /* Zapewnia, że tło pokryje całą stronę */
+    background-repeat: no-repeat; /* Zapobiega powtarzaniu się tła */
+    padding-top: 20px;
+    height: 100vh;
 }
 
-.tlo {
+/*.tlo {
     background-image: url("https://c0.wallpaperflare.com/path/652/943/804/close-up-fresh-freshness-garden-7ccccc72fd9ca313ed27c332fc51855c.jpg");
     background-size: cover;
     background-position: center;
@@ -47,7 +52,7 @@
         height: 100%;
         width: 100%;
         background-color: rgba(0, 0, 0, 0.5);
-    }
+    }*/
 
 /*
    Napisy główne
@@ -134,7 +139,8 @@
     height: 120px;
     overflow-x: scroll;
     border-radius: 20px 20px 5px 5px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(26, 26, 26, 0.85); /* Półprzezroczyste tło */
+    backdrop-filter: blur(10px); /* Rozmycie tła */
 }
 
 .product-list {
@@ -190,7 +196,8 @@
     margin-top: 20px;
     overflow-y: scroll;
     border-radius: 20px 5px 5px 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(26, 26, 26, 0.85); /* Półprzezroczyste tło */
+    backdrop-filter: blur(10px); /* Rozmycie tła */
     padding: 10px 15px;
 }
 
@@ -250,7 +257,8 @@
     margin-top: 20px;
     overflow-y: scroll;
     border-radius: 20px 5px 5px 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(26, 26, 26, 0.85); /* Półprzezroczyste tło */
+    backdrop-filter: blur(10px); /* Rozmycie tła */
     padding: 10px 15px;
 }
 
@@ -294,4 +302,22 @@
 .list-back-fridge::-webkit-scrollbar-track {
     border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+/*
+   Viewporty
+*/
+
+@media (max-width: 1260px) {
+    ::deep .row {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .container-fluid {
+        height: auto;
+        padding-bottom: 50px;
+    }
 }

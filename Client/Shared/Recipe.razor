@@ -1,41 +1,81 @@
-﻿<div class="container-fluid tlo">
-<div class="recipe-container">
-    <div class="recipe-header">
-        <div class="left">
-            <h1>LOREM IPSUM LOREM LOREM</h1>
-            <p>adigoaibgoqiebgoiqbegoibqeoigbqoiebgoiqegb</p>
-            <button class="search-button">cos</button>
-            <button class="search-button">cos</button>
+﻿@inject HttpClient Http
+@using ByteCuisine.Shared
+@using ByteCuisine.Client.Services
+@inject UserStateService UserState
+@inject NavigationManager Navigation
+
+<div class="container-fluid tlo">
+    <div class="recipe-container1">
+        <div class="recipe-header">
+            <div class="left">
+                <h1>@selected_recipe.Name</h1>
+                <p id="linia-pod-opisem">@selected_recipe.Description</p>
+            </div>
+            <div class="right">
+                <div class="recipe-image">
+                    <img id="dish-main-img" src="data:image/png;base64,@Convert.ToBase64String(selected_recipe.DishImage)" alt="Recipe Image">
+                </div>
+            </div>
         </div>
-        <div class="right">
-            <div class="recipe-image">
-                <img src="/images/xx.png" alt="Recipe Image">
+    </div>
+
+    <div class="recipe-container2">
+        <div class="recipe-body">
+            <div class="preparation">
+                <h2>Sposób przygotowania:</h2>
+                <p>@selected_recipe.Description</p>
+            </div>
+            <div class="ingredients">
+                <h2>Potrzebne składniki:</h2>
+                <ul>
+                    @{
+                        foreach (var ingredient in selected_ingredients)
+						{
+							<li>
+                                <img loading="lazy" class="ingri-element" src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="Ingredient Image">
+                                <span>@ingredient.Name</span>
+                            </li>
+						}
+                    }
+                </ul>
             </div>
         </div>
     </div>
 </div>
-
-<div class="recipe-container">
-    <div class="recipe-body">
-        <div class="preparation">
-            <h2>Sposób przygotowania:</h2>
-            <p>Newy rok to świetny pretekst do eksperymentów w kuchni...</p>
-        </div>
-        <div class="ingredients">
-            <h2>Składniki:</h2>
-            <p>Newy rok to świetny pretekst do eksperymentów w kuchni...</p>
-            <ul>
-                <li>aadgad</li>
-                <li>aadgad</li>
-                <li>aadgad</li>
-                <li>aadgad</li>
-                <li>aadgad</li>
-            </ul>
-        </div>
-    </div>
-</div>
-</div>
 @code {
-	[Parameter]
-	public string RecipeId { get; set; }
+    [Parameter]
+    public string RecipeId { get; set; }
+
+    public Dish selected_recipe = new Dish();
+
+    public List<Ingredient> all_ingredients = new List<Ingredient>();
+
+    public List<Ingredient> selected_ingredients = new List<Ingredient>();
+
+    public List<DishIngredient> allDishIngredients = new List<DishIngredient>();
+
+    private async Task LoadIngredientsUsedInDish() {
+        allDishIngredients = await Http.GetFromJsonAsync<List<DishIngredient>>($"api/dishingredient");
+        foreach (var dishIngredient in allDishIngredients)
+        {
+            if (dishIngredient.Dish_Id == selected_recipe.Dish_Id)
+            {
+                var ingri = all_ingredients.Where(x => x.Ingredient_Id == dishIngredient.Ingredient_Id).FirstOrDefault();
+                selected_ingredients.Add(ingri);
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        all_ingredients = await Http.GetFromJsonAsync<List<Ingredient>>($"api/ingredient");
+
+        if (int.TryParse(RecipeId, out var dishId))
+        {
+            var recipe = await Http.GetFromJsonAsync<Dish>($"api/dish/dishes/{dishId}");
+            selected_recipe = recipe;
+        }
+
+        await LoadIngredientsUsedInDish();
+    }
 }
