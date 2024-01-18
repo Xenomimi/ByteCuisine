@@ -22,7 +22,7 @@
                             <li class="product-fridge">
                                 @if (ingredient != null)
                                 {
-                                    <img loading="lazy" src="data:image/png;base64,@Convert.ToBase64String(ingredient)" />
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(ingredient)" />
                                 }
                                 else
                                 {
@@ -53,7 +53,7 @@
                                 if (ingredient != null)
                                 {
                                     <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
-                                        <img loading="lazy" src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
+                                        <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
                                     </li>
                                 }
                             }
@@ -73,19 +73,32 @@
 
                     <div class="list-back-pion">
                         <ul class="product-list-pion">
-
-                            @if (dishesWithIngredientsFromFridge.Any())
+                            @if (filteredDishes.Any())
                             {
-                                foreach (var di in dishesWithIngredientsFromFridge)
+                                @* Znaleziono wyszukane produkty *@
+                                foreach (var di in filteredDishes)
                                 {
-                                    var dish = dishesWithIngredientsFromFridge.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
+                                    var dish = filteredDishes.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
                                     <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
-                                        <img loading="lazy" width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
+                                        <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
                                         @dish.Name
                                         <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
                                     </li>
                                 }
                             }
+                            else if (filteredDishes.Count == 0)
+							{
+                                @* Jeśli niczego nie szukano to załaduj przepisy pasujące do lodówki *@
+                                foreach (var di in dishesWithIngredientsFromFridge)
+								{
+									var dish = dishesWithIngredientsFromFridge.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
+									<li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
+										<img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
+										@dish.Name
+										<button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
+									</li>
+								}
+							}
                             else
                             {
                                 <div>No dishes found.</div>
@@ -143,22 +156,29 @@
         Navigation.NavigateTo($"/recipepage/{dish_id}");
     }
 
-    private HashSet<int> selectedDishIds = new HashSet<int>();
-
     @* Funkcje zaznaczania przepisów *@
+    private int? selectedDishId;
+
     private string GetDishClass(int dishId)
-	{
-        return selectedDishIds.Contains(dishId) ? "list-item-pion selected" : "list-item-pion";
-	}
+    {
+        return selectedDishId == dishId ? "list-item-pion selected" : "list-item-pion";
+    }
 
     private void ToggleDishSelection(int dishId)
     {
-        if (!selectedDishIds.Add(dishId))
+        if (selectedDishId == dishId)
         {
-            selectedDishIds.Remove(dishId);
+            // Jeśli wybrany przepis jest już zaznaczony, odznaczamy go
+            selectedDishId = null;
         }
-    }
+        else
+        {
+            // Wybieramy nowy przepis
+            selectedDishId = dishId;
+        }
 
+        StateHasChanged(); // Aktualizujemy stan komponentu
+    }
 
     @* Dodawanie składników do wirtualnej lodówki *@
 
@@ -194,7 +214,7 @@
     }
 
     @* Funkcja Dodająca Przepisy Zawierające Składniki z Lodówki *@
-    
+
     List<Dish> dishesWithIngredientsFromFridge = new List<Dish>();
 
     private async Task LoadDishesWithIngredientsFromFridge()
@@ -213,12 +233,10 @@
             var dish = await Http.GetFromJsonAsync<Dish>($"api/dish/dishes/{dishId}");
             dishesWithIngredientsFromFridge.Add(dish);
         }
-
         StateHasChanged();
     }
 
     @* Ładowanie elementów z bazy *@
-
     private List<Ingredient> ingredients = new List<Ingredient>();
     private List<Ingredient> products = new List<Ingredient>();
     private List<IngredientsInFridge> fridge = new List<IngredientsInFridge>();
@@ -238,46 +256,59 @@
     private string searchIngri;
     private string searchRecipe;
     private string searchMissing;
+
     @* Wyniki wyszukiwania *@
     private List<string> recipes = new List<string>();
     private List<string> missing_products = new List<string>();
     string searchText = string.Empty;
+    
+    
     List<Dish> filteredDishes = new List<Dish>();
 
 
-
-
-
-
     @* Funkcje wyszukujące kliknięciu przycisku *@
-
     private void SearchIngri()
     {
+        // Wyczyszczenie obecnej listy produktów
         products.Clear();
 
         if (string.IsNullOrEmpty(searchIngri))
         {
+            // Jeśli pole wyszukiwania jest puste, wyświetl wszystkie składniki
             products = ingredients;
         }
         else
         {
+            // Filtrowanie składników według zapytania wyszukiwania
             foreach (var ingredient in ingredients)
             {
-                if (ingredient.Description.Contains(searchIngri) || ingredient.Name.Contains(searchIngri))
+                if (ingredient.Description.Contains(searchIngri, StringComparison.OrdinalIgnoreCase)
+                    || ingredient.Name.Contains(searchIngri, StringComparison.OrdinalIgnoreCase))
                 {
                     products.Add(ingredient);
                 }
             }
         }
+
+        StateHasChanged(); // Aktualizacja stanu komponentu
     }
     void SearchDishes()
     {
-        filteredDishes = dishesWithIngredientsFromFridge
-            .Where(dish => dish.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-                        || dish.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-            .ToList();
+        if (string.IsNullOrEmpty(searchText))
+        {
+            // Jeśli pole wyszukiwania jest puste, wyświetl wszystkie przepisy
+            filteredDishes = dishesWithIngredientsFromFridge;
+        }
+        else
+        {
+            // Filtrowanie przepisów według zapytania wyszukiwania
+            filteredDishes = dishesWithIngredientsFromFridge
+                .Where(dish => dish.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                            || dish.Description.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
 
-        StateHasChanged();
+        StateHasChanged(); // Aktualizacja stanu komponentu
     }
     private void SearchMissing()
     {

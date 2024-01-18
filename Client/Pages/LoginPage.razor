@@ -74,16 +74,12 @@
 
                 // Przekazanie obiektu user do komponentu Fridge.razor
                 UserState.SetCurrentUser(user.User_Id);
-
-                return;
             }
             else if (user.Username == loginModel.Username && user.Password == loginModel.Password && user.Role == "Admin")
             {
                 Navigation.NavigateTo("/admin");
 
-                UserState.SetCurrentUser(user.User_Id);
-
-                return;
+                UserState.SetCurrentUser(user.User_Id, user.Role);
             }
         }
     }
