@@ -10,7 +10,23 @@
     font-family: 'Quicksand-Semibold';
 }
 
-.users, .dishes, .ingredients {
+.CSVData {
+    padding: 50px;
+}
+
+    .CSVData h1 {
+        color: #5DAB02;
+        font-size: 50px;
+        font-weight: 700;
+        text-align: center;
+        font-family: 'Quicksand-Semibold';
+    }
+
+.dishesCSV {
+    margin: 50px 0px 50px 0px;
+}
+
+.usersDatabase, .dishesDatabase, .ingredientsDatabase {
     margin: 50px 0px 50px 0px;
 }
 

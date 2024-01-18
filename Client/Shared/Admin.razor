@@ -5,54 +5,74 @@
 @inject UserStateService UserState
 
 <div class="showdata">
-    <h1>Data In Aplication</h1>
-    <div class="users">
+    <h1>Data In Database</h1>
+    <div class="usersDatabase">
          <QuickGrid Items="users.AsQueryable()" Pagination="paginationAccount">
             <PropertyColumn TGridItem="Account" TProp="int" Property="u=>u.User_Id" />
             <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Username" />
             <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Role" />
-            <PropertyColumn TGridItem="Account" TProp="byte[]" Property="u=>u.PictureData"/>
+            <TemplateColumn Context="u">
+                @{
+                    var base64Image = Convert.ToBase64String(u.PictureData);
+                }
+                <img src="data:image/png;base64,@base64Image" />
+            </TemplateColumn>
         </QuickGrid>
         <Paginator Value="paginationAccount"/>
     </div>
     <hr />
-    <div class ="dishes">
+    <div class ="dishesDatabase">
         <QuickGrid Items="dishes.AsQueryable()" Pagination="paginationDish">
             <PropertyColumn Property="d=>d.Dish_Id" />
             <PropertyColumn Property="d=>d.Name" />
             <PropertyColumn Property="d=>d.Category" />
             <PropertyColumn Property="d=>d.Description" />
-            <PropertyColumn Property="d=>d.DishImage" />
+            <TemplateColumn Context="d">
+                @{
+                    var base64Image = Convert.ToBase64String(d.DishImage);
+                }
+                <img src="data:image/png;base64,@base64Image" />
+            </TemplateColumn>
         </QuickGrid>
         <Paginator Value="paginationDish" />
     </div>
     <hr />
-    <div class="ingredients">
+    <div class="ingredientsDatabase">
         <QuickGrid Items="ingredients.AsQueryable()" Pagination="paginationIngredient">
             <PropertyColumn Property="i=>i.Ingredient_Id" />
             <PropertyColumn Property="i=>i.Name" />
             <PropertyColumn Property="i=>i.Category" />
             <PropertyColumn Property="i=>i.Description" />
             <PropertyColumn Property="i=>i.Callories" />
-            <PropertyColumn Property="i=>i.Image" />
+            <TemplateColumn Context="i">
+                @{
+                    var base64Image = Convert.ToBase64String(i.Image);
+                }
+                <img src="data:image/png;base64,@base64Image" />
+            </TemplateColumn>
         </QuickGrid>
         <Paginator Value="paginationIngredient" />
     </div>
     <hr />
 </div>
+<div class="CSVData">
+    <h1>Data In CSV File</h1>
+    <div class="dishesCSV">
+        <QuickGrid Items="listOfDishes.AsQueryable()" Pagination="paginationDishCSV">
+            <PropertyColumn Property="d => d.Dish_Id" />
+            <PropertyColumn Property="d => d.Name" />
+            <PropertyColumn Property="d => d.Category" />
+            <PropertyColumn Property="d => d.Description"/>
+            <TemplateColumn Context="d">
+                @{
+                    var base64Image = Convert.ToBase64String(d.DishImage);
+                }
+                <img src="data:image/png;base64,@base64Image" />
+            </TemplateColumn>
+        </QuickGrid>
+        <Paginator Value="paginationDishCSV" />
 
-<div>
-    <ul>
-        @foreach (var item in listOfDishes)
-        {
-            <li>
-                Id - @item.Dish_Id,
-                Name - @item.Name,
-                Description - @item.Description,
-                <img src="data:image/png;base64,@Convert.ToBase64String(@item.DishImage)">
-            </li>
-        }
-    </ul>
+    </div>
 </div>
 
 
@@ -65,6 +85,7 @@
 
     private PaginationState paginationAccount = new PaginationState { ItemsPerPage = 10 };
     private PaginationState paginationDish = new PaginationState { ItemsPerPage = 10 };
+    private PaginationState paginationDishCSV = new PaginationState { ItemsPerPage = 10 };
     private PaginationState paginationIngredient = new PaginationState { ItemsPerPage = 10 };
 
     protected override async Task OnInitializedAsync()
