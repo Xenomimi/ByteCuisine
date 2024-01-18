@@ -11,11 +11,11 @@
             <PropertyColumn TGridItem="Account" TProp="int" Property="u=>u.User_Id" />
             <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Username" />
             <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Role" />
-            <TemplateColumn Context="u">
+            <TemplateColumn Context="u" Title="Image">
                 @{
                     var base64Image = Convert.ToBase64String(u.PictureData);
                 }
-                <img src="data:image/png;base64,@base64Image" />
+                <img class="UserPicture" src="data:image/png;base64,@base64Image" />
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="paginationAccount"/>
@@ -27,11 +27,11 @@
             <PropertyColumn Property="d=>d.Name" />
             <PropertyColumn Property="d=>d.Category" />
             <PropertyColumn Property="d=>d.Description" />
-            <TemplateColumn Context="d">
+            <TemplateColumn Context="d" Title="Image">
                 @{
                     var base64Image = Convert.ToBase64String(d.DishImage);
                 }
-                <img src="data:image/png;base64,@base64Image" />
+                <img class="DishPicture" src="data:image/png;base64,@base64Image" />
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="paginationDish" />
@@ -44,11 +44,11 @@
             <PropertyColumn Property="i=>i.Category" />
             <PropertyColumn Property="i=>i.Description" />
             <PropertyColumn Property="i=>i.Callories" />
-            <TemplateColumn Context="i">
+            <TemplateColumn Context="i" Title="Image">
                 @{
                     var base64Image = Convert.ToBase64String(i.Image);
                 }
-                <img src="data:image/png;base64,@base64Image" />
+                <img class="IngredientPicture" src="data:image/png;base64,@base64Image" />
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="paginationIngredient" />
@@ -63,11 +63,11 @@
             <PropertyColumn Property="d => d.Name" />
             <PropertyColumn Property="d => d.Category" />
             <PropertyColumn Property="d => d.Description"/>
-            <TemplateColumn Context="d">
+            <TemplateColumn Context="d" Title="Image">
                 @{
                     var base64Image = Convert.ToBase64String(d.DishImage);
                 }
-                <img src="data:image/png;base64,@base64Image" />
+                <img class="DishPicture" src="data:image/png;base64,@base64Image" />
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="paginationDishCSV" />

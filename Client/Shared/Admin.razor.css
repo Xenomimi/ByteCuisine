@@ -35,3 +35,8 @@ hr {
     border-radius: 5px;
     width: 100%;
 }
+
+.UserPicture, .DishPicture, .IngredientPicture{
+    max-width: 100px;
+    max-height: 100px;
+}

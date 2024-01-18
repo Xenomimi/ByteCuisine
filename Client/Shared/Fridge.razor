@@ -5,126 +5,134 @@
 @inject NavigationManager Navigation
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<div class ="background-container">
-    <div class="tlo-pudlo">
-        <div class="tlo"></div>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6 d-flex flex-column align-items-center">
-                <h2 class="section-title">Virtual Fridge</h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 d-flex flex-column align-items-center">
+            <h2 class="section-title">Virtual Fridge</h2>
 
-                <div class="list-back-fridge">
-                    <ul class="product-list-fridge">
-                        @foreach (var product in fridge)
+            <div class="list-back-fridge">
+                <ul class="product-list-fridge">
+                    @foreach (var product in fridge)
+                    {
+                        var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == product.Ingredient_Id)?.Image;
+                        <li class="product-fridge">
+                            @if (ingredient != null)
+                            {
+                                <img src="data:image/png;base64,@Convert.ToBase64String(ingredient)" />
+                            }
+                            else
+                            {
+                                <span>No image available</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6 d-flex flex-column align-items-center">
+            <div class="search-section">
+                <h2 class="section-title">Search for ingredients</h2>
+                <div class="search-container">
+                    <i class="material-icons search-icon">search</i>
+                    <input type="text" id="search-igri" @bind="searchIngri" placeholder="Search for ingredients" />
+                </div>
+                <button class="search-button" @onclick="SearchIngri">Search</button>
+                <button class="search-button" @onclick="AddSelectedIngredients">Add Ingredients</button>
+                @* Lista składników *@
+
+                <div class="list-back">
+                    <ul class="product-list">
+                        @foreach (var ingri in products)
                         {
-                            var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == product.Ingredient_Id)?.Image;
-                            <li class="product-fridge">
-                                @if (ingredient != null)
-                                {
-                                    <img src="data:image/png;base64,@Convert.ToBase64String(ingredient)" />
-                                }
-                                else
-                                {
-                                    <span>No image available</span>
-                                }
-                            </li>
+                            var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == ingri.Ingredient_Id);
+                            if (ingredient != null)
+                            {
+                                <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
+                                </li>
+                            }
                         }
                     </ul>
                 </div>
             </div>
 
-            <div class="col-md-6 d-flex flex-column align-items-center">
-                <div class="search-section">
-                    <h2 class="section-title">Search for ingredients</h2>
-                    <div class="search-container">
-                        <i class="material-icons search-icon">search</i>
-                        <input type="text" id="search-igri" @bind="searchIngri" placeholder="Search for ingredients" />
-                    </div>
-                    <button class="search-button" @onclick="SearchIngri">Search</button>
-                    <button class="search-button" @onclick="AddSelectedIngredients">Add Ingredients</button>
-                    @* Lista składników *@
-
-                    <div class="list-back">
-                        <ul class="product-list">
-                            @foreach (var ingri in products)
-                            {
-                                var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == ingri.Ingredient_Id);
-                                if (ingredient != null)
-                                {
-                                    <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
-                                        <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
-                                    </li>
-                                }
-                            }
-                        </ul>
-                    </div>
+            <div class="search-section">
+                <h2 class="section-title">Search for recipes</h2>
+                <div class="search-container">
+                    <i class="material-icons search-icon">search</i>
+                    <input type="text" id="search-igri" @bind="searchText" placeholder="Search for recipes" />
                 </div>
+                <button class="search-button" @onclick="SearchDishes">Search</button>
 
-                <div class="search-section">
-                    <h2 class="section-title">Search for recipes</h2>
-                    <div class="search-container">
-                        <i class="material-icons search-icon">search</i>
-                        <input type="text" id="search-igri" @bind="searchText" placeholder="Search for recipes" />
-                    </div>
-                    <button class="search-button" @onclick="SearchDishes">Search</button>
+                @* Wyszukiwanie przepisów *@
 
-                    @* Wyszukiwanie przepisów *@
-
-                    <div class="list-back-pion">
-                        <ul class="product-list-pion">
-                            @if (filteredDishes.Any())
+                <div class="list-back-pion">
+                    <ul class="product-list-pion">
+                        @if (filteredDishes.Any())
+                        {
+                            @* Znaleziono wyszukane produkty *@
+                            foreach (var di in filteredDishes)
                             {
-                                @* Znaleziono wyszukane produkty *@
-                                foreach (var di in filteredDishes)
-                                {
-                                    var dish = filteredDishes.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
-                                    <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
-                                        <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
-                                        @dish.Name
-                                        <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
-                                    </li>
-                                }
+                                var dish = filteredDishes.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
+                                <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
+                                    <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
+                                    @dish.Name
+                                    <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
+                                </li>
                             }
-                            else if (filteredDishes.Count == 0)
-							{
-                                @* Jeśli niczego nie szukano to załaduj przepisy pasujące do lodówki *@
-                                foreach (var di in dishesWithIngredientsFromFridge)
-								{
-									var dish = dishesWithIngredientsFromFridge.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
-									<li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
-										<img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
-										@dish.Name
-										<button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
-									</li>
-								}
-							}
-                            else
+                        }
+                        else if (filteredDishes.Count == 0)
+                        {
+                            @* Jeśli niczego nie szukano to załaduj przepisy pasujące do lodówki *@
+                            foreach (var di in dishesWithIngredientsFromFridge)
                             {
-                                <div>No dishes found.</div>
+                                var dish = dishesWithIngredientsFromFridge.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
+                                <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
+                                    <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
+                                    @dish.Name
+                                    <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
+                                </li>
                             }
-                        </ul>
-                    </div>
+                        }
+                        else
+                        {
+                            <div>No dishes found.</div>
+                        }
+                    </ul>
                 </div>
+            </div>
 
-                <div class="search-section">
-                    <h2 class="section-title">What you need:</h2>
-                    <div class="search-container">
-                        <i class="material-icons search-icon">search</i>
-                        <input type="text" id="search-igri" @bind="searchMissing" placeholder="Search for what you need" />
-                    </div>
-                    <button class="search-button">Search</button>
-                    
-                    @* Wyszukiwanie brakujących składników *@
-                    
-                    <div class="list-back">
-                        <ul class="product-list">
-                            @foreach (var product in products)
-                            {
-                                <li class="list-item">@product</li>
-                            }
-                        </ul>
-                    </div>
+            <div class="search-section">
+                <h2 class="section-title">What you need:</h2>
+
+                @* Wyszukiwanie brakujących składników *@
+
+                <div class="list-back">
+                    <ul class="product-list">
+                        @foreach(var product in owned_products)
+                        {
+                            <li class="list-item">
+                                <img src="data:image/png;base64,@Convert.ToBase64String(product.Image)" alt="@product.Name" />
+                                <span class="checkmark-icon">
+                                    <svg width="50" height="50" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6.46875 11.25L2.90625 7.6875L3.79688 6.79688L6.46875 9.46875L12.2031 3.73438L13.0938 4.625L6.46875 11.25Z" fill="#145F1B" />
+                                    </svg>
+                                </span>
+                            </li>
+                        }
+                        @foreach (var product in missing_products)
+                        {
+                            <li class="list-item">
+                                <img src="data:image/png;base64,@Convert.ToBase64String(product.Image)" alt="@product.Name" />
+                                <span class="not-checkmark-icon">
+                                    <svg width="50" height="50" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4.5 11.875L3.625 11L7.125 7.5L3.625 4L4.5 3.125L8 6.625L11.5 3.125L12.375 4L8.875 7.5L12.375 11L11.5 11.875L8 8.375L4.5 11.875Z" fill="#930000" />
+                                    </svg>
+                                </span>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </div>
@@ -168,13 +176,24 @@
     {
         if (selectedDishId == dishId)
         {
+            // Czyścimy liste potrzebnych produktów
+            owned_products.Clear();
+            missing_products.Clear();
+
             // Jeśli wybrany przepis jest już zaznaczony, odznaczamy go
             selectedDishId = null;
         }
         else
         {
+            // Czyścimy liste potrzebnych produktów
+            owned_products.Clear();
+            missing_products.Clear();
+
             // Wybieramy nowy przepis
             selectedDishId = dishId;
+
+            // Wyszukujemy brakujące produkty
+            LoadOwnedAndMissingProducts(dishId);
         }
 
         StateHasChanged(); // Aktualizujemy stan komponentu
@@ -236,6 +255,41 @@
         StateHasChanged();
     }
 
+    @* Funkcja znajdująca posiadane i brakujące produkty dla wybranego przepisu *@
+    private async Task LoadOwnedAndMissingProducts(int dish_id)
+    {
+        var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
+        var ingredientsInFridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
+        var allDishIngredients = await Http.GetFromJsonAsync<List<DishIngredient>>("api/dishingredient");
+        
+        // Potrzebne składniki do przepisu
+        var neededProducts = allDishIngredients.Where(m => m.Dish_Id == dish_id).ToList();
+
+        // Posiadane składniki w lodówce
+        var owned = allDishIngredients.Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id)).ToList();
+
+        var ownedProducts = owned.Intersect(neededProducts).ToList();
+
+        // Brakujące składniki w lodówce
+        var missing = allDishIngredients.Where(di => !ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id)).ToList();
+
+        // Brakujące składniki do przepisu
+        var missingProducts = missing.Intersect(neededProducts).ToList();
+
+
+        foreach(var product in ownedProducts)
+        {
+            owned_products.Add(ingredients.FirstOrDefault(i => i.Ingredient_Id == product.Ingredient_Id));
+        }
+
+        foreach(var product in missingProducts)
+        {
+            missing_products.Add(ingredients.FirstOrDefault(i => i.Ingredient_Id == product.Ingredient_Id));
+        }
+
+        StateHasChanged();
+	}
+
     @* Ładowanie elementów z bazy *@
     private List<Ingredient> ingredients = new List<Ingredient>();
     private List<Ingredient> products = new List<Ingredient>();
@@ -259,11 +313,12 @@
 
     @* Wyniki wyszukiwania *@
     private List<string> recipes = new List<string>();
-    private List<string> missing_products = new List<string>();
+    private List<Ingredient> missing_products = new List<Ingredient>();
+    private List<Ingredient> owned_products = new List<Ingredient>();
     string searchText = string.Empty;
-    
-    
     List<Dish> filteredDishes = new List<Dish>();
+
+    
 
 
     @* Funkcje wyszukujące kliknięciu przycisku *@

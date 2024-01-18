@@ -8,51 +8,13 @@
    Tło
 */
 
-/*.background-container {
-    position: relative;
-    overflow: hidden;
-    height: auto;
-}
-
-.tlo-pudlo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}*/
-
 .container-fluid {
-    position: relative;
-    z-index: 2;
     background-image: url('/images/tlo.jpg');
-    background-size: cover; /* Zapewnia, że tło pokryje całą stronę */
-    background-repeat: no-repeat; /* Zapobiega powtarzaniu się tła */
-    padding-top: 20px;
-    height: 100vh;
-}
-
-/*.tlo {
-    background-image: url("https://c0.wallpaperflare.com/path/652/943/804/close-up-fresh-freshness-garden-7ccccc72fd9ca313ed27c332fc51855c.jpg");
     background-size: cover;
-    background-position: center;
+    background-repeat: no-repeat;
+    padding-bottom: 50px;
     height: 100vh;
-    width: 100%;
-    position: relative;
-    filter: blur(8px);
-    transform: scale(1.1);
 }
-
-    .tlo::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-    }*/
 
 /*
    Napisy główne
@@ -167,6 +129,34 @@
     .list-item:hover {
         transform: scale(1.1);
     }
+
+.checkmark-icon {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 25px;
+    height: 25px;
+    background-color: #80FF44;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.not-checkmark-icon {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 25px;
+    height: 25px;
+    background-color: #FF6464;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
 
 .list-item.selected {
     background-color: #5DAB02;
