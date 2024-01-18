@@ -6,14 +6,21 @@ using System.Threading.Tasks;
 
 namespace ByteCuisine.Shared
 {
-    public class Dish
+    public class DishDTO
     {
         public int Dish_Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public byte[] DishImage { get; set; }
         public string Category { get; set; }
-        public List<DishIngredient> DishIngredients { get; set; }
 
+        public DishDTO(int id, string name, string description, string image, string category)
+        {
+            Dish_Id = id;
+            Name = name;
+            Description = description;
+            DishImage = Convert.FromBase64String(image);
+            Category = category;
+        }
     }
 }

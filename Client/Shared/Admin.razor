@@ -1,5 +1,6 @@
 ﻿@using ByteCuisine.Shared
 @using ByteCuisine.Client.Services
+@using System.Globalization
 @inject HttpClient Http
 @inject UserStateService UserState
 
@@ -40,11 +41,27 @@
     <hr />
 </div>
 
+<div>
+    <ul>
+        @foreach (var item in listOfDishes)
+        {
+            <li>
+                Id - @item.Dish_Id,
+                Name - @item.Name,
+                Description - @item.Description,
+                <img src="data:image/png;base64,@Convert.ToBase64String(@item.DishImage)">
+            </li>
+        }
+    </ul>
+</div>
+
+
 
 @code {
     List<Account> users = new List<Account>();
     List<Dish> dishes = new List<Dish>();
     List<Ingredient> ingredients = new List<Ingredient>();
+    List<DishDTO> listOfDishes = new List<DishDTO>();
 
     private PaginationState paginationAccount = new PaginationState { ItemsPerPage = 10 };
     private PaginationState paginationDish = new PaginationState { ItemsPerPage = 10 };
@@ -52,8 +69,47 @@
 
     protected override async Task OnInitializedAsync()
     {
-        users = await Http.GetFromJsonAsync<List<Account>>("api/account");
-        dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
-        ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
+        try
+        {
+            users = await Http.GetFromJsonAsync<List<Account>>("api/account");
+            dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
+            ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
+
+            string csvDishDTO = await Http.GetStringAsync("sample.csv");
+            ParseCsvDishDTO(csvDishDTO);
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the exception appropriately
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    private void ParseCsvDishDTO(string csvData)
+    {
+        var rows = csvData.Split("\n");
+        foreach (var row in rows) // Skip header
+        {
+            try
+            {
+                var columns = row.Split(";");
+                if (columns.Length >= 5)
+                {
+                    int id = int.Parse(columns[0]);
+                    string name = columns[1];
+                    string description = columns[2];
+                    string image = columns[3];
+                    string category = columns[4];
+
+                    var dishDTO = new DishDTO(id, name, description, image, category);
+                    listOfDishes.Add(dishDTO);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception for a specific row
+                Console.WriteLine($"Error parsing CSV row: {ex.Message}");
+            }
+        }
     }
 }
