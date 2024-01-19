@@ -1,0 +1,73 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div class="custom-chart-size">
+    <canvas id="@Id"></canvas>
+</div>
+
+
+<style>
+.custom-chart-size {
+        margin: auto;
+        max-width: 1000px; /* Szerokość wykresu */
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+	}
+</style>
+
+@code {
+    public enum ChartType
+    {
+        Pie,
+        Bar
+    }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public ChartType Type { get; set; }
+
+    [Parameter]
+    public string[] Data { get; set; }
+
+    [Parameter]
+    public string[] BackgroundColor { get; set; }
+
+    [Parameter]
+    public string[] Labels { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Here we create an anonymous type with all the options
+        // that need to be sent to Chart.js
+        var config = new
+        {
+            Type = Type.ToString().ToLower(),
+            Options = new
+            {
+                Responsive = true,
+                Scales = new
+                {
+                    YAxes = new[]
+                    {
+                        new { Ticks = new {
+                            BeginAtZero=true
+                        } }
+                }
+                }
+            },
+            Data = new
+            {
+                Datasets = new[]
+                {
+                    new { Data = Data, BackgroundColor = BackgroundColor}
+            },
+                Labels = Labels
+            }
+        };
+
+        await JSRuntime.InvokeVoidAsync("setup", Id, config);
+    }
+}

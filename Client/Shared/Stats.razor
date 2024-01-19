@@ -1,0 +1,15 @@
+﻿@using ByteCuisine.Shared
+@inject IJSRuntime JSRuntime
+
+<div>
+    <h1>Database statistics</h1>
+    <Wykres Id="pie1" Type="@Wykres.ChartType.Bar"
+            Data="@(new[] { "1", "2" })"
+            BackgroundColor="@(new[] { "blue","green" })"
+            Labels="@(new[] { "Fail","Ok" })">
+    </Wykres>
+</div>
+
+@code {
+
+}

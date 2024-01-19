@@ -54,10 +54,15 @@
             <span class="material-symbols-outlined">calendar_month</span>
             <span class="menu-text">Calendar</span>
         </div>
-        <div class="menu-item">
-            <span class="material-symbols-outlined">finance</span>
-            <span class="menu-text">Statistics</span>
-        </div>
+        @if (UserState.CurrentUserType == "Admin")
+        {
+            <NavLink href="/stats">
+                    <div class="menu-item">
+                        <span class="material-symbols-outlined">finance</span>
+                        <span class="menu-text">Statistics</span>
+                    </div>
+            </NavLink>
+        }       
         <div class="menu-item">
             <span class="material-symbols-outlined">notifications</span>
             <span class="menu-text">Notifications</span>
