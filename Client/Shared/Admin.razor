@@ -1,6 +1,10 @@
 ﻿@using ByteCuisine.Shared
 @using ByteCuisine.Client.Services
 @using System.Globalization
+@using CsvHelper
+@using CsvHelper.Configuration
+@using System.Text
+@inject IJSRuntime JSR
 @inject HttpClient Http
 @inject UserStateService UserState
 
@@ -20,6 +24,8 @@
         </QuickGrid>
         <Paginator Value="paginationAccount"/>
     </div>
+    <hr />
+    <button @onclick="ExportAccountsToCSV">Export To CSV</button>
     <hr />
     <div class ="dishesDatabase">
         <QuickGrid Items="dishes.AsQueryable()" Pagination="paginationDish">
@@ -130,4 +136,18 @@
             }
         }
     }
+
+    private async Task ExportAccountsToCSV()
+    {
+        var csvData = new StringBuilder();
+        csvData.AppendLine("User_Id;Username;Password;PictureData");
+        foreach (var rekord in users)
+        {
+            csvData.AppendLine($"{rekord.User_Id};{rekord.Username};{rekord.Password};{Convert.ToBase64String(rekord.PictureData)}");
+        }
+
+
+        await JSR.InvokeAsync<object>("saveAsFile", "eksport_accounts.csv", Convert.ToBase64String(Encoding.UTF8.GetBytes(csvData.ToString())));
+    }
+
 }
