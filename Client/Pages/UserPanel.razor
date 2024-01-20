@@ -6,16 +6,18 @@
 <div class="container">
     <section class="content">
         <section class="user-section">
-            <div class="user-profile">
-                <img src="xx.png" alt="Avatar użytkownika" class="avatar">
-                <p>Statystyki użytkownika</p>
+            <div class="profile-container">
+                <img src="/images/userimg.png" alt="Avatar użytkownika" class="avatar">
+                <span class="user-name">Nick Patterson</span>
             </div>
+            <img src="/images/1.png" alt="Statystyki użytkownika" class="statistics-image">
         </section>
+
 
         <section class="my-kitchen">
             <h2>Moja Kuchnia</h2>
             <div class="scroll-buttons top">
-                <button class="carousel-control prev" @onclick="() => ScrollList(-1)">
+                <button class="scroll-control prev" @onclick="() => ScrollList(-1)">
                     <span class="material-symbols-outlined">expand_less</span>
                 </button>
             </div>
@@ -24,20 +26,24 @@
                 @foreach (var recipe in VisibleRecipes)
                 {
                     <li class="recipe-item">
-                        @recipe.Name @DisplayStars(recipe.Rating)
+                        <img src="ścieżka_do_obrazka_dania" alt="@recipe.Name" class="recipe-image">
+                        <div class="recipe-text">
+                            @recipe.Name
+                            <div class="recipe-rating">@DisplayStars(recipe.Rating)</div>
+                        </div>
                     </li>
                 }
             </ul>
 
 
+
             <div class="scroll-buttons bottom">
-                <button class="carousel-control next" @onclick="() => ScrollList(1)">
+                <button class="scroll-control next" @onclick="() => ScrollList(1)">
                     <span class="material-symbols-outlined">expand_more</span>
                 </button>
             </div>
-        </section>
     </section>
-
+    </section>
     <section class="favorites">
         <h2>Ulubione</h2>
         <div class="carousel">
@@ -52,11 +58,12 @@
                     <div class="carousel-item">
                         <div class="carousel-image-wrapper">
                             <img src="@dish.ImageUrl" alt="@dish.Name" class="favorite-image">
+                            <div class="carousel-text">@dish.Name</div>
                         </div>
-                        <div class="carousel-text">@dish.Name</div>
                     </div>
                 }
             </div>
+
             <button class="carousel-control next" @onclick="() => ScrollCarousel(1)">
                 <span class="material-symbols-outlined">chevron_right</span>
             </button>
@@ -91,8 +98,10 @@
 
     private void ScrollCarousel(int direction)
     {
-        int maxIndex = Favorites.Count - 1;
-        currentFavoriteIndex += direction;
+        int itemsPerScroll = 5;
+        int maxIndex = Favorites.Count - itemsPerScroll;
+        currentFavoriteIndex += direction * itemsPerScroll;
+
         if (currentFavoriteIndex < 0)
         {
             currentFavoriteIndex = 0;
@@ -104,25 +113,37 @@
     }
 
 
+
     private void ScrollList(int direction)
     {
-        currentRecipeIndex += direction;
-        // ... (Logika przewijania dla przepisów) ...
+        int itemsPerScroll = 3; // Zmienione z 5 na 3
+        int maxIndex = Recipes.Count - itemsPerScroll;
+        currentRecipeIndex += direction * itemsPerScroll;
+
+        if (currentRecipeIndex < 0)
+        {
+            currentRecipeIndex = 0;
+        }
+        else if (currentRecipeIndex > maxIndex)
+        {
+            currentRecipeIndex = maxIndex;
+        }
     }
 
+
     private IEnumerable<FavoriteDish> VisibleFavorites =>
-    Favorites.Skip(currentFavoriteIndex).Take(3);
+    Favorites.Skip(currentFavoriteIndex).Take(5);
 
 
     private IEnumerable<Recipe> VisibleRecipes =>
-        Recipes.Skip(currentRecipeIndex).Take(5);
+        Recipes.Skip(currentRecipeIndex).Take(3);
 
     private MarkupString DisplayStars(int rating)
     {
         var stars = new StringBuilder();
         for (int i = 0; i < rating; i++)
         {
-            stars.Append("<span class='material-symbols-outlined'>star</span>");
+            stars.Append("<span class='material-symbols-outlined star'>star</span>");
         }
         return new MarkupString(stars.ToString());
     }
