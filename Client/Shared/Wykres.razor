@@ -30,7 +30,7 @@
     public ChartType Type { get; set; }
 
     [Parameter]
-    public string[] Data { get; set; }
+    public int[] Data { get; set; }
 
     [Parameter]
     public string[] BackgroundColor { get; set; }
@@ -47,26 +47,24 @@
             Type = Type.ToString().ToLower(),
             Options = new
             {
+                // Opcje konfiguracji...
                 Responsive = true,
-                Scales = new
-                {
-                    YAxes = new[]
-                    {
-                        new { Ticks = new {
-                            BeginAtZero=true
-                        } }
-                }
-                }
             },
             Data = new
             {
                 Datasets = new[]
                 {
-                    new { Data = Data, BackgroundColor = BackgroundColor}
-            },
+            new
+            {
+                Label = "Ilość rekordów dla tabeli", // Tutaj ustawiasz etykietę serii danych
+                Data = Data,
+                BackgroundColor = BackgroundColor
+            }
+    },
                 Labels = Labels
             }
         };
+        await JSRuntime.InvokeVoidAsync("destroyChart", Id);
 
         await JSRuntime.InvokeVoidAsync("setup", Id, config);
     }

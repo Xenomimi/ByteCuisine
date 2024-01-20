@@ -1,15 +1,43 @@
 ﻿@using ByteCuisine.Shared
 @inject IJSRuntime JSRuntime
+@inject HttpClient Http
 
 <div>
     <h1>Database statistics</h1>
     <Wykres Id="pie1" Type="@Wykres.ChartType.Bar"
-            Data="@(new[] { "1", "2" })"
-            BackgroundColor="@(new[] { "blue","green" })"
-            Labels="@(new[] { "Fail","Ok" })">
+            Data="@(new[] { users.Count ,  dishes.Count, ingredients.Count })"
+            BackgroundColor="@(new[] { "blue","green", "red" })"
+            Labels="@(new[] { "Accounts", "Dishes", "Ingredients" })">
     </Wykres>
 </div>
 
-@code {
 
+<script>
+    function destroyChart(chartId) {
+        var chart = Chart.getChart(chartId);
+        if (chart) {
+            chart.destroy();
+        }
+    }
+</script>
+
+@code {
+    List<Account> users = new List<Account>();
+    List<Dish> dishes = new List<Dish>();
+    List<Ingredient> ingredients = new List<Ingredient>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await Http.GetFromJsonAsync<List<Account>>("api/account");
+            dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
+            ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the exception appropriately
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
 }
