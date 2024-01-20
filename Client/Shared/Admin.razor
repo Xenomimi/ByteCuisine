@@ -11,7 +11,7 @@
 <div class="showdata">
     <h1>Data In Database</h1>
     <div class="usersDatabase">
-         <QuickGrid Items="users.AsQueryable()" Pagination="paginationAccount">
+        <QuickGrid Items="users.AsQueryable()" Pagination="paginationAccount">
             <PropertyColumn TGridItem="Account" TProp="int" Property="u=>u.User_Id" />
             <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Username" />
             <PropertyColumn TGridItem="Account" TProp="string" Property="u=>u.Role" />
@@ -22,11 +22,11 @@
                 <img class="UserPicture" src="data:image/png;base64,@base64Image" />
             </TemplateColumn>
         </QuickGrid>
-        <Paginator Value="paginationAccount"/>
+        <Paginator Value="paginationAccount" />
     </div>
     <button @onclick="ExportAccountsToCSV">Export To CSV</button>
     <hr />
-    <div class ="dishesDatabase">
+    <div class="dishesDatabase">
         <QuickGrid Items="dishes.AsQueryable()" Pagination="paginationDish">
             <PropertyColumn Property="d=>d.Dish_Id" />
             <PropertyColumn Property="d=>d.Name" />
@@ -64,12 +64,33 @@
 </div>
 <div class="CSVData">
     <h1>Data In CSV File</h1>
-    <div class="dishesCSV">
+    <div class="AccountCSV">
+        <QuickGrid Items="listOfAccounts.AsQueryable()" Pagination="paginationAccountCSV">
+            <PropertyColumn Property="a => a.User_Id" />
+            <PropertyColumn Property="a => a.Username" />
+            <PropertyColumn Property="a => a.Role" />
+            <TemplateColumn Context="a" Title="Image">
+                @{
+                    var base64Image = Convert.ToBase64String(a.PictureData);
+                }
+                <img class="DishPicture" src="data:image/png;base64,@base64Image" />
+            </TemplateColumn>
+        </QuickGrid>
+        <Paginator Value="paginationAccountCSV" />
+        <div class="file-upload-wrapper">
+            <div class="upload-file">
+                <input type="file" id="file-upload" @ref="inputFileAccount" @onchange="LoadFileAccount" accept=".csv" />
+            </div>
+            <button @onclick="InsertAccountsToDatabase">Insert to database</button>
+        </div>
+    </div>
+    <hr />
+    <div class="DishCSV">
         <QuickGrid Items="listOfDishes.AsQueryable()" Pagination="paginationDishCSV">
             <PropertyColumn Property="d => d.Dish_Id" />
             <PropertyColumn Property="d => d.Name" />
             <PropertyColumn Property="d => d.Category" />
-            <PropertyColumn Property="d => d.Description"/>
+            <PropertyColumn Property="d => d.Description" />
             <TemplateColumn Context="d" Title="Image">
                 @{
                     var base64Image = Convert.ToBase64String(d.DishImage);
@@ -80,9 +101,32 @@
         <Paginator Value="paginationDishCSV" />
         <div class="file-upload-wrapper">
             <div class="upload-file">
-                <input type="file" id="file-upload" @ref="inputFile" @onchange="LoadFile" accept=".csv" />
+                <input type="file" id="file-upload" @ref="inputFileDish" @onchange="LoadFileDish" accept=".csv" />
             </div>
             <button @onclick="InsertDishesToDatabase">Insert to database</button>
+        </div>
+    </div>
+    <hr />
+    <div class="IngredientCSV">
+        <QuickGrid Items="listOfIngredients.AsQueryable()" Pagination="paginationIngredientCSV">
+            <PropertyColumn Property="i => i.Ingredient_Id" />
+            <PropertyColumn Property="i => i.Name" />
+            <PropertyColumn Property="i => i.Description" />
+            <PropertyColumn Property="i => i.Category" />
+            <PropertyColumn Property="i => i.Callories" />
+            <TemplateColumn Context="i" Title="Image">
+                @{
+                    var base64Image = Convert.ToBase64String(i.Image);
+                }
+                <img class="DishPicture" src="data:image/png;base64,@base64Image" />
+            </TemplateColumn>
+        </QuickGrid>
+        <Paginator Value="paginationIngredientCSV" />
+        <div class="file-upload-wrapper">
+            <div class="upload-file">
+                <input type="file" id="file-upload" @ref="inputFileIngredient" @onchange="LoadFileIngredient" accept=".csv" />
+            </div>
+            <button @onclick="InsertIngredientsToDatabase">Insert to database</button>
         </div>
     </div>
     <hr />
@@ -90,17 +134,24 @@
 
 @code {
 
-    ElementReference inputFile;
+    ElementReference inputFileAccount;
+    ElementReference inputFileDish;
+    ElementReference inputFileIngredient;
 
     List<Account> users = new List<Account>();
     List<Dish> dishes = new List<Dish>();
     List<Ingredient> ingredients = new List<Ingredient>();
+    List<AccountDTO> listOfAccounts = new List<AccountDTO>();
     List<DishDTO> listOfDishes = new List<DishDTO>();
+    List<IngredientDTO> listOfIngredients = new List<IngredientDTO>();
 
     private PaginationState paginationAccount = new PaginationState { ItemsPerPage = 5 };
     private PaginationState paginationDish = new PaginationState { ItemsPerPage = 5 };
-    private PaginationState paginationDishCSV = new PaginationState { ItemsPerPage = 5 };
     private PaginationState paginationIngredient = new PaginationState { ItemsPerPage = 5 };
+
+    private PaginationState paginationAccountCSV = new PaginationState { ItemsPerPage = 5 };
+    private PaginationState paginationDishCSV = new PaginationState { ItemsPerPage = 5 };
+    private PaginationState paginationIngredientCSV = new PaginationState { ItemsPerPage = 5 };
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,40 +168,108 @@
         }
     }
 
-    async Task LoadFile()
+    async Task LoadFileDish()
     {
-        var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFile);
-        var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFile);
+        var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileDish);
+        var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileDish);
 
         // Przetwórz zawartość pliku
         ParseCsvDishDTO(fileContent);
+    }
+    async Task LoadFileAccount()
+    {
+        var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileAccount);
+        var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileAccount);
+
+        // Przetwórz zawartość pliku
+        ParseCsvAccountDTO(fileContent);
+    }
+    async Task LoadFileIngredient()
+    {
+        var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileIngredient);
+        var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileIngredient);
+
+        // Przetwórz zawartość pliku
+        ParseCsvIngredientDTO(fileContent);
     }
 
     async Task InsertDishesToDatabase()
     {
         try
         {
-            for(int i = 0; i < listOfDishes.Count; i++)
+            for (int i = 0; i < listOfDishes.Count; i++)
             {
                 var dish = listOfDishes[i];
                 if (dish.Name == dishes[i].Name && dish.Description == dishes[i].Description && dish.Category == dishes[i].Category)
-				{
-					continue;
-				}
-				else
-				{
+                {
+                    continue;
+                }
+                else
+                {
                     var dishToInsert = new DishDTO2(dish.Name, dish.Description, dish.DishImage, dish.Category);
 
-					await Http.PostAsJsonAsync("api/dish", dishToInsert);
-				}
+                    await Http.PostAsJsonAsync("api/dish", dishToInsert);
+                }
             }
-		}
-		catch (Exception ex)
-		{
-			// Log or handle the exception appropriately
-			Console.WriteLine($"An error occurred: {ex.Message}");
-		}
-	}
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the exception appropriately
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    async Task InsertAccountsToDatabase()
+    {
+        try
+        {
+            for (int i = 0; i < listOfAccounts.Count; i++)
+            {
+                var account = listOfAccounts[i];
+                if (account.Username == users[i].Username)
+                {
+                    continue;
+                }
+                else
+                {
+                    var accountToInsert = new AccountDTO(account.Username, account.Password, account.Role, account.PictureData);
+
+                    await Http.PostAsJsonAsync("api/account", accountToInsert);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the exception appropriately
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    async Task InsertIngredientsToDatabase()
+    {
+        try
+        {
+            for (int i = 0; i < listOfIngredients.Count; i++)
+            {
+                var ingredient = listOfIngredients[i];
+                if (ingredient.Name == ingredients[i].Name && ingredient.Description == ingredients[i].Description && ingredient.Category == ingredients[i].Category)
+                {
+                    continue;
+                }
+                else
+                {
+                    var ingredientToInsert = new IngredientDTO(ingredient.Name, ingredient.Description, ingredient.Image, ingredient.Category, ingredient.Callories);
+
+                    await Http.PostAsJsonAsync("api/ingredient", ingredientToInsert);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the exception appropriately
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
 
     private void ParseCsvDishDTO(string csvData)
     {
@@ -180,13 +299,70 @@
         }
     }
 
+    private void ParseCsvAccountDTO(string csvData)
+    {
+        var rows = csvData.Split("\n");
+        foreach (var row in rows) // Skip header
+        {
+            try
+            {
+                var columns = row.Split(";");
+                if (columns.Length >= 5)
+                {
+                    int id = int.Parse(columns[0]);
+                    string username = columns[1];
+                    string password = columns[2];
+                    string role = columns[3];
+                    string image = columns[4];
+
+                    var accountDTO = new AccountDTO(id, username, password, role, image);
+                    listOfAccounts.Add(accountDTO);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception for a specific row
+                Console.WriteLine($"Error parsing CSV row: {ex.Message}");
+            }
+        }
+    }
+
+    private void ParseCsvIngredientDTO(string csvData)
+    {
+        var rows = csvData.Split("\n");
+        foreach (var row in rows) // Skip header
+        {
+            try
+            {
+                var columns = row.Split(";");
+                if (columns.Length >= 6)
+                {
+                    int id = int.Parse(columns[0]);
+                    string name = columns[1];
+                    string description = columns[2];
+                    string image = columns[3];
+                    string category = columns[4];
+                    double calorie = double.Parse(columns[5]);
+
+                    var ingredientDTO = new IngredientDTO(id, name, description, image, category, calorie);
+                    listOfIngredients.Add(ingredientDTO);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception for a specific row
+                Console.WriteLine($"Error parsing CSV row: {ex.Message}");
+            }
+        }
+    }
+
     private async Task ExportAccountsToCSV()
     {
         var csvData = new StringBuilder();
-        csvData.AppendLine("User_Id;Username;Password;PictureData");
+        csvData.AppendLine("User_Id;Username;Password;Role;PictureData");
         foreach (var rekord in users)
         {
-            csvData.AppendLine($"{rekord.User_Id};{rekord.Username};{rekord.Password};{Convert.ToBase64String(rekord.PictureData)}");
+            csvData.AppendLine($"{rekord.User_Id};{rekord.Username};{rekord.Password};{rekord.Role};{Convert.ToBase64String(rekord.PictureData)}");
         }
 
 
@@ -218,5 +394,4 @@
 
         await JSR.InvokeAsync<object>("saveAsFile", "eksport_ingredients.csv", Convert.ToBase64String(Encoding.UTF8.GetBytes(csvData.ToString())));
     }
-
 }

@@ -18,6 +18,28 @@ namespace ByteCuisine.Server.Controllers
             _dataContext = dataContext;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddAccount([FromBody] AccountDTO model)
+        {
+            try
+            {
+                var newAccount = new Account
+                {
+                    Username = model.Username,
+                    Password = model.Password,
+                    Role = model.Role,
+                    PictureData = model.PictureData
+                };
+                _dataContext.Accounts.Add(newAccount);
+                await _dataContext.SaveChangesAsync();
+                return Ok(newAccount);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<Account>>> Get()
         {
