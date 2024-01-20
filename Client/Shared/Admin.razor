@@ -82,7 +82,7 @@
             <div class="upload-file">
                 <input type="file" id="file-upload" @ref="inputFile" @onchange="LoadFile" accept=".csv" />
             </div>
-            <button>Insert to database</button>
+            <button @onclick="InsertDishesToDatabase">Insert to database</button>
         </div>
     </div>
     <hr />
@@ -125,6 +125,32 @@
         // Przetwórz zawartość pliku
         ParseCsvDishDTO(fileContent);
     }
+
+    async Task InsertDishesToDatabase()
+    {
+        try
+        {
+            for(int i = 0; i < listOfDishes.Count; i++)
+            {
+                var dish = listOfDishes[i];
+                if (dish.Name == dishes[i].Name && dish.Description == dishes[i].Description && dish.Category == dishes[i].Category)
+				{
+					continue;
+				}
+				else
+				{
+                    var dishToInsert = new DishDTO2(dish.Name, dish.Description, dish.DishImage, dish.Category);
+
+					await Http.PostAsJsonAsync("api/dish", dishToInsert);
+				}
+            }
+		}
+		catch (Exception ex)
+		{
+			// Log or handle the exception appropriately
+			Console.WriteLine($"An error occurred: {ex.Message}");
+		}
+	}
 
     private void ParseCsvDishDTO(string csvData)
     {

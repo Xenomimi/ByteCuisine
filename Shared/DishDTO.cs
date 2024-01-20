@@ -22,5 +22,12 @@ namespace ByteCuisine.Shared
             DishImage = Convert.FromBase64String(image);
             Category = category;
         }
+        public DishDTO(string name, string description, byte[] image, string category)
+        {
+            Name = name;
+            Description = description;
+            DishImage = image;
+            Category = category;
+        }
     }
 }

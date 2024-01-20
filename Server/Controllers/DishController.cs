@@ -18,6 +18,28 @@ namespace ByteCuisine.Server.Controllers
             _dataContext = dataContext;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddDish([FromBody] DishDTO2 model)
+        {
+            try
+            {
+                var newDish = new Dish
+                {
+                    Name = model.Name,
+                    Description = model.Description,
+                    DishImage = model.DishImage,
+                    Category = model.Category
+                };
+                _dataContext.Dishes.Add(newDish);
+                await _dataContext.SaveChangesAsync();
+                return Ok(newDish);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<Dish>>> Get()
         {
