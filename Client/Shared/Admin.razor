@@ -24,7 +24,6 @@
         </QuickGrid>
         <Paginator Value="paginationAccount"/>
     </div>
-    <hr />
     <button @onclick="ExportAccountsToCSV">Export To CSV</button>
     <hr />
     <div class ="dishesDatabase">
@@ -42,6 +41,7 @@
         </QuickGrid>
         <Paginator Value="paginationDish" />
     </div>
+    <button @onclick="ExportAccountsToCSV">Export To CSV</button>
     <hr />
     <div class="ingredientsDatabase">
         <QuickGrid Items="ingredients.AsQueryable()" Pagination="paginationIngredient">
@@ -59,6 +59,7 @@
         </QuickGrid>
         <Paginator Value="paginationIngredient" />
     </div>
+    <button @onclick="ExportAccountsToCSV">Export To CSV</button>
     <hr />
 </div>
 <div class="CSVData">
@@ -77,19 +78,29 @@
             </TemplateColumn>
         </QuickGrid>
         <Paginator Value="paginationDishCSV" />
+        <div class="file-upload-wrapper">
+            <div class="upload-file">
+                <input type="file" id="file-upload" @ref="inputFile" @onchange="LoadFile" accept=".csv" />
+            </div>
+            <button>Insert to database</button>
+        </div>
     </div>
+    <hr />
 </div>
 
 @code {
+
+    ElementReference inputFile;
+
     List<Account> users = new List<Account>();
     List<Dish> dishes = new List<Dish>();
     List<Ingredient> ingredients = new List<Ingredient>();
     List<DishDTO> listOfDishes = new List<DishDTO>();
 
-    private PaginationState paginationAccount = new PaginationState { ItemsPerPage = 10 };
-    private PaginationState paginationDish = new PaginationState { ItemsPerPage = 10 };
-    private PaginationState paginationDishCSV = new PaginationState { ItemsPerPage = 10 };
-    private PaginationState paginationIngredient = new PaginationState { ItemsPerPage = 10 };
+    private PaginationState paginationAccount = new PaginationState { ItemsPerPage = 5 };
+    private PaginationState paginationDish = new PaginationState { ItemsPerPage = 5 };
+    private PaginationState paginationDishCSV = new PaginationState { ItemsPerPage = 5 };
+    private PaginationState paginationIngredient = new PaginationState { ItemsPerPage = 5 };
 
     protected override async Task OnInitializedAsync()
     {
@@ -98,15 +109,21 @@
             users = await Http.GetFromJsonAsync<List<Account>>("api/account");
             dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
             ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
-
-            string csvDishDTO = await Http.GetStringAsync("sample.csv");
-            ParseCsvDishDTO(csvDishDTO);
         }
         catch (Exception ex)
         {
             // Log or handle the exception appropriately
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    async Task LoadFile()
+    {
+        var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFile);
+        var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFile);
+
+        // Przetwórz zawartość pliku
+        ParseCsvDishDTO(fileContent);
     }
 
     private void ParseCsvDishDTO(string csvData)
