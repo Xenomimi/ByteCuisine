@@ -41,7 +41,7 @@
         </QuickGrid>
         <Paginator Value="paginationDish" />
     </div>
-    <button @onclick="ExportAccountsToCSV">Export To CSV</button>
+    <button @onclick="ExportDishesToCSV">Export To CSV</button>
     <hr />
     <div class="ingredientsDatabase">
         <QuickGrid Items="ingredients.AsQueryable()" Pagination="paginationIngredient">
@@ -59,7 +59,7 @@
         </QuickGrid>
         <Paginator Value="paginationIngredient" />
     </div>
-    <button @onclick="ExportAccountsToCSV">Export To CSV</button>
+    <button @onclick="ExportIngredientsToCSV">Export To CSV</button>
     <hr />
 </div>
 <div class="CSVData">
@@ -191,6 +191,32 @@
 
 
         await JSR.InvokeAsync<object>("saveAsFile", "eksport_accounts.csv", Convert.ToBase64String(Encoding.UTF8.GetBytes(csvData.ToString())));
+    }
+
+    private async Task ExportDishesToCSV()
+    {
+        var csvData = new StringBuilder();
+        csvData.AppendLine("Dish_Id;Name;Description;DishImage;Category");
+        foreach (var rekord in dishes)
+        {
+            csvData.AppendLine($"{rekord.Dish_Id};{rekord.Name};{rekord.Description};{Convert.ToBase64String(rekord.DishImage)};{rekord.Category}");
+        }
+
+
+        await JSR.InvokeAsync<object>("saveAsFile", "eksport_dishes.csv", Convert.ToBase64String(Encoding.UTF8.GetBytes(csvData.ToString())));
+    }
+
+    private async Task ExportIngredientsToCSV()
+    {
+        var csvData = new StringBuilder();
+        csvData.AppendLine("Ingredient_Id;Name;Description;Image;Category;Callories");
+        foreach (var rekord in ingredients)
+        {
+            csvData.AppendLine($"{rekord.Ingredient_Id};{rekord.Name};{rekord.Description};{Convert.ToBase64String(rekord.Image)};{rekord.Category};{rekord.Callories}");
+        }
+
+
+        await JSR.InvokeAsync<object>("saveAsFile", "eksport_ingredients.csv", Convert.ToBase64String(Encoding.UTF8.GetBytes(csvData.ToString())));
     }
 
 }
