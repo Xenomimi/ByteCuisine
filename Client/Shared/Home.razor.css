@@ -2,6 +2,7 @@
     width: 90vw;
     margin: auto;
     padding: 10px;
+    display: flex; /* Potrzebne, aby flex-direction miał wpływ */
     flex-direction: column;
     justify-content: space-around;
 }
@@ -11,7 +12,6 @@
     justify-content: space-between;
     height: 350px; /* Zachowana zwiększona wysokość sekcji */
 }
-
 #featured-recipe, #popular-chefs {
     background-color: #f5f5f5;
     padding: 15px;
@@ -19,15 +19,41 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-right:20px;
 }
 
 #featured-recipe {
-    flex-grow: 2;
-    margin-right: 20px;
+    background-color: #f5f5f5;
+    padding: 0px 0px 0px 15px;
+    border-radius: 20px;
+    display: flex; /* Flex jest używany tutaj do rozmieszczenia tekstu i obrazu */
+    justify-content: space-between; /* Zapewnia odstęp między elementami */
+    align-items: center; /* Centruje elementy wertykalnie */
+    flex-direction: row; /* Elementy w jednym rzędzie zamiast kolumny */
+    width: 100%;
+    border: 1px solid black;
+    
 }
 
 #popular-chefs {
     flex-basis: 30%;
+    background-image: url("/images/essa.jpg");
+    background-size: cover;
+    background-position: center;
+    padding: 0px;
+
+  
+}
+#blur{
+    backdrop-filter:blur(5px);
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .chef {
@@ -37,6 +63,8 @@
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     font-size: 1.2em;
+    margin-bottom: 20px;
+
 }
 
 .carousel-container {
@@ -105,8 +133,9 @@ h2 {
     #top-section {
         flex-direction: column;
         height: auto;
-        margin-top:10px;
-        margin-bottom:10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
     }
 
     #featured-recipe, #popular-chefs {
@@ -139,4 +168,132 @@ h2 {
         font-size: 1.2em;
         padding: 10px 0;
     }
+}
+#recipe-text {
+    /* Style dla tekstu */
+    padding-right: 20px; /* Odstęp między tekstem a obrazem */
+}
+
+#recipe-image {
+    flex-grow: 1; /* Pozwala obrazowi na wypełnienie dostępnego miejsca */
+    display: flex;
+    justify-content: flex-end; /* Umieszcza obraz na końcu kontenera */
+    height:100%;
+}
+
+    
+
+
+    #recipe-image img {
+        width: auto; /* Dostosowuje szerokość do zawartości */
+        height: auto; /* Zachowuje proporcje obrazu */
+        max-height: 100%; /* Zapewnia, że obraz nie będzie większy niż kontener */
+        border-radius: 10px; /* Dodaje zaokrąglenie krawędzi jeśli potrzebujesz */
+    }
+
+@media (max-width: 600px) {
+    /* Styl responsywny pozostaje bez zmian */
+}
+#recipe-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 50%; /* Aby tekst i obrazek użytkownika nie rozciągały się na całą szerokość */
+    align-items: center;
+}
+
+#user-image {
+    border-radius: 50%; /* Dla okrągłego zdjęcia */
+    width: 80px; /* Przykładowa szerokość, dostosuj do swoich potrzeb */
+    height: 80px; /* Przykładowa wysokość, dostosuj do swoich potrzeb */
+}
+
+#recipe-info {
+    text-align: left;
+}
+
+    #recipe-info h1 {
+        font-size: 2em; /* Wielkość czcionki dla tytułu */
+        margin-bottom: 10px; /* Odstęp pomiędzy tytułem a opisem */
+    }
+
+    #recipe-info p {
+        font-size: 1em; /* Wielkość czcionki dla paragrafów */
+        margin-bottom: 5px; /* Odstęp pomiędzy paragrafami */
+    }
+
+
+#check-recipe-btn {
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-family: 'Quicksand-Medium';
+    font-size: 10px;
+    margin-left: 10px;
+    background: linear-gradient(120deg, #0f7909, #5DAB02);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 0.5s, transform 0.3s ease, box-shadow 0.3s ease;
+    margin-right: 20px;
+}
+
+    #check-recipe-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-position: 0 0;
+    }
+#rating {
+    display: flex;
+}
+
+    #rating .material-symbols-outlined {
+        color: #FFD700; /* Ustawienie złotego koloru dla gwiazdek */
+        font-size: 24px; /* Dostosowanie rozmiaru gwiazdek */
+    }
+
+
+#action-container {
+    display: flex;
+    align-items: center;
+}
+#user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Wycentruje obraz i tekst w poziomie */
+}
+#user-name {
+    margin-top: 8px; /* Odstęp od góry, dostosuj do swoich potrzeb */
+    font-size: 1.2em; /* Przykładowa wielkość czcionki, dostosuj do swoich potrzeb */
+    margin-bottom: 15px; /* Odstęp od dolnych elementów */
+}
+
+.bold-text {
+    font-weight: bold; /* Pogrubienie tekstu dla tej klasy */
+}
+.chef {
+    display: flex;
+    align-items: center; /* Wyrównuje obraz i tekst w pionie */
+    margin-bottom: 10px; /* Odstęp między szefami kuchni */
+    background-color: white; /* Tło dla każdego szefa kuchni */
+    border-radius: 20px; /* Zaokrąglone rogi dla tła */
+    padding: 5px; /* Odstęp wewnątrz każdego szefa kuchni */
+    display: flex; 
+    flex-direction:row;
+    justify-content:center;
+}
+
+.chef-image {
+    width: 50px; /* Dostosuj szerokość obrazu */
+    height: 50px; /* Dostosuj wysokość obrazu */
+    border-radius: 50%; /* Sprawia, że obrazy są okrągłe */
+    margin-right: 10px; /* Odstęp między obrazem a tekstem */
+}
+
+#popularchef{
+    color:white;
+    text-align:center;
+    font-family: 'Quicksand-Medium';
+
 }
