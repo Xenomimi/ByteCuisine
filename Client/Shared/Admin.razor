@@ -79,7 +79,7 @@
         <Paginator Value="paginationAccountCSV" />
         <div class="file-upload-wrapper">
             <div class="upload-file">
-                <input type="file" id="file-upload" @ref="inputFileAccount" @onchange="LoadFileAccount" accept=".csv" />
+                <input type="file" @ref="inputFileAccount" @onchange="LoadFileAccount" accept=".csv" />
             </div>
             <button @onclick="InsertAccountsToDatabase">Insert to database</button>
         </div>
@@ -101,7 +101,7 @@
         <Paginator Value="paginationDishCSV" />
         <div class="file-upload-wrapper">
             <div class="upload-file">
-                <input type="file" id="file-upload" @ref="inputFileDish" @onchange="LoadFileDish" accept=".csv" />
+                <input type="file" @ref="inputFileDish" @onchange="LoadFileDish" accept=".csv" />
             </div>
             <button @onclick="InsertDishesToDatabase">Insert to database</button>
         </div>
@@ -124,7 +124,7 @@
         <Paginator Value="paginationIngredientCSV" />
         <div class="file-upload-wrapper">
             <div class="upload-file">
-                <input type="file" id="file-upload" @ref="inputFileIngredient" @onchange="LoadFileIngredient" accept=".csv" />
+                <input type="file" @ref="inputFileIngredient" @onchange="LoadFileIngredient" accept=".csv" />
             </div>
             <button @onclick="InsertIngredientsToDatabase">Insert to database</button>
         </div>
@@ -170,27 +170,45 @@
 
     async Task LoadFileDish()
     {
-        var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileDish);
-        var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileDish);
+        try
+        {
+            var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileDish);
+            var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileDish);
 
-        // Przetwórz zawartość pliku
-        ParseCsvDishDTO(fileContent);
+            ParseCsvDishDTO(fileContent);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in LoadFileAccount: {ex.Message}");
+        }
     }
     async Task LoadFileAccount()
     {
-        var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileAccount);
-        var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileAccount);
+        try
+        {
+            var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileAccount);
+            var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileAccount);
 
-        // Przetwórz zawartość pliku
-        ParseCsvAccountDTO(fileContent);
+            ParseCsvAccountDTO(fileContent);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in LoadFileAccount: {ex.Message}");
+        }
     }
     async Task LoadFileIngredient()
     {
-        var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileIngredient);
-        var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileIngredient);
+        try
+        {
+            var fileInfo = await JSR.InvokeAsync<FileInfoModel>("readFileInfo", inputFileIngredient);
+            var fileContent = await JSR.InvokeAsync<string>("readFileAsText", inputFileIngredient);
 
-        // Przetwórz zawartość pliku
-        ParseCsvIngredientDTO(fileContent);
+            ParseCsvIngredientDTO(fileContent);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in LoadFileAccount: {ex.Message}");
+        }
     }
 
     async Task InsertDishesToDatabase()
