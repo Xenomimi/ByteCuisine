@@ -9,13 +9,13 @@
     <div class="row">
         <div class="col-md-6 d-flex flex-column align-items-center">
             <h2 class="section-title">Virtual Fridge</h2>
-
+            <button class="search-button" @onclick="RemoveSelectedFridgeProducts">Delete selected products</button>
             <div class="list-back-fridge">
                 <ul class="product-list-fridge">
                     @foreach (var product in fridge)
                     {
                         var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == product.Ingredient_Id)?.Image;
-                        <li class="product-fridge">
+                        <li class="@GetFridgeItemClass(product.IngredientsInFridge_Id)" @onclick="() => ToggleFridgeProductSelection(product.IngredientsInFridge_Id)">
                             @if (ingredient != null)
                             {
                                 <img src="data:image/png;base64,@Convert.ToBase64String(ingredient)" />
@@ -158,6 +158,62 @@
         }
     }
 
+    @* Funkcja zaznaczania produktów w lodówce *@
+
+    private HashSet<int> selectedFridgeProductIds = new HashSet<int>();
+
+    private void ToggleFridgeProductSelection(int productId)
+    {
+        if (!selectedFridgeProductIds.Add(productId))
+        {
+            selectedFridgeProductIds.Remove(productId);
+        }
+
+        StateHasChanged(); // Update the UI to reflect the change in selection
+    }
+
+    private string GetFridgeItemClass(int productId)
+    {
+        return selectedFridgeProductIds.Contains(productId) ? "product-fridge selected" : "product-fridge";
+    }
+
+
+    @* Funkcja usuwająca produkty z wirtualnej lodówki *@
+
+    private async Task RemoveSelectedFridgeProducts()
+    {
+        bool isFridgeUpdated = false;
+
+        foreach (var productId in selectedFridgeProductIds)
+        {
+            // Remove from UI
+            fridge.RemoveAll(f => f.IngredientsInFridge_Id == productId);
+
+            // Remove from Database
+            using var response = await Http.DeleteAsync($"api/ingredientsInFridge/delete/{productId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Error removing product: {errorMessage}");
+            }
+            else
+            {
+                isFridgeUpdated = true;
+            }
+        }
+
+        selectedFridgeProductIds.Clear(); // Clear the selection
+
+        // Check if fridge was updated and refresh dish list
+        if (isFridgeUpdated)
+        {
+            await LoadDishesWithIngredientsFromFridge();
+        }
+
+        StateHasChanged(); // Refresh the UI
+    }
+
+
     @* Nawigacja do przepisu *@
     private void NavigateToRecipe(int dish_id)
     {
@@ -241,6 +297,8 @@
         var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
         var ingredientsInFridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
         var allDishIngredients = await Http.GetFromJsonAsync<List<DishIngredient>>("api/dishingredient");
+
+        dishesWithIngredientsFromFridge.Clear();
 
         var dishIdsWithIngredientsFromFridge = allDishIngredients
             .Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id))

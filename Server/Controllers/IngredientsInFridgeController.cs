@@ -15,6 +15,28 @@ namespace ByteCuisine.Server.Controllers
             _dataContext = dataContext;
         }
 
+        [HttpDelete("delete/{productId}")]
+        public async Task<IActionResult> DeleteIngredient(int productId)
+        {
+            try
+            {
+                var ingredientInFridge = await _dataContext.IngredientsInFridges
+                                                           .FirstOrDefaultAsync(f => f.IngredientsInFridge_Id == productId);
+                if (ingredientInFridge == null)
+                {
+                    return NotFound(new { message = "Ingredient not found in the fridge." });
+                }
+
+                _dataContext.IngredientsInFridges.Remove(ingredientInFridge);
+                await _dataContext.SaveChangesAsync();
+                return Ok(new { message = "Ingredient removed from the fridge." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [HttpPost("user/{currentUser}")]
         public async Task<IActionResult> AddProduct([FromBody] IngredientsInFridgeDTO model)
         {
@@ -34,9 +56,6 @@ namespace ByteCuisine.Server.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
-
-
-
 
         [HttpGet]
         public async Task<ActionResult<List<IngredientsInFridge>>> Get()

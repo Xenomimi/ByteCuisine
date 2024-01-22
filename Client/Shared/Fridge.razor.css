@@ -284,6 +284,10 @@
         width: auto;
     }
 
+.product-fridge.selected {
+    background-color: #5DAB02;
+}
+
 .list-back-fridge::-webkit-scrollbar-thumb {
     background-color: #5DAB02;
     border-radius: 20px;

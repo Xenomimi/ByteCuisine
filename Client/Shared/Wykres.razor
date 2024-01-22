@@ -1,14 +1,15 @@
 ﻿@inject IJSRuntime JSRuntime
 
 <div class="custom-chart-size">
-    <canvas id="@Id"></canvas>
+    <canvas width="1000" height="775" id="@Id"></canvas>
 </div>
 
 
 <style>
 .custom-chart-size {
         margin: auto;
-        max-width: 1000px; /* Szerokość wykresu */
+        height: 775px !important;
+        max-width: 1000px !important;
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -40,8 +41,6 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // Here we create an anonymous type with all the options
-        // that need to be sent to Chart.js
         var config = new
         {
             Type = Type.ToString().ToLower(),
@@ -56,7 +55,7 @@
                 {
             new
             {
-                Label = "Ilość rekordów dla tabeli", // Tutaj ustawiasz etykietę serii danych
+                Label = "Ilość rekordów dla tabeli",
                 Data = Data,
                 BackgroundColor = BackgroundColor
             }

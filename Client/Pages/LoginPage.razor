@@ -18,7 +18,7 @@
             <div class="welcome">
                 <h3>Welcome!</h3>
             </div>
-            <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+            <EditForm Model="@loginModel">
                 <div class="form-group">
                     <span class="material-symbols-outlined">
                         account_circle
@@ -85,12 +85,6 @@
     }
 
     private LoginModel loginModel = new LoginModel();
-
-    private void HandleLogin()
-    {
-        
-        // Logika logowania
-    }
 
     public class LoginModel
     {
