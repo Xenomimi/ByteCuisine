@@ -14,6 +14,11 @@ namespace ByteCuisine.Shared
         public string Role { get; set; }
         public byte[] PictureData { get; set; }
 
+        public AccountDTO()
+        {
+
+        }
+
         public AccountDTO(int id, string name, string password, string role, string image)
         {
             User_Id = id;

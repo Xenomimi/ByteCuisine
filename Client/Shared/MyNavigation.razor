@@ -68,10 +68,12 @@
             <span class="menu-text">Notifications</span>
         </div>
         <div class="menu-footer">
-            <div class="menu-item">
-                <span class="material-symbols-outlined">settings</span>
-                <span class="menu-text">Settings</span>
-            </div>
+                <NavLink @onclick="() => NavigateToSettings(UserState.CurrentUser)">
+                <div class="menu-item">
+                    <span class="material-symbols-outlined">settings</span>
+                    <span class="menu-text">Settings</span>
+                </div>
+            </NavLink>
             <NavLink href="/userpanel">
                 <div class="menu-item">
                     <span class="material-symbols-outlined">account_circle</span>
@@ -84,6 +86,11 @@
 </div>
 @code {
     private bool isMenuOpen = false;
+
+    private void NavigateToSettings(int settings_id)
+    {
+        Navigation.NavigateTo($"/settingspage/{settings_id}");
+    }
 
     void Logout()
 	{

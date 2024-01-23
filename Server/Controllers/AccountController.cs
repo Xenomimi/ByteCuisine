@@ -18,6 +18,32 @@ namespace ByteCuisine.Server.Controllers
             _dataContext = dataContext;
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountDTO updatedAccount)
+        {
+            try
+            {
+                var existingAccount = await _dataContext.Accounts.FirstOrDefaultAsync(a => a.User_Id == id);
+
+                if (existingAccount == null)
+                {
+                    return NotFound();
+                }
+
+                // Aktualizacja has³a u¿ytkownika
+                existingAccount.Password = updatedAccount.Password;
+
+                _dataContext.Entry(existingAccount).State = EntityState.Modified;
+                await _dataContext.SaveChangesAsync();
+
+                return Ok(existingAccount);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddAccount([FromBody] AccountDTO model)
         {

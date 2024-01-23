@@ -1,0 +1,17 @@
+﻿@page "/settingspage/{UserId}"
+@using ByteCuisine.Shared
+
+
+<style>
+
+</style>
+
+<div id="settings">
+	<MyNavigation />
+	<Settings UserId="@UserId" />
+</div>
+
+@code {
+	[Parameter]
+	public string UserId { get; set; }
+}

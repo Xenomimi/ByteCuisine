@@ -1,0 +1,93 @@
+﻿@using ByteCuisine.Shared
+@using ByteCuisine.Client.Services
+@inject HttpClient Http
+@inject UserStateService UserState
+
+<div class="kont">
+    <div class="formularz">
+        <h1>Change a password</h1>
+        <EditForm Model="passwordChangeModel" OnValidSubmit="ChangePassword">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="CurrentPassword">Actual password</label>
+                <InputText id="CurrentPassword" @bind-Value="passwordChangeModel.CurrentPassword" type="password" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="NewPassword">New password</label>
+                <InputText id="NewPassword" @bind-Value="passwordChangeModel.NewPassword" type="password" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="ConfirmNewPassword">Confirm a new password</label>
+                <InputText id="ConfirmNewPassword" @bind-Value="passwordChangeModel.ConfirmNewPassword" type="password" class="form-control" />
+            </div>
+
+            <button type="submit" class="change-button">
+                Change password
+            </button>
+        </EditForm>
+        @if (!string.IsNullOrEmpty(changePasswordResultMessage))
+        {
+            <div class="alert alert-success alert-with-margin" role="alert">@changePasswordResultMessage</div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+
+    private ChangePasswordModel passwordChangeModel = new ChangePasswordModel();
+    private string changePasswordResultMessage = null;
+    private List<Account> users = new List<Account>();
+    private AccountDTO accountDTO = new AccountDTO();
+
+
+    private class ChangePasswordModel
+    {
+        public string CurrentPassword { get; set; }
+        public string NewPassword { get; set; }
+        public string ConfirmNewPassword { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await Http.GetFromJsonAsync<List<Account>>("api/account");
+            Account user = users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserId));
+
+            accountDTO = new AccountDTO(user.User_Id, user.Username, user.Password, user.Role, Convert.ToBase64String(user.PictureData));
+
+
+
+        }
+        catch (Exception ex)
+        {
+            // Log or handle the exception appropriately
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    private async Task ChangePassword()
+    {
+        if (accountDTO.Password == passwordChangeModel.CurrentPassword)
+        {
+            if (passwordChangeModel.NewPassword == passwordChangeModel.ConfirmNewPassword && accountDTO.Password != passwordChangeModel.NewPassword)
+			{
+                accountDTO.Password = passwordChangeModel.NewPassword;
+				await Http.PutAsJsonAsync($"api/account/{accountDTO.User_Id}", accountDTO);
+				changePasswordResultMessage = "Password changed successfully!";
+			}
+			else
+			{
+				changePasswordResultMessage = "Passwords don't match!";
+			}
+        }
+        else
+		{
+			changePasswordResultMessage = "Wrong password!";
+		}
+    }
+}
