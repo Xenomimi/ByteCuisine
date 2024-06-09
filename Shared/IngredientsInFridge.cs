@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ByteCuisine.Shared
 {
+    [Table("IngredientsInFridge", Schema = "ByteCuisine")]
     public class IngredientsInFridge
     {
         public int IngredientsInFridge_Id { get; set; }
+
         public int Ingredient_Id { get; set; }
         public Ingredient Ingredient { get; set; }
 
-        public int VirtualFridge_Id { get; set; }
-        public VirtualFridge VirtualFridge { get; set; }
+        public int AccountId { get; set; }
+        public Account Account { get; set; }
     }
 }

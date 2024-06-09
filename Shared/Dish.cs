@@ -1,19 +1,28 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ByteCuisine.Shared
 {
+    [Table("Dish", Schema = "ByteCuisine")]
     public class Dish
     {
+        [Key]
         public int Dish_Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public byte[] DishImage { get; set; }
-        public string Category { get; set; }
-        public List<DishIngredient> DishIngredients { get; set; }
 
+        [Required]
+        [MaxLength(100)]
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public byte[] DishImage { get; set; }
+
+        public bool IsDeleted { get; set; }
+
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+
+        public ICollection<DishIngredient> DishIngredients { get; set; }
     }
 }

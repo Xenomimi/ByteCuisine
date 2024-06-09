@@ -1,5 +1,6 @@
 using ByteCuisine.Server.Controllers.Data;
 using ByteCuisine.Shared;
+using ByteCuisine.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;

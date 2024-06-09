@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ByteCuisine.Shared
 {
+    [Table("DishIngredient", Schema = "ByteCuisine")]
     public class DishIngredient
     {
         public int DishIngredient_Id { get; set; }
+
         public int Dish_Id { get; set; }
         public Dish Dish { get; set; }
 

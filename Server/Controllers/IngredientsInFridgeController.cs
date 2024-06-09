@@ -1,5 +1,6 @@
 ﻿using ByteCuisine.Server.Controllers.Data;
 using ByteCuisine.Shared;
+using ByteCuisine.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,25 +38,25 @@ namespace ByteCuisine.Server.Controllers
             }
         }
 
-        [HttpPost("user/{currentUser}")]
-        public async Task<IActionResult> AddProduct([FromBody] IngredientsInFridgeDTO model)
-        {
-            try
-            {
-                var fridgeModel = new IngredientsInFridge
-                {
-                    Ingredient_Id = model.Ingredient_Id,
-                    VirtualFridge_Id = model.VirtualFridge_Id,
-                };
-                _dataContext.IngredientsInFridges.Add(fridgeModel);
-                await _dataContext.SaveChangesAsync();
-                return Ok(fridgeModel);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
+        //[HttpPost("user/{currentUser}")]
+        //public async Task<IActionResult> AddProduct([FromBody] IngredientsInFridgeDTO model)
+        //{
+        //    try
+        //    {
+        //        var fridgeModel = new IngredientsInFridge
+        //        {
+        //            Ingredient_Id = model.Ingredient_Id,
+        //            VirtualFridge_Id = model.VirtualFridge_Id,
+        //        };
+        //        _dataContext.IngredientsInFridges.Add(fridgeModel);
+        //        await _dataContext.SaveChangesAsync();
+        //        return Ok(fridgeModel);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //}
 
         [HttpGet]
         public async Task<ActionResult<List<IngredientsInFridge>>> Get()
@@ -71,20 +72,20 @@ namespace ByteCuisine.Server.Controllers
             }
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<ActionResult<List<IngredientsInFridge>>> GetIngredientsInFridgeByUser(int userId)
-        {
-            try
-            {
-                var items = await _dataContext.IngredientsInFridges
-                                         .Where(v => v.VirtualFridge_Id == userId)
-                                         .ToListAsync();
-                return Ok(items);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
+        //[HttpGet("user/{userId}")]
+        //public async Task<ActionResult<List<IngredientsInFridge>>> GetIngredientsInFridgeByUser(int userId)
+        //{
+        //    try
+        //    {
+        //        var items = await _dataContext.IngredientsInFridges
+        //                                 .Where(v => v.VirtualFridge_Id == userId)
+        //                                 .ToListAsync();
+        //        return Ok(items);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //}
     }
 }

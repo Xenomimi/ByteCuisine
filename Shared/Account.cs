@@ -1,18 +1,31 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ByteCuisine.Shared
 {
+    [Table("Account", Schema = "ByteCuisine")]
     public class Account
     {
+        [Key]
         public int User_Id { get; set; }
+
+        [Required]
+        [MaxLength(50)]
         public string Username { get; set; }
+
+        [Required]
         public string Password { get; set; }
+
+        [Required]
+        [MaxLength(20)]
         public string Role { get; set; }
+
+        public bool IsDeleted { get; set; }
+
         public byte[] PictureData { get; set; }
-        public VirtualFridge VirtualFridge { get; set; }
+
+        public ICollection<IngredientsInFridge> IngredientsInFridge { get; set; }
+        public ICollection<Log> Logs { get; set; }
     }
 }

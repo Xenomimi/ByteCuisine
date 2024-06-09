@@ -1,5 +1,6 @@
 ﻿using ByteCuisine.Server.Controllers.Data;
 using ByteCuisine.Shared;
+using ByteCuisine.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +29,6 @@ namespace ByteCuisine.Server.Controllers
                     Name = model.Name,
                     Description = model.Description,
                     DishImage = model.DishImage,
-                    Category = model.Category
                 };
                 _dataContext.Dishes.Add(newDish);
                 await _dataContext.SaveChangesAsync();

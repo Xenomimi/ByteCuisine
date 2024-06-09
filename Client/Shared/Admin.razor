@@ -1,6 +1,7 @@
 ﻿@using ByteCuisine.Shared
 @using ByteCuisine.Client.Services
 @using System.Globalization
+@using ByteCuisine.Shared.DTOs;
 @using CsvHelper
 @using CsvHelper.Configuration
 @using System.Text
@@ -47,7 +48,6 @@
         <QuickGrid Items="ingredients.AsQueryable()" Pagination="paginationIngredient">
             <PropertyColumn Property="i=>i.Ingredient_Id" />
             <PropertyColumn Property="i=>i.Name" />
-            <PropertyColumn Property="i=>i.Category" />
             <PropertyColumn Property="i=>i.Description" />
             <PropertyColumn Property="i=>i.Callories" />
             <TemplateColumn Context="i" Title="Image">
@@ -218,7 +218,7 @@
             for (int i = 0; i < listOfDishes.Count; i++)
             {
                 var dish = listOfDishes[i];
-                if (dish.Name == dishes[i].Name && dish.Description == dishes[i].Description && dish.Category == dishes[i].Category)
+                if (dish.Name == dishes[i].Name && dish.Description == dishes[i].Description)
                 {
                     continue;
                 }
@@ -270,7 +270,7 @@
             for (int i = 0; i < listOfIngredients.Count; i++)
             {
                 var ingredient = listOfIngredients[i];
-                if (ingredient.Name == ingredients[i].Name && ingredient.Description == ingredients[i].Description && ingredient.Category == ingredients[i].Category)
+                if (ingredient.Name == ingredients[i].Name && ingredient.Description == ingredients[i].Description)
                 {
                     continue;
                 }
@@ -406,7 +406,7 @@
         csvData.AppendLine("Ingredient_Id;Name;Description;Image;Category;Callories");
         foreach (var rekord in ingredients)
         {
-            csvData.AppendLine($"{rekord.Ingredient_Id};{rekord.Name};{rekord.Description};{Convert.ToBase64String(rekord.Image)};{rekord.Category};{rekord.Callories}");
+            csvData.AppendLine($"{rekord.Ingredient_Id};{rekord.Name};{rekord.Description};{Convert.ToBase64String(rekord.Image)};{rekord.Callories}");
         }
 
 
