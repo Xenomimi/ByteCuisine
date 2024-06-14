@@ -3,6 +3,7 @@ using ByteCuisine.Shared;
 using ByteCuisine.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ByteCuisine.Server.Controllers
 {
@@ -11,9 +12,12 @@ namespace ByteCuisine.Server.Controllers
     public class IngredientsInFridgeController : ControllerBase
     {
         private readonly DataContext _dataContext;
-        public IngredientsInFridgeController(DataContext dataContext)
+        private readonly ILogger<IngredientsInFridgeController> _logger;
+
+        public IngredientsInFridgeController(DataContext dataContext, ILogger<IngredientsInFridgeController> logger)
         {
             _dataContext = dataContext;
+            _logger = logger;
         }
 
         [HttpDelete("delete/{productId}")]
@@ -38,25 +42,25 @@ namespace ByteCuisine.Server.Controllers
             }
         }
 
-        //[HttpPost("user/{currentUser}")]
-        //public async Task<IActionResult> AddProduct([FromBody] IngredientsInFridgeDTO model)
-        //{
-        //    try
-        //    {
-        //        var fridgeModel = new IngredientsInFridge
-        //        {
-        //            Ingredient_Id = model.Ingredient_Id,
-        //            VirtualFridge_Id = model.VirtualFridge_Id,
-        //        };
-        //        _dataContext.IngredientsInFridges.Add(fridgeModel);
-        //        await _dataContext.SaveChangesAsync();
-        //        return Ok(fridgeModel);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //}
+        [HttpPost("user/{currentUser}")]
+        public async Task<IActionResult> AddProduct([FromBody] IngredientsInFridgeDTO model)
+        {
+            try
+            {
+                var fridgeModel = new IngredientsInFridge
+                {
+                    Ingredient_Id = model.Ingredient_Id,
+                    AccountId = model.Account_Id,
+                };
+                _dataContext.IngredientsInFridges.Add(fridgeModel);
+                await _dataContext.SaveChangesAsync();
+                return Ok(fridgeModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
 
         [HttpGet]
         public async Task<ActionResult<List<IngredientsInFridge>>> Get()
@@ -72,20 +76,20 @@ namespace ByteCuisine.Server.Controllers
             }
         }
 
-        //[HttpGet("user/{userId}")]
-        //public async Task<ActionResult<List<IngredientsInFridge>>> GetIngredientsInFridgeByUser(int userId)
-        //{
-        //    try
-        //    {
-        //        var items = await _dataContext.IngredientsInFridges
-        //                                 .Where(v => v.VirtualFridge_Id == userId)
-        //                                 .ToListAsync();
-        //        return Ok(items);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //}
+        [HttpGet("user/{userID}")]
+        public async Task<ActionResult<List<IngredientsInFridge>>> GetIngredientsInFridgeByUser(int userId)
+        {
+            try
+            {
+                var items = await _dataContext.IngredientsInFridges
+                                         .Where(v => v.AccountId == userId)
+                                         .ToListAsync();
+                return Ok(items);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

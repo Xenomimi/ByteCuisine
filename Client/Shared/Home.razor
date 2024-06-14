@@ -1,79 +1,64 @@
-﻿<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+﻿@using ByteCuisine.Client.Services;
+@using ByteCuisine.Shared;
+@inject UserStateService UserState
+@inject HttpClient Http
+@inject IJSRuntime JsRuntime;
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-<div id="container">
-    <div id="top-section">
-        <div id="featured-recipe">
-            <div id="recipe-details">
-                <div id="user-profile">
-                    <img src="/images/userimg.png" alt="Nick Patterson" id="user-image" />
-                    <div id="user-name">Nick Patterson</div>
-                </div>               
-                <div id="recipe-info">
-                    <h1>Spaghetti</h1>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
-                    <p class="bold-text">Estimated calories: 157,7 kcal</p>
-                    <div id="action-container">
-                        <button id="check-recipe-btn">Check recipe</button>
-                        <div id="rating">
-                            <span class="material-symbols-outlined">star</span>
-                            <span class="material-symbols-outlined">star</span>
-                            <span class="material-symbols-outlined">star</span>
-                            <span class="material-symbols-outlined">star</span>
-                            <span class="material-symbols-outlined">star_half</span>
-                        </div>
-                    </div>
-
-
-
-                </div>
-            </div>
-            <div id="recipe-image">
-                <img src="/images/jedzenie.png" alt="Spaghetti" />
-            </div>
-        </div>
-
-
-        <div id="popular-chefs">
-            <div id="blur">
-                <h1 id="popularchef">Popular chefs</h1>
-                <div class="chef">
-                    <img src="/images/userimg.png" alt="Nick Patterson" class="chef-image" />
-                    Nick Patterson
-                </div>
-                <div class="chef">
-                    <img src="/images/userimg.png" alt="Emma Highley" class="chef-image" />
-                    Emma Highley
-                </div>
-                <div class="chef">
-                    <img src="/images/userimg.png" alt="Tim Robertson" class="chef-image" />
-                    Tim Robertson
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <h2>Recommended recipes based on your preferences</h2>
+<div class="container mt-5">
+    <h1>Witaj @users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser))?.Username!</h1>
+    <h4>Potrawy, które jesteś w stanie zrobić:</h4>
     <div class="carousel-container">
-        <button @onclick="PrzewinWLewo" class="carousel-button left-button">
-            <span class="material-symbols-outlined">arrow_back_ios</span>
-        </button>        
         <div class="carousel">
             <!-- Widoczne karty przepisów -->
-            @foreach (var przepis in WidocznePrzepisy)
+            @if (dishesWithIngredientsFromFridge.Count == 0)
+			{
+                <p>Brak przepisów</p>
+            }
+            else
+            {
+                <button @onclick="PrzewinWLewo" class="carousel-button left-button">
+                    <span class="material-symbols-outlined">arrow_back_ios</span>
+                </button>
+                @foreach (var di in dishesWithIngredientsFromFridge)
+                {
+                    var dish = dishesWithIngredientsFromFridge.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
+                    <div class="card">
+                        <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
+                        @dish.Name
+                    </div>
+                }
+                <button @onclick="PrzewinWPrawo" class="carousel-button right-button">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            }
+
+@*             @foreach (var przepis in WidocznePrzepisy)
             {
                 <div class="card">@przepis</div>
-            }
+            } *@
         </div>
-        <button @onclick="PrzewinWPrawo" class="carousel-button right-button">
-            <span class="material-symbols-outlined">arrow_forward_ios</span>
-        </button>
 
     </div>
+    <button class="btn custom-btn mt-4" @onclick="DodajPrzepis">Dodaj swoje własne przepisy!</button>
 </div>
 
 @code {
+    List<Dish> dishesWithIngredientsFromFridge = new List<Dish>();
+
+    private void DodajPrzepis()
+    {
+        // Logika dodawania przepisu
+    }
+
+    List<Account> users = new List<Account>();
+    protected override async Task OnInitializedAsync()
+    {
+        users = await Http.GetFromJsonAsync<List<Account>>("api/account");
+    }
+
     private List<string> WszystkiePrzepisy = new List<string>
     {
         "Stek", "Jedzenie Wegetariańskie", "Posiłek", "Stek", "Stek", "Stek", "Stek", "Stek"
@@ -100,5 +85,25 @@
             aktualnyIndeks++;
         }
     }
-}
 
+    private async Task LoadDishesWithIngredientsFromFridge()
+    {
+        var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
+        var ingredientsInFridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
+        var allDishIngredients = await Http.GetFromJsonAsync<List<DishIngredient>>("api/dishingredient");
+
+        dishesWithIngredientsFromFridge.Clear();
+
+        var dishIdsWithIngredientsFromFridge = allDishIngredients
+            .Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id))
+            .Select(di => di.Dish_Id)
+            .Distinct();
+
+        foreach (var dishId in dishIdsWithIngredientsFromFridge)
+        {
+            var dish = await Http.GetFromJsonAsync<Dish>($"api/dish/dishes/{dishId}");
+            dishesWithIngredientsFromFridge.Add(dish);
+        }
+        StateHasChanged();
+    }
+}

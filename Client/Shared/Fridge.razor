@@ -1,6 +1,7 @@
 ﻿@using ByteCuisine.Shared
 @using ByteCuisine.Client.Services
 @using ByteCuisine.Shared.DTOs;
+@using System.Text.Json;
 @inject HttpClient Http
 @inject UserStateService UserState
 @inject NavigationManager Navigation
@@ -267,7 +268,7 @@
             var fridgeModel = new IngredientsInFridgeDTO 
             { 
                 Ingredient_Id = ingredientId,
-                VirtualFridge_Id = currentUser,
+                Account_Id = currentUser,
             };
             using var response = await Http.PostAsJsonAsync($"api/ingredientsInFridge/user/{currentUser}", fridgeModel);
             if (!response.IsSuccessStatusCode)
@@ -290,29 +291,69 @@
     }
 
     @* Funkcja Dodająca Przepisy Zawierające Składniki z Lodówki *@
-
     List<Dish> dishesWithIngredientsFromFridge = new List<Dish>();
 
     private async Task LoadDishesWithIngredientsFromFridge()
     {
-        var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
-        var ingredientsInFridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
-        var allDishIngredients = await Http.GetFromJsonAsync<List<DishIngredient>>("api/dishingredient");
-
-        dishesWithIngredientsFromFridge.Clear();
-
-        var dishIdsWithIngredientsFromFridge = allDishIngredients
-            .Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id))
-            .Select(di => di.Dish_Id)
-            .Distinct();
-
-        foreach (var dishId in dishIdsWithIngredientsFromFridge)
+        try
         {
-            var dish = await Http.GetFromJsonAsync<Dish>($"api/dish/dishes/{dishId}");
-            dishesWithIngredientsFromFridge.Add(dish);
+            var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
+            Console.WriteLine($"Current user: {currentUser}");
+
+            var ingredientsResponse = await Http.GetAsync($"api/ingredientsInFridge/user/{currentUser}");
+            var ingredientsContent = await ingredientsResponse.Content.ReadAsStringAsync();
+            Console.WriteLine($"Ingredients response: {ingredientsContent}");
+
+            if (!ingredientsResponse.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Error fetching ingredients: {ingredientsResponse.StatusCode}");
+                return;
+            }
+
+            var ingredientsInFridge = JsonSerializer.Deserialize<List<IngredientsInFridge>>(ingredientsContent);
+
+            var dishIngredientsResponse = await Http.GetAsync("api/dishingredient");
+            var dishIngredientsContent = await dishIngredientsResponse.Content.ReadAsStringAsync();
+            Console.WriteLine($"Dish ingredients response: {dishIngredientsContent}");
+
+            if (!dishIngredientsResponse.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Error fetching dish ingredients: {dishIngredientsResponse.StatusCode}");
+                return;
+            }
+
+            var allDishIngredients = JsonSerializer.Deserialize<List<DishIngredient>>(dishIngredientsContent);
+
+            dishesWithIngredientsFromFridge.Clear();
+
+            var dishIdsWithIngredientsFromFridge = allDishIngredients
+                .Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id))
+                .Select(di => di.Dish_Id)
+                .Distinct();
+
+            foreach (var dishId in dishIdsWithIngredientsFromFridge)
+            {
+                var dishResponse = await Http.GetAsync($"api/dish/dishes/{dishId}");
+                var dishContent = await dishResponse.Content.ReadAsStringAsync();
+                Console.WriteLine($"Dish response for ID {dishId}: {dishContent}");
+
+                if (!dishResponse.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error fetching dish {dishId}: {dishResponse.StatusCode}");
+                    continue;
+                }
+
+                var dish = JsonSerializer.Deserialize<Dish>(dishContent);
+                dishesWithIngredientsFromFridge.Add(dish);
+            }
+            StateHasChanged();
         }
-        StateHasChanged();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
+        }
     }
+
 
     @* Funkcja znajdująca posiadane i brakujące produkty dla wybranego przepisu *@
     private async Task LoadOwnedAndMissingProducts(int dish_id)
