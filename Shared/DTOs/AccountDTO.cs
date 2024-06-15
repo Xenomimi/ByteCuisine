@@ -17,13 +17,21 @@ namespace ByteCuisine.Shared.DTOs
 
         public AccountDTO()
         {
-
+            Role = "User";
+            IsDeleted = false;
         }
 
         public AccountDTO(string name, string password)
         {
             Username = name;
             Password = password;
+        }
+
+        public AccountDTO(string email,string name, string password)
+        {
+            Email = email;
+            Username = name;
+            Password = password;         
         }
 
         public AccountDTO(string email, string name, string password, string role, string image)
@@ -46,6 +54,7 @@ namespace ByteCuisine.Shared.DTOs
             PictureData = image;
         }
 
+        
 
     }
 }
