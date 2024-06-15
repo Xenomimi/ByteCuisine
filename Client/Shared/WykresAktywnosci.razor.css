@@ -1,0 +1,9 @@
+﻿.custom-chart-size {
+    margin: auto;
+    max-width: 1000px !important;
+    background-color: white;
+    border-radius: 25px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}

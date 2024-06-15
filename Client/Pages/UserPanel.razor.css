@@ -38,36 +38,9 @@
     border-radius: 20px;
     position: relative;
     overflow: hidden;
+    margin-right: 20px;
 }
 
-
-
-
-
-.user-profile {
-    position: relative;
-    width: 220px;
-    text-align: center;
-    margin: auto;
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.avatar {
-    border-radius: 50%;
-    width: 100px; /* Adjust as needed */
-    height: 100px; /* Adjust as needed */
-    border: none; /* Remove the border */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-}
 
 
 
@@ -360,16 +333,6 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     border-bottom-left-radius: 20px; /* Match parent's border-radius */
     border-bottom-right-radius: 20px; /* Match parent's border-radius */
 }
-.user-section .avatar {
-    width: 100px; /* Adjust as needed */
-    height: 100px; /* Adjust as needed */
-    border-radius: 50%;
-    border: 4px solid white; /* Adjust color and size as needed */
-    position: absolute;
-    top: 50%; /* Adjust as needed */
-    left: 20px; /* Adjust as needed */
-    transform: translate(0, -50%); /* Center vertically */
-}
 .user-section .statistics {
     background: rgba(0, 0, 0, 0.7); /* Adjust color and transparency as needed */
     border-radius: 10px; /* Adjust as needed */
@@ -426,12 +389,7 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
 }
 
 .avatar {
-    border-radius: 50%;
-    width: 100px; /* Adjust as needed */
-    height: 100px; /* Adjust as needed */
-    border: 4px solid white;
-    margin-top: -50px; /* Half of the height to pull the image upwards */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 /* Add a pseudo-element for the blurred background */
@@ -452,7 +410,7 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
 .user-name {
     margin-top: 130px;
     color: white;
-    font-size: 20px;
+    font-size: 25px;
     position: relative;
     z-index: 2;
 }
@@ -493,20 +451,34 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     flex-direction: column;
     justify-content: center;
 }
-.profile-container {
-    background: rgba(255, 255, 255, 0.3); /* Semi-transparent background */
+.profile-name-container {
+    background: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
     backdrop-filter: blur(10px); /* Apply the blur effect */
     padding: 10px;
     display: inline-block; /* Adjust as needed */
     border-radius: 10px; /* Rounded corners */
     position: relative;
     text-align: center;
-    flex: 0 0 220px; /* Adjust the flex-basis to the width of the profile container */
-    margin-right: 20px;
 }
+
+.user-profile-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
 .statistics-container {
-    /* Replace this with your actual statistics container class */
-    flex: 1; /* This will allow it to fill up the remaining space */
-    /* Apply your styles for the statistics container */
+    
 }
 

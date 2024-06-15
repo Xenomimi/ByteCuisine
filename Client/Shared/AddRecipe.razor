@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <div class="container mt-5">
-    <h3>AddRecipe</h3>
+    <h3>Dodaj swój własny przepis 😄</h3>
     <EditForm Model="@recipe" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -32,10 +32,10 @@
 
         <div class="form-group">
             <div class="search-section">
-                <h2 class="section-title">Search for ingredients</h2>
+                <h2 class="section-title">Wyszukaj składniki 📝</h2>
                 <div class="search-container">
                     <i class="material-icons search-icon">search</i>
-                    <input type="text" id="search-igri" @bind="searchIngri" placeholder="Search for ingredients" />
+                    <input type="text" id="search-igri" @bind="searchIngri" placeholder="Wyszukaj składniki" />
                 </div>
                 <button class="search-button" @onclick="SearchIngri">Search</button>
                 

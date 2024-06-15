@@ -1,0 +1,139 @@
+﻿@page "/user-activity"
+@using ByteCuisine.Client.Services;
+@using ByteCuisine.Shared;
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@inject UserStateService UserState
+
+<div class="custom-chart-size">
+    <canvas width="500" id="@Id"></canvas>
+</div>
+
+@code {
+    public enum ChartType
+    {
+        Pie,
+        Bar,
+        Line
+    }
+
+    [Parameter]
+    public string Id { get; set; } = "userActivityChart";
+
+    [Parameter]
+    public ChartType Type { get; set; } = ChartType.Line; // Ustawienie domyślnego typu wykresu
+
+    private int[] Data;
+    private string[] BackgroundColor = new string[]
+    {
+        "rgba(75, 192, 192, 0.2)"
+    };
+    private string[] BorderColor = new string[]
+    {
+        "rgba(75, 192, 192, 1)"
+    };
+    private string[] Labels = new string[]
+    {
+        "Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Pobierz dane logowań na każdy dzień tygodnia
+        Data = await GetLoginsPerWeekAsync();
+    }
+
+    public async Task<int[]> GetLoginsPerWeekAsync()
+    {
+        var startDate = DateTime.Today.AddDays(-7);
+        var logs = await Http.GetFromJsonAsync<List<Log>>($"api/log");
+
+        var loginsPerDay = logs
+            .Where(log => log.ActivityTime >= startDate && log.AccountId == UserState.CurrentUser && log.ActivityName == "Logowanie")
+            .GroupBy(log => log.ActivityTime.DayOfWeek)
+            .Select(g => new { DayOfWeek = g.Key, Count = g.Count() })
+            .ToDictionary(g => g.DayOfWeek, g => g.Count);
+
+        var result = new int[7];
+        foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek)))
+        {
+            result[(int)day] = loginsPerDay.ContainsKey(day) ? loginsPerDay[day] : 0;
+        }
+
+        return result;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var config = new
+        {
+            Type = "line",
+            Options = new
+            {
+                Responsive = true,
+                Scales = new
+                {
+                    X = new
+                    {
+                        BeginAtZero = true,
+                        Ticks = new
+                        {
+                            Color = "white" // Kolor etykiet na osi X
+                        },
+                        Grid = new
+                        {
+                            Color = "rgba(255, 255, 255, 0.4)" // Kolor linii siatki na osi X
+                        },
+                        Border = new
+                        {
+                            Color = "rgba(255, 255, 255, 0.4)" // Kolor linii podziałek na osi X
+                        }
+                    },
+                    Y = new
+                    {
+                        BeginAtZero = true,
+                        Ticks = new
+                        {
+                            Color = "white" // Kolor etykiet na osi Y
+                        },
+                        Grid = new
+                        {
+                            Color = "rgba(255, 255, 255, 0.4)" // Kolor linii siatki na osi Y
+                        },
+                        Border = new
+                        {
+                            Color = "rgba(255, 255, 255, 0.4)" // Kolor linii podziałek na osi Y
+                        }
+                    }
+                },
+                Plugins = new
+                {
+                    Legend = new
+                    {
+                        Labels = new
+                        {
+                            Color = "white" // Kolor etykiet legendy
+                        }
+                    }
+                }
+            },
+            Data = new
+            {
+                Datasets = new[]
+                {
+                    new
+                    {
+                        Label = "Ilość logowań użytkownika",
+                        Data = Data,
+                        BackgroundColor = BackgroundColor,
+                        BorderColor = BorderColor,
+                        Fill = true
+                    }
+            },
+                Labels = Labels
+            }
+        };
+        await JSRuntime.InvokeVoidAsync("destroyChart", Id);
+        await JSRuntime.InvokeVoidAsync("setup", Id, config);
+    }
+}

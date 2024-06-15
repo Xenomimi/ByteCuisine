@@ -1,18 +1,26 @@
-﻿
-@page "/userpanel"
+﻿@page "/userpanel"
 @using System.Text
+@using ByteCuisine.Client.Services;
+@using ByteCuisine.Shared;
+@inject HttpClient Http
+@inject UserStateService UserState
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined">
 <MyNavigation />
 <div class="container">
     <section class="content">
         <section class="user-section">
-            <div class="profile-container">
-                <img src="/images/userimg.png" alt="Avatar użytkownika" class="avatar">
-                <span class="user-name">Nick Patterson</span>
-            </div>
-            <img src="/images/1.png" alt="Statystyki użytkownika" class="statistics-image">
-        </section>
+            <div class="user-profile-block">
+                <img class="avatar" src="data:image/png;base64,@Convert.ToBase64String(users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser))?.PictureData)" />
 
+                <div class="profile-name-container">
+                    <span class="user-name">@users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser))?.Username</span>
+                </div>
+            </div>
+            <div class="statistics-container">
+                <WykresAktywnosci/>
+            </div>
+        </section>
 
         <section class="my-kitchen">
             <h2>Moja Kuchnia</h2>
@@ -72,6 +80,14 @@
 </div>
 
 @code {
+
+    List<Account> users = new List<Account>();
+    protected override async Task OnInitializedAsync()
+    {
+        users = await Http.GetFromJsonAsync<List<Account>>("api/account");
+    }
+
+
     private int currentFavoriteIndex = 0;
     private int currentRecipeIndex = 0;
 

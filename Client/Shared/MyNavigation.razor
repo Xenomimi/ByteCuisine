@@ -20,10 +20,10 @@
         <div class="logo">
             <img src="/images/Logo+Napis.png" />
         </div>
-        <input type="text" class="search-box" placeholder="Search">
+        <input type="text" class="search-box" placeholder="Szukaj">
         <div class="nav-icons">
             <NavLink @onclick="Logout">
-                <button class="logout-button">Logout</button>
+                <button class="logout-button">Wyloguj</button>
             </NavLink>
         </div>
     </div>
@@ -32,13 +32,13 @@
         <NavLink href="/index">
             <div class="menu-item">
                 <span class="material-symbols-outlined">home</span>
-                <span class="menu-text">Home</span>
+                <span class="menu-text">Strona główna</span>
             </div>
         </NavLink>
         <NavLink href="/fridge">
             <div class="menu-item">
                 <span class="material-symbols-outlined">kitchen</span>
-                <span class="menu-text">Fridge</span>
+                <span class="menu-text">Wirtualna Lodówka</span>
             </div>
         </NavLink>
         @if (UserState.CurrentUserType == "Admin")
@@ -50,34 +50,26 @@
 				</div>
 			</NavLink>
 		}
-        <div class="menu-item">
-            <span class="material-symbols-outlined">calendar_month</span>
-            <span class="menu-text">Calendar</span>
-        </div>
         @if (UserState.CurrentUserType == "Admin")
         {
             <NavLink href="/stats">
                     <div class="menu-item">
                         <span class="material-symbols-outlined">finance</span>
-                        <span class="menu-text">Statistics</span>
+                        <span class="menu-text">Statystyki</span>
                     </div>
             </NavLink>
-        }       
-        <div class="menu-item">
-            <span class="material-symbols-outlined">notifications</span>
-            <span class="menu-text">Notifications</span>
-        </div>
+        }
         <div class="menu-footer">
                 <NavLink @onclick="() => NavigateToSettings(UserState.CurrentUser)">
                 <div class="menu-item">
                     <span class="material-symbols-outlined">settings</span>
-                    <span class="menu-text">Settings</span>
+                    <span class="menu-text">Ustawienia</span>
                 </div>
             </NavLink>
             <NavLink href="/userpanel">
                 <div class="menu-item">
                     <span class="material-symbols-outlined">account_circle</span>
-                    <span class="menu-text">User</span>
+                    <span class="menu-text">Moje konto</span>
                 </div>
             </NavLink>
         </div>
