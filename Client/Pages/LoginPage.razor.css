@@ -25,6 +25,11 @@
     align-items: center;
 }
 
+.log-or-regi {
+    display: flex;
+    gap: 20px;
+}
+
 .login-brand img {
     max-width: 200px;
 }
@@ -44,6 +49,11 @@
     top: 50% !important;
     transform: translateY(-95%) !important;
     pointer-events: none; /* Zapobiega kliknięciu na ikonę */
+}
+
+::deep input#email {
+    padding-left: 40px !important;
+    margin-bottom: 23px !important;
 }
 
 ::deep input#username {
