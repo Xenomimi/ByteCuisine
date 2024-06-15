@@ -13,7 +13,7 @@
     <div class="carousel-container">
         <div class="carousel">
             <!-- Widoczne karty przepisów -->
-            @if (dishesWithIngredientsFromFridge.Count == 0)
+            @if (allDishes.Count == 0)
 			{
                 <p>Brak przepisów</p>
             }
@@ -22,12 +22,11 @@
                 <button @onclick="PrzewinWLewo" class="carousel-button left-button">
                     <span class="material-symbols-outlined">arrow_back_ios</span>
                 </button>
-                @foreach (var di in dishesWithIngredientsFromFridge)
+                foreach (var di in allDishes)
                 {
-                    var dish = dishesWithIngredientsFromFridge.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
                     <div class="card">
-                        <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
-                        @dish.Name
+                        <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(di.DishImage)" alt="@di.Name" />
+                        @di.Name
                     </div>
                 }
                 <button @onclick="PrzewinWPrawo" class="carousel-button right-button">
@@ -42,21 +41,17 @@
         </div>
 
     </div>
-    <button class="btn custom-btn mt-4" @onclick="DodajPrzepis">Dodaj swoje własne przepisy!</button>
+    <button class="btn custom-btn mt-4">Dodaj swoje własne przepisy!</button>
 </div>
 
 @code {
-    List<Dish> dishesWithIngredientsFromFridge = new List<Dish>();
-
-    private void DodajPrzepis()
-    {
-        // Logika dodawania przepisu
-    }
+    List<Dish> allDishes = new List<Dish>();
 
     List<Account> users = new List<Account>();
     protected override async Task OnInitializedAsync()
     {
         users = await Http.GetFromJsonAsync<List<Account>>("api/account");
+        allDishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
     }
 
     private List<string> WszystkiePrzepisy = new List<string>
@@ -64,7 +59,7 @@
         "Stek", "Jedzenie Wegetariańskie", "Posiłek", "Stek", "Stek", "Stek", "Stek", "Stek"
     };
     private int aktualnyIndeks = 0;
-    private int widocznaIlosc = 5;
+    private int widocznaIlosc = 1;
     private List<string> WidocznePrzepisy => WszystkiePrzepisy
         .Skip(aktualnyIndeks)
         .Take(widocznaIlosc)
@@ -86,24 +81,5 @@
         }
     }
 
-    private async Task LoadDishesWithIngredientsFromFridge()
-    {
-        var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
-        var ingredientsInFridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
-        var allDishIngredients = await Http.GetFromJsonAsync<List<DishIngredient>>("api/dishingredient");
 
-        dishesWithIngredientsFromFridge.Clear();
-
-        var dishIdsWithIngredientsFromFridge = allDishIngredients
-            .Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id))
-            .Select(di => di.Dish_Id)
-            .Distinct();
-
-        foreach (var dishId in dishIdsWithIngredientsFromFridge)
-        {
-            var dish = await Http.GetFromJsonAsync<Dish>($"api/dish/dishes/{dishId}");
-            dishesWithIngredientsFromFridge.Add(dish);
-        }
-        StateHasChanged();
-    }
 }
