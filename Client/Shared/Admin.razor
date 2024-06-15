@@ -1,4 +1,24 @@
-﻿@code {
+﻿@using ByteCuisine.Shared
+@using ByteCuisine.Shared.DTOs
+@inject HttpClient Http
 
-    
+
+<QuickGrid Items="listOfLogs.AsQueryable()" Pagination="paginationLogs">
+    <PropertyColumn Property="l => l.AccountId" />
+    <PropertyColumn Property="l => l.ActivityName" />
+    <PropertyColumn Property="l => l.ActivityTime" />
+</QuickGrid>
+<Paginator Value="paginationLogs" />
+
+@code {
+
+    private PaginationState paginationLogs = new PaginationState { ItemsPerPage = 10 };
+
+    List<Log> listOfLogs = new List<Log>();
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(500);
+        listOfLogs = await Http.GetFromJsonAsync<List<Log>>("api/log");
+        StateHasChanged();
+    }
 }
