@@ -1,4 +1,4 @@
-﻿@* @using ByteCuisine.Shared
+﻿@using ByteCuisine.Shared
 @using ByteCuisine.Client.Services
 @using ByteCuisine.Shared.DTOs;
 @inject HttpClient Http
@@ -43,6 +43,7 @@
     private string changePasswordResultMessage = null;
     private List<Account> users = new List<Account>();
     private AccountDTO accountDTO = new AccountDTO();
+    public string activeEmail;
 
 
     private class ChangePasswordModel
@@ -58,16 +59,13 @@
         {
             users = await Http.GetFromJsonAsync<List<Account>>("api/account");
             Account user = users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserId));
-
-            accountDTO = new AccountDTO(user.Email="",user.User_Id, user.Username, user.Password, user.Role, Convert.ToBase64String(user.PictureData));
-
-
-
+            accountDTO = new AccountDTO(user.Email, user.Username, user.Password, user.Role, Convert.ToBase64String(user.PictureData));
+            activeEmail = user.Email;
         }
         catch (Exception ex)
         {
             // Log or handle the exception appropriately
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Wystąpił błąd: {ex.Message}");
         }
     }
 
@@ -78,17 +76,17 @@
             if (passwordChangeModel.NewPassword == passwordChangeModel.ConfirmNewPassword && accountDTO.Password != passwordChangeModel.NewPassword)
 			{
                 accountDTO.Password = passwordChangeModel.NewPassword;
-				await Http.PutAsJsonAsync($"api/account/{accountDTO.User_Id}", accountDTO);
-				changePasswordResultMessage = "Password changed successfully!";
+				await Http.PutAsJsonAsync($"api/account/{accountDTO.Email}", accountDTO);
+				changePasswordResultMessage = "Pomyślnie zmieniono hasło!";
 			}
 			else
 			{
-				changePasswordResultMessage = "Passwords don't match!";
+				changePasswordResultMessage = "Hasła sie róźnią!";
 			}
         }
         else
 		{
-			changePasswordResultMessage = "Wrong password!";
+			changePasswordResultMessage = "Podano złe hasło!";
 		}
     }
-} *@
+}

@@ -19,12 +19,12 @@ namespace ByteCuisine.Server.Controllers
             _dataContext = dataContext;
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountDTO updatedAccount)
+        [HttpPut("{userEmail}")]
+        public async Task<IActionResult> UpdateAccount(string userEmail, [FromBody] AccountDTO updatedAccount)
         {
             try
             {
-                var existingAccount = await _dataContext.Accounts.FirstOrDefaultAsync(a => a.User_Id == id);
+                var existingAccount = await _dataContext.Accounts.FirstOrDefaultAsync(a => a.Email == userEmail);
 
                 if (existingAccount == null)
                 {
