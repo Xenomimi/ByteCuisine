@@ -52,6 +52,7 @@ namespace ByteCuisine.Server.Controllers
             {
                 var newAccount = new Account
                 {
+                    Email = model.Email,
                     Username = model.Username,
                     Password = model.Password,
                     Role = model.Role,

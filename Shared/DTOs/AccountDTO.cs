@@ -8,10 +8,11 @@ namespace ByteCuisine.Shared.DTOs
 {
     public class AccountDTO
     {
-        public int User_Id { get; set; }
+        public string Email { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
+        public bool IsDeleted { get; set; }
         public byte[] PictureData { get; set; }
 
         public AccountDTO()
@@ -19,21 +20,32 @@ namespace ByteCuisine.Shared.DTOs
 
         }
 
-        public AccountDTO(int id, string name, string password, string role, string image)
+        public AccountDTO(string name, string password)
         {
-            User_Id = id;
+            Username = name;
+            Password = password;
+        }
+
+        public AccountDTO(string email, string name, string password, string role, string image)
+        {
+            Email = email;
             Username = name;
             Password = password;
             Role = role;
+            IsDeleted = false;
             PictureData = Convert.FromBase64String(image);
         }
 
-        public AccountDTO(string name, string password, string role, byte[] image)
+        public AccountDTO(string email,string name, string password, string role, byte[] image)
         {
+            Email = email;
             Username = name;
             Password = password;
             Role = role;
+            IsDeleted = false;
             PictureData = image;
         }
+
+
     }
 }

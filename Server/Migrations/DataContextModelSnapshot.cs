@@ -30,6 +30,11 @@ namespace ByteCuisine.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("User_Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -52,6 +57,12 @@ namespace ByteCuisine.Server.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("User_Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Account", "ByteCuisine");
                 });

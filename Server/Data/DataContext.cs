@@ -28,6 +28,9 @@ namespace ByteCuisine.Server.Controllers.Data
             modelBuilder.Entity<Log>().HasKey(l => l.Id);
             modelBuilder.Entity<Category>().HasKey(c => c.Id);
 
+            modelBuilder.Entity<Account>().HasIndex(a => a.Username).IsUnique();
+            modelBuilder.Entity<Account>().HasIndex(a => a.Email).IsUnique();
+
             // Relationships
             modelBuilder.Entity<Dish>()
                 .HasMany(d => d.DishIngredients)

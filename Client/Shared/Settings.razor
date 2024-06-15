@@ -1,4 +1,4 @@
-﻿@using ByteCuisine.Shared
+﻿@* @using ByteCuisine.Shared
 @using ByteCuisine.Client.Services
 @using ByteCuisine.Shared.DTOs;
 @inject HttpClient Http
@@ -59,7 +59,7 @@
             users = await Http.GetFromJsonAsync<List<Account>>("api/account");
             Account user = users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserId));
 
-            accountDTO = new AccountDTO(user.User_Id, user.Username, user.Password, user.Role, Convert.ToBase64String(user.PictureData));
+            accountDTO = new AccountDTO(user.Email="",user.User_Id, user.Username, user.Password, user.Role, Convert.ToBase64String(user.PictureData));
 
 
 
@@ -91,4 +91,4 @@
 			changePasswordResultMessage = "Wrong password!";
 		}
     }
-}
+} *@
