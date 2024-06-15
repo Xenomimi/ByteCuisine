@@ -295,63 +295,23 @@
 
     private async Task LoadDishesWithIngredientsFromFridge()
     {
-        try
+        var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
+        var ingredientsInFridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
+        var allDishIngredients = await Http.GetFromJsonAsync<List<DishIngredient>>("api/dishingredient");
+
+        dishesWithIngredientsFromFridge.Clear();
+
+        var dishIdsWithIngredientsFromFridge = allDishIngredients
+            .Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id))
+            .Select(di => di.Dish_Id)
+            .Distinct();
+
+        foreach (var dishId in dishIdsWithIngredientsFromFridge)
         {
-            var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
-            Console.WriteLine($"Current user: {currentUser}");
-
-            var ingredientsResponse = await Http.GetAsync($"api/ingredientsInFridge/user/{currentUser}");
-            var ingredientsContent = await ingredientsResponse.Content.ReadAsStringAsync();
-            Console.WriteLine($"Ingredients response: {ingredientsContent}");
-
-            if (!ingredientsResponse.IsSuccessStatusCode)
-            {
-                Console.WriteLine($"Error fetching ingredients: {ingredientsResponse.StatusCode}");
-                return;
-            }
-
-            var ingredientsInFridge = JsonSerializer.Deserialize<List<IngredientsInFridge>>(ingredientsContent);
-
-            var dishIngredientsResponse = await Http.GetAsync("api/dishingredient");
-            var dishIngredientsContent = await dishIngredientsResponse.Content.ReadAsStringAsync();
-            Console.WriteLine($"Dish ingredients response: {dishIngredientsContent}");
-
-            if (!dishIngredientsResponse.IsSuccessStatusCode)
-            {
-                Console.WriteLine($"Error fetching dish ingredients: {dishIngredientsResponse.StatusCode}");
-                return;
-            }
-
-            var allDishIngredients = JsonSerializer.Deserialize<List<DishIngredient>>(dishIngredientsContent);
-
-            dishesWithIngredientsFromFridge.Clear();
-
-            var dishIdsWithIngredientsFromFridge = allDishIngredients
-                .Where(di => ingredientsInFridge.Any(iif => iif.Ingredient_Id == di.Ingredient_Id))
-                .Select(di => di.Dish_Id)
-                .Distinct();
-
-            foreach (var dishId in dishIdsWithIngredientsFromFridge)
-            {
-                var dishResponse = await Http.GetAsync($"api/dish/dishes/{dishId}");
-                var dishContent = await dishResponse.Content.ReadAsStringAsync();
-                Console.WriteLine($"Dish response for ID {dishId}: {dishContent}");
-
-                if (!dishResponse.IsSuccessStatusCode)
-                {
-                    Console.WriteLine($"Error fetching dish {dishId}: {dishResponse.StatusCode}");
-                    continue;
-                }
-
-                var dish = JsonSerializer.Deserialize<Dish>(dishContent);
-                dishesWithIngredientsFromFridge.Add(dish);
-            }
-            StateHasChanged();
+            var dish = await Http.GetFromJsonAsync<Dish>($"api/dish/dishes/{dishId}");
+            dishesWithIngredientsFromFridge.Add(dish);
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Exception: {ex.Message}");
-        }
+        StateHasChanged();
     }
 
 
