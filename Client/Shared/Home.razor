@@ -2,7 +2,8 @@
 @using ByteCuisine.Shared;
 @inject UserStateService UserState
 @inject HttpClient Http
-@inject IJSRuntime JsRuntime;
+@inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -41,7 +42,7 @@
         </div>
 
     </div>
-    <button class="btn custom-btn mt-4">Dodaj swoje własne przepisy!</button>
+    <button class="btn btn-success" @onclick="@NavigateToNewPage">Dodaj swoje własne przepisy!</button>
 </div>
 
 @code {
@@ -52,6 +53,12 @@
     {
         users = await Http.GetFromJsonAsync<List<Account>>("api/account");
         allDishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
+    }
+
+
+    private void NavigateToNewPage()
+    {
+        Navigation.NavigateTo("/addrecipe");
     }
 
     private List<string> WszystkiePrzepisy = new List<string>
