@@ -10,8 +10,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6 d-flex flex-column align-items-center">
-            <h2 class="section-title">Virtual Fridge</h2>
-            <button class="search-button" @onclick="RemoveSelectedFridgeProducts">Delete selected products</button>
+            <h2 class="section-title">Wirtualna Lodówka</h2>
+            <button class="search-button" @onclick="RemoveSelectedFridgeProducts">Usuń zaznaczone składniki</button>
             <div class="list-back-fridge">
                 <ul class="product-list-fridge">
                     @foreach (var product in fridge)
@@ -34,13 +34,13 @@
 
         <div class="col-md-6 d-flex flex-column align-items-center">
             <div class="search-section">
-                <h2 class="section-title">Search for ingredients</h2>
+                <h2 class="section-title">Wyszukaj składniki</h2>
                 <div class="search-container">
                     <i class="material-icons search-icon">search</i>
-                    <input type="text" id="search-igri" @bind="searchIngri" placeholder="Search for ingredients" />
+                    <input type="text" id="search-igri" @bind="searchIngri" placeholder="Wyszukaj składniki" />
                 </div>
-                <button class="search-button" @onclick="SearchIngri">Search</button>
-                <button class="search-button" @onclick="AddSelectedIngredients">Add Ingredients</button>
+                <button class="search-button" @onclick="SearchIngri">Wyszukaj</button>
+                <button class="search-button" @onclick="AddSelectedIngredients">Dodaj składniki</button>
                 @* Lista składników *@
 
                 <div class="list-back">
@@ -60,12 +60,12 @@
             </div>
 
             <div class="search-section">
-                <h2 class="section-title">Search for recipes</h2>
+                <h2 class="section-title">Wyszukaj przepisy</h2>
                 <div class="search-container">
                     <i class="material-icons search-icon">search</i>
-                    <input type="text" id="search-igri" @bind="searchText" placeholder="Search for recipes" />
+                    <input type="text" id="search-igri" @bind="searchText" placeholder="Wyszukaj przepisy" />
                 </div>
-                <button class="search-button" @onclick="SearchDishes">Search</button>
+                <button class="search-button" @onclick="SearchDishes">Szukaj</button>
 
                 @* Wyszukiwanie przepisów *@
 
@@ -80,7 +80,7 @@
                                 <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
                                     <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
                                     @dish.Name
-                                    <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
+                                    <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Przejdź do przepisu</button>
                                 </li>
                             }
                         }
@@ -93,20 +93,20 @@
                                 <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
                                     <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
                                     @dish.Name
-                                    <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Go to recipe</button>
+                                    <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Przejdź do przepisu</button>
                                 </li>
                             }
                         }
                         else
                         {
-                            <div>No dishes found.</div>
+                            <div>Nie znaleziono przepisów</div>
                         }
                     </ul>
                 </div>
             </div>
 
             <div class="search-section">
-                <h2 class="section-title">What you need:</h2>
+                <h2 class="section-title">Czego potrzebujesz:</h2>
 
                 @* Wyszukiwanie brakujących składników *@
 

@@ -20,7 +20,7 @@ namespace ByteCuisine.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddDish([FromBody] DishDTO2 model)
+        public async Task<IActionResult> AddDish([FromBody] DishDTO model)
         {
             try
             {
@@ -29,6 +29,7 @@ namespace ByteCuisine.Server.Controllers
                     Name = model.Name,
                     Description = model.Description,
                     DishImage = model.DishImage,
+                    CategoryId = model.CategoryId
                 };
                 _dataContext.Dishes.Add(newDish);
                 await _dataContext.SaveChangesAsync();

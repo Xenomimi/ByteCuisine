@@ -1,33 +1,39 @@
 ﻿@using System.Collections.Generic
 @using System.Linq
 @using ByteCuisine.Shared
+@using ByteCuisine.Shared.DTOs;
 @inject HttpClient Http
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <div class="container mt-5">
     <h3>Dodaj swój własny przepis 😄</h3>
-    <EditForm Model="@recipe" OnValidSubmit="@HandleValidSubmit">
+    <EditForm Model="@dish" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
         <div class="form-group">
             <label for="name">Nazwa potrawy</label>
-            <InputText id="name" class="form-control" @bind-Value="recipe.Name" />
+            <InputText id="name" class="form-control" @bind-Value="dish.Name" />
         </div>
 
         <div class="form-group">
             <label for="description">Opis przyrządzenia</label>
-            <InputTextArea id="description" class="form-control" @bind-Value="recipe.Description" />
+            <InputTextArea id="description" class="form-control" @bind-Value="dish.Description" />
         </div>
 
         <div class="form-group">
             <label for="category">Kategoria przepisu</label>
-            <InputSelect id="category" class="form-control" @bind-Value="recipe.Category">
+            <InputSelect id="category" class="form-control" @bind-Value="dish.CategoryId" @bind-Value:event="onchange">
                 @foreach (var category in categories)
                 {
-                    <option value="@category.CategoryName">@category.CategoryName</option>
+                    <option value="@category.Id">@category.Id</option>
                 }
             </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label for="file">Zdjęcie potrawy</label>
+            <InputFile id="file" class="form-control" OnChange="OnInputFileChange" />
         </div>
 
         <div class="form-group">
@@ -38,7 +44,7 @@
                     <input type="text" id="search-igri" @bind="searchIngri" placeholder="Wyszukaj składniki" />
                 </div>
                 <button class="search-button" @onclick="SearchIngri">Search</button>
-                
+
                 @* Lista składników *@
 
                 <div class="list-back">
@@ -62,23 +68,36 @@
     </EditForm>
 </div>
 
-
 @code {
+    private DishIngredientDTO dishIngredientDTO = new DishIngredientDTO();
     private string searchIngri;
     private List<ByteCuisine.Shared.Ingredient> ingredients = new List<ByteCuisine.Shared.Ingredient>();
     private List<ByteCuisine.Shared.Ingredient> products = new List<ByteCuisine.Shared.Ingredient>();
-    private Recipe recipe = new Recipe();
+    private DishDTO dish = new DishDTO();
     private List<Category> categories = new List<Category>();
 
+    private string uploadedFileBase64;
 
-    @* Funkcje zaznaczania składników *@
+    private HashSet<int> selectedIngredientIds = new HashSet<int>();
+
+    private byte[] uploadedFile;
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        uploadedFileBase64 = Convert.ToBase64String(buffer);
+
+        Console.WriteLine(uploadedFileBase64);
+
+        dish.DishImage = Convert.FromBase64String(uploadedFileBase64);
+    }
 
     private string GetItemClass(int ingredientId)
     {
         return selectedIngredientIds.Contains(ingredientId) ? "list-item selected" : "list-item";
     }
-
-    private HashSet<int> selectedIngredientIds = new HashSet<int>();
 
     private void ToggleIngredientSelection(int ingredientId)
     {
@@ -88,40 +107,39 @@
         }
     }
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
-        // Tutaj można dodać logikę zapisywania przepisu
-        Console.WriteLine("Przepis został dodany");
+        // Debugowanie wartości CategoryId przed wysłaniem
+        Console.WriteLine($"Selected CategoryId: {dish.CategoryId}");
+
+        await Http.PostAsJsonAsync("api/dish", dish);
+        await Task.Delay(500);
+
+        var lastDish = (await Http.GetFromJsonAsync<List<Dish>>("api/dish")).Last();
+
+        int lastDishId = lastDish.Dish_Id;
+
+        foreach (var ingredientId in selectedIngredientIds)
+        {
+            dishIngredientDTO.Dish_Id = lastDishId;
+            dishIngredientDTO.Ingredient_Id = ingredientId;
+
+            await Http.PostAsJsonAsync("api/dishingredient", dishIngredientDTO);
+        }
+
+        StateHasChanged();
     }
 
-    public class Recipe
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Category { get; set; }
-        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
-    }
-
-    public class Ingredient
-    {
-        public string Name { get; set; }
-        public bool IsSelected { get; set; }
-    }
-
-    // Obsługa wyszukiwania składników
     private void SearchIngri()
     {
-        // Wyczyszczenie obecnej listy produktów
         products.Clear();
 
         if (string.IsNullOrEmpty(searchIngri))
         {
-            // Jeśli pole wyszukiwania jest puste, wyświetl wszystkie składniki
             products = ingredients;
         }
         else
         {
-            // Filtrowanie składników według zapytania wyszukiwania
             foreach (var ingredient in ingredients)
             {
                 if (ingredient.Description.Contains(searchIngri, StringComparison.OrdinalIgnoreCase)
@@ -132,7 +150,7 @@
             }
         }
 
-        StateHasChanged(); // Aktualizacja stanu komponentu
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()
@@ -140,5 +158,21 @@
         ingredients = await Http.GetFromJsonAsync<List<ByteCuisine.Shared.Ingredient>>("api/ingredient");
         products = await Http.GetFromJsonAsync<List<ByteCuisine.Shared.Ingredient>>("api/ingredient");
         categories = await Http.GetFromJsonAsync<List<Category>>("api/category");
+
+        // Ustawienie domyślnej kategorii, jeśli jest to wymagane
+        if (categories.Count > 0)
+        {
+            dish.CategoryId = categories.First().Id;
+        }
+    }
+
+    private void pokaz(ChangeEventArgs e)
+    {
+        // Przekonwertuj wartość na int i przypisz do dish.CategoryId
+        if (int.TryParse(e.Value.ToString(), out int categoryId))
+        {
+            dish.CategoryId = categoryId;
+            Console.WriteLine($"Selected CategoryId: {dish.CategoryId}");
+        }
     }
 }
