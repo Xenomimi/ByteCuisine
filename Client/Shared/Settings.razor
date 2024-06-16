@@ -43,7 +43,7 @@
     private string changePasswordResultMessage = null;
     private List<Account> users = new List<Account>();
     private AccountDTO accountDTO = new AccountDTO();
-    public string activeEmail;
+    private LogDTO log = new LogDTO();
 
 
     private class ChangePasswordModel
@@ -60,7 +60,6 @@
             users = await Http.GetFromJsonAsync<List<Account>>("api/account");
             Account user = users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserId));
             accountDTO = new AccountDTO(user.Email, user.Username, user.Password, user.Role, Convert.ToBase64String(user.PictureData));
-            activeEmail = user.Email;
         }
         catch (Exception ex)
         {
@@ -78,15 +77,34 @@
                 accountDTO.Password = passwordChangeModel.NewPassword;
 				await Http.PutAsJsonAsync($"api/account/{accountDTO.Email}", accountDTO);
 				changePasswordResultMessage = "Pomyślnie zmieniono hasło!";
+                
+                // Dodanie loga
+                log.AccountId = Convert.ToInt32(UserId);
+                log.ActivityTime = DateTime.UtcNow;
+                log.ActivityName = "Zmiana hasła";
+
+                await Http.PostAsJsonAsync("api/log", log);
 			}
 			else
 			{
 				changePasswordResultMessage = "Hasła sie róźnią!";
+                // Dodanie loga
+                log.AccountId = Convert.ToInt32(UserId);
+                log.ActivityTime = DateTime.UtcNow;
+                log.ActivityName = "Nieudana próba zmiany hasła (inne hasła)";
+
+                await Http.PostAsJsonAsync("api/log", log);
 			}
         }
         else
 		{
 			changePasswordResultMessage = "Podano złe hasło!";
+            // Dodanie loga
+            log.AccountId = Convert.ToInt32(UserId);
+            log.ActivityTime = DateTime.UtcNow;
+            log.ActivityName = "Nieudana próba zmiany hasła (złe hasło)";
+
+            await Http.PostAsJsonAsync("api/log", log);
 		}
     }
 }
