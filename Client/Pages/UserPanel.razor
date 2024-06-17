@@ -11,14 +11,20 @@
     <section class="content">
         <section class="user-section">
             <div class="user-profile-block">
-                <img class="avatar" src="data:image/png;base64,@Convert.ToBase64String(users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser))?.PictureData)" />
+                <div class="avatar-container">
+                    <img class="avatar" src="data:image/png;base64,@Convert.ToBase64String(users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser))?.PictureData)" />
+                    <label for="file-upload" class="overlay-button">
+                        Wybierz zdjęcie
+                    </label>
+                    <InputFile OnChange="HandleFileSelected" id="file-upload" class="input-file" />
+                </div>
 
                 <div class="profile-name-container">
                     <span class="user-name">@users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser))?.Username</span>
                 </div>
             </div>
             <div class="statistics-container">
-                <WykresAktywnosci/>
+                <WykresAktywnosci />
             </div>
         </section>
 
@@ -43,22 +49,18 @@
                 }
             </ul>
 
-
-
             <div class="scroll-buttons bottom">
                 <button class="scroll-control next" @onclick="() => ScrollList(1)">
                     <span class="material-symbols-outlined">expand_more</span>
                 </button>
             </div>
-    </section>
+        </section>
     </section>
     <section class="favorites">
         <h2>Ulubione</h2>
         <div class="carousel">
             <button class="carousel-control prev" @onclick="() => ScrollCarousel(-1)">
-                <span class="material-symbols-outlined">
-                    chevron_left
-                </span>
+                <span class="material-symbols-outlined">chevron_left</span>
             </button>
             <div class="favorites-carousel">
                 @foreach (var dish in VisibleFavorites)
@@ -80,13 +82,12 @@
 </div>
 
 @code {
-
     List<Account> users = new List<Account>();
+
     protected override async Task OnInitializedAsync()
     {
         users = await Http.GetFromJsonAsync<List<Account>>("api/account");
     }
-
 
     private int currentFavoriteIndex = 0;
     private int currentRecipeIndex = 0;
@@ -108,7 +109,7 @@
         new Recipe { Name = "Curry", Rating = 5 },
         new Recipe { Name = "Spaghetti", Rating = 4 },
         new Recipe { Name = "Chicken Curry", Rating = 5 },
-        new Recipe { Name = "Lasagna", Rating = 4 }, 
+        new Recipe { Name = "Lasagna", Rating = 4 },
         new Recipe { Name = "Burger", Rating = 5 },
     };
 
@@ -128,11 +129,9 @@
         }
     }
 
-
-
     private void ScrollList(int direction)
     {
-        int itemsPerScroll = 3; // Zmienione z 5 na 3
+        int itemsPerScroll = 3;
         int maxIndex = Recipes.Count - itemsPerScroll;
         currentRecipeIndex += direction * itemsPerScroll;
 
@@ -146,13 +145,9 @@
         }
     }
 
+    private IEnumerable<FavoriteDish> VisibleFavorites => Favorites.Skip(currentFavoriteIndex).Take(5);
 
-    private IEnumerable<FavoriteDish> VisibleFavorites =>
-    Favorites.Skip(currentFavoriteIndex).Take(5);
-
-
-    private IEnumerable<Recipe> VisibleRecipes =>
-        Recipes.Skip(currentRecipeIndex).Take(3);
+    private IEnumerable<Recipe> VisibleRecipes => Recipes.Skip(currentRecipeIndex).Take(3);
 
     private MarkupString DisplayStars(int rating)
     {
@@ -164,12 +159,27 @@
         return new MarkupString(stars.ToString());
     }
 
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+
+        var base64Image = Convert.ToBase64String(buffer);
+        var currentUser = users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser));
+        if (currentUser != null)
+        {
+            currentUser.PictureData = buffer;
+            // Update the user profile picture in the backend/database as needed
+            await Http.PostAsJsonAsync("api/account/updatePicture", currentUser);
+        }
+    }
+
     public class FavoriteDish
     {
         public string Name { get; set; }
-        public string ImageUrl { get; set; } // Adres URL obrazka dania
+        public string ImageUrl { get; set; }
     }
-
 
     public class Recipe
     {

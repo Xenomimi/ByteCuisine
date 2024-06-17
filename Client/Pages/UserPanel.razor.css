@@ -23,9 +23,6 @@
     align-items: stretch;
 }
 
-
-
-
 .user-section {
     display: flex;
     align-items: center;
@@ -40,9 +37,6 @@
     overflow: hidden;
     margin-right: 20px;
 }
-
-
-
 
 .my-kitchen {
     width: 50%;
@@ -66,116 +60,6 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-}
-
-
-    .carousel-control:hover {
-        color: #333;
-    }
-
-.recipe-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0; /* Remove default margin */
-    padding: 0; /* Remove default padding */
-}
-
-    .recipe-list li {
-        font-size: 18px;
-        color: #333;
-        margin-bottom: 10px;
-    }
-
-.favorites {
-    width: 100%;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-top: 20px;
-}
-
-.favorites-carousel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.carousel-item {
-    width: 200px; /* Możesz dostosować do swoich potrzeb */
-    height: 200px; /* Kwadratowy kształt */
-    margin: 10px; /* Odstępy między elementami */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: #fff; /* Białe tło */
-    border-radius: 10px; /* Zaokrąglone rogi */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Cień dla efektu głębi */
-    position: relative; /* Pozycjonowanie względne dla tekstu */
-}
-
-.favorites .carousel {
-    display: flex;
-    align-items: center;
-}
-
-.favorites .carousel-control {
-    /* Additional styling as needed */
-}
-
-.favorites-carousel {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
-
-}
-
-.my-kitchen .scroll-buttons.top {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 10px;
-}
-
-.my-kitchen .scroll-buttons.bottom {
-    display: flex;
-    justify-content: center;
-    padding-top: 10px;
-}
-
-/* Ensure this applies to all buttons within .scroll-buttons */
-.my-kitchen .scroll-buttons .carousel-control {
-    /* Styles for your buttons */
-}
-.favorites-carousel .carousel-item {
-    margin: 0 10px; /* Adjust the spacing as needed */
-    flex: 0 0 auto; /* This prevents the items from stretching */
-}
-.material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    
-}
-
-.recipe-list li {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-}
-
-    .recipe-list li span {
-        margin-left: 5px;
-    }
-
-/* Stylizacja przycisków karuzeli */
-.carousel-control {
     cursor: pointer;
     background: none;
     border: none;
@@ -193,12 +77,84 @@
         color: #333;
     }
 
-/* Dalsze style karuzeli i innych elementów*/ 
-.favorites-carousel .carousel-item {
-margin: 0 10px; / Regulacja odstępów między elementami /
-flex: 0 0 auto; / Zapobiega rozciąganiu elementów 
+    .carousel-control.prev {
+        left: -25px; /* Możesz dostosować wartość */
+    }
+
+    .carousel-control.next {
+        right: -25px; /* Możesz dostosować wartość */
+    }
+
+.carousel-control {
+    width: 44px; /* Dostosuj szerokość */
+    height: 44px; /* Dostosuj wysokość */
+    z-index: 2; /* Możesz zwiększyć tę wartość, jeśli to konieczne */
 }
-/* Dodaj odstęp między daniami */
+
+.recipe-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+    .recipe-list li {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .recipe-list li span {
+            margin-left: 5px;
+        }
+
+.favorites {
+    width: 100%;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 20px;
+}
+
+.favorites-carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .favorites-carousel .carousel-item {
+        width: 200px; /* Możesz dostosować do swoich potrzeb */
+        height: 200px; /* Kwadratowy kształt */
+        margin: 10px; /* Odstępy między elementami */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #fff; /* Białe tło */
+        border-radius: 10px; /* Zaokrąglone rogi */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Cień dla efektu głębi */
+        position: relative; /* Pozycjonowanie względne dla tekstu */
+        margin: 0 10px; /* Regulacja odstępów między elementami */
+        flex: 0 0 auto; /* Zapobiega rozciąganiu elementów */
+    }
+
+.carousel {
+    position: relative;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
 .recipe-item {
     margin-bottom: 20px; /* Odstęp między daniami */
     padding: 10px; /* Wewnętrzny odstęp dla obramowania */
@@ -206,51 +162,16 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     border-radius: 10px; /* Zaokrąglone rogi */
 }
 
-    /* Styl obramowania dla dania po najechaniu myszką */
     .recipe-item:hover {
         border-color: #007bff; /* Zmień kolor obramowania po najechaniu myszką */
     }
-.carousel {
-    position: relative;
-}
-.carousel-control.prev {
-    left: -25px; /* Możesz dostosować wartość */
-}
 
-.carousel-control.next {
-    right: -25px; /* Możesz dostosować wartość */
-}
-.carousel-control {
-    z-index: 2; /* Możesz zwiększyć tę wartość, jeśli to konieczne */
-}
-.carousel-control {
-    width: 44px; /* Dostosuj szerokość */
-    height: 44px; /* Dostosuj wysokość */
-    /* Reszta stylów */
-}
-
-.scroll-control {
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-size: 24px;
-    display: inline-flex; /* Dla wyśrodkowania ikony w przycisku */
-    align-items: center;
-    justify-content: center;
-    color: #555;
-    transition: color 0.3s ease;
-    padding: 5px 10px;
-}
-
-
-    .scroll-control:hover {
-        color: #333;
-    }
 .my-kitchen .scroll-buttons.top,
 .my-kitchen .scroll-buttons.bottom {
     justify-content: center; /* Poprawka zamiast space-between */
     padding: 10px 0; /* Dodajemy odstęp */
 }
+
 .carousel-image-wrapper {
     width: 100%; /* Pełna szerokość elementu */
     height: 70%; /* 70% wysokości elementu dla obrazka */
@@ -261,10 +182,12 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     border-top-left-radius: 10px; /* Zaokrąglenie górnych rogów */
     border-top-right-radius: 10px; /* Zaokrąglenie górnych rogów */
 }
+
 .favorite-image {
     width: auto; /* Zachowuje proporcje obrazka */
     height: 100%; /* Wysokość obrazka */
 }
+
 .carousel-text {
     font-size: 16px; /* Możesz dostosować do swoich potrzeb */
     color: #333; /* Kolor tekstu */
@@ -310,18 +233,10 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
         justify-content: center; /* Centrowanie w pionie */
     }
 
-/* Jeśli używasz gwiazdek jako elementów HTML, możesz potrzebować dodatkowych stylów */
-.my-kitchen .recipe-item .recipe-rating {
-    /* Stylizacja gwiazdek, jeśli są one elementami HTML */
-}
-
-/* Upewnij się, że przyciski przewijania są odpowiednio stylizowane */
-.my-kitchen .scroll-buttons {
-    /* Style dla przycisków przewijania, jeśli są potrzebne */
-}
 .recipe-rating {
     color: gold; /* Ustawia kolor gwiazdek na złoty */
 }
+
 .user-section .overlay {
     position: absolute;
     bottom: 0;
@@ -333,6 +248,7 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     border-bottom-left-radius: 20px; /* Match parent's border-radius */
     border-bottom-right-radius: 20px; /* Match parent's border-radius */
 }
+
 .user-section .statistics {
     background: rgba(0, 0, 0, 0.7); /* Adjust color and transparency as needed */
     border-radius: 10px; /* Adjust as needed */
@@ -344,6 +260,7 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     width: 300px; /* Adjust as needed */
     height: auto; /* Adjust as needed */
 }
+
 .overlay {
     position: absolute;
     top: 0;
@@ -354,11 +271,13 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     border-radius: 20px;
     z-index: 1;
 }
+
 .statistics {
     /* Adjustments if needed */
     position: relative; /* Make sure the statistics is above the overlay */
     z-index: 2;
 }
+
 .user-section::after {
     content: '';
     position: absolute;
@@ -370,11 +289,6 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     backdrop-filter: blur(5px); /* Adjust the blur strength as needed */
     z-index: -2; /* Make sure it's behind everything else */
     border-radius: 8px; /* Match the border-radius of the container */
-}
-.user-section {
-    position: relative;
-    width: 100%; /* Set the width you prefer */
-    padding: 20px;
 }
 
 .user-profile {
@@ -388,23 +302,19 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for depth */
 }
 
-.avatar {
-
-}
-
-/* Add a pseudo-element for the blurred background */
-.user-profile::before {
-    content: '';
-    
-    top: -10px; /* Slightly larger than the avatar to create a blur effect around it */
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    background: inherit; /* Inherit the background of the parent */
-    backdrop-filter: blur(15px); /* Adjust the blur strength as needed */
-    border-radius: 50%; /* Circular blur if the avatar is circular */
-    z-index: -1; /* Behind the avatar */
-}
+    /* Add a pseudo-element for the blurred background */
+    .user-profile::before {
+        content: '';
+        position: absolute;
+        top: -10px; /* Slightly larger than the avatar to create a blur effect around it */
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: inherit; /* Inherit the background of the parent */
+        backdrop-filter: blur(15px); /* Adjust the blur strength as needed */
+        border-radius: 50%; /* Circular blur if the avatar is circular */
+        z-index: -1; /* Behind the avatar */
+    }
 
 /* Style for the user's name text */
 .user-name {
@@ -414,12 +324,13 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     position: relative;
     z-index: 2;
 }
+
 .user-section {
-    
     display: flex;
     align-items: center;
     padding: 20px;
     position: relative;
+    width: 100%; /* Set the width you prefer */
 }
 
 .user-profile {
@@ -451,6 +362,7 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     flex-direction: column;
     justify-content: center;
 }
+
 .profile-name-container {
     background: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
     backdrop-filter: blur(10px); /* Apply the blur effect */
@@ -470,15 +382,59 @@ flex: 0 0 auto; / Zapobiega rozciąganiu elementów
     gap: 20px;
 }
 
-.avatar {
+.avatar-container {
+    position: relative;
     width: 150px;
     height: 150px;
+    display: inline-block;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid white;
 }
 
-.statistics-container {
-    
+.overlay-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    flex-direction: column;
 }
 
+.avatar-container:hover .overlay-button {
+    opacity: 1;
+}
+
+.input-file {
+    display: none; /* Hide the input file */
+}
+
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+::deep#file-upload {
+    display: none;
+}
+::deep.input-file
+{
+    display:none;
+}
+::deep input {
+    display: none;
+}
