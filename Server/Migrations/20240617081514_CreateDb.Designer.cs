@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ByteCuisine.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240615125518_Creation")]
-    partial class Creation
+    [Migration("20240617081514_CreateDb")]
+    partial class CreateDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

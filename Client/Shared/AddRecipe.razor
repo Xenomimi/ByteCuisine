@@ -26,7 +26,7 @@
             <InputSelect id="category" class="form-control" @bind-Value="dish.CategoryId" @bind-Value:event="onchange">
                 @foreach (var category in categories)
                 {
-                    <option value="@category.Id">@category.Id</option>
+                    <option value="@category.Id">@category.CategoryName</option>
                 }
             </InputSelect>
         </div>
