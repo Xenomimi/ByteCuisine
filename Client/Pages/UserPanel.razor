@@ -164,14 +164,14 @@
         var file = e.File;
         var buffer = new byte[file.Size];
         await file.OpenReadStream().ReadAsync(buffer);
-
         var base64Image = Convert.ToBase64String(buffer);
-        var currentUser = users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser));
+
+
+        var currentUser = users.FirstOrDefault(u => u.User_Id == UserState.CurrentUser);
         if (currentUser != null)
         {
-            currentUser.PictureData = buffer;
-            // Update the user profile picture in the backend/database as needed
-            await Http.PostAsJsonAsync("api/account/updatePicture", currentUser);
+            currentUser.PictureData = Convert.FromBase64String(base64Image);
+            await Http.PutAsJsonAsync("api/account/updatePicture", currentUser);
         }
     }
 

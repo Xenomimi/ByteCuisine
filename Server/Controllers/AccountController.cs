@@ -68,6 +68,33 @@ namespace ByteCuisine.Server.Controllers
             }
         }
 
+        [HttpPut("updatePicture")]
+        public async Task<IActionResult> UpdateProfilePicture([FromBody] AccountDTO updatedAccount)
+        {
+            try
+            {
+                var existingAccount = await _dataContext.Accounts.FirstOrDefaultAsync(a => a.Email == updatedAccount.Email);
+
+                if (existingAccount == null)
+                {
+                    return NotFound();
+                }
+
+                // Aktualizacja zdjêcia profilowego u¿ytkownika
+                existingAccount.PictureData = updatedAccount.PictureData;
+
+                _dataContext.Entry(existingAccount).State = EntityState.Modified;
+                await _dataContext.SaveChangesAsync();
+
+                return Ok(existingAccount);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<List<Account>>> Get()
         {
