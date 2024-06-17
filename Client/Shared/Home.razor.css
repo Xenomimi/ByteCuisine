@@ -10,7 +10,7 @@
 #top-section {
     display: flex;
     justify-content: space-between;
-    height: 350px; /* Zachowana zwiększona wysokość sekcji */
+    max-height: 450px;
 }
 
 #featured-recipe, #popular-chefs {

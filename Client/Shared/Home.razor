@@ -46,15 +46,16 @@
         <div id="featured-recipe">
             <div id="recipe-details">
                 <div id="user-profile">
-                    <img src="images/userimg.png" alt="Nick Patterson" id="user-image" />
-                    <div id="user-name">Nick Patterson</div>
+                    @* PROFIL *@
+                    <img src="data:image/png;base64,@Convert.ToBase64String(userImage)" alt="user-image" id="user-image" />
+                    <div id="user-name">@userName</div>
                 </div>
                 <div id="recipe-info">
-                    <h1>Spaghetti</h1>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+                    <h1>@bannerName</h1>
+                    <p>@bannerDescription</p>
                     <p class="bold-text">Estimated calories: 157,7 kcal</p>
                     <div id="action-container">
-                        <button id="check-recipe-btn">Check recipe</button>
+                        <button id="check-recipe-btn" @onclick="() => NavigateToRecipe(bannerId)">Przejdź do przepisu</button>
                         <div id="rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -66,7 +67,7 @@
                 </div>
             </div>
             <div id="recipe-image">
-                <img src="images/jedzenie.png" alt="Spaghetti" />
+                <img src="data:image/png;base64,@Convert.ToBase64String(bannerImage)" alt="dish-image" />
             </div>
         </div>
 
@@ -74,13 +75,20 @@
             <div id="blur">
                 <h1 id="popularchef">Popular Chefs</h1>
 
-                @foreach (var chef in users)
+                @if(users.Count == 0)
                 {
-                    <div class="chef" @onclick="@change_baner">
-                        <span class="material-icons gold-crown">emoji_events</span>
-                        <img src="data:image/png;base64,@Convert.ToBase64String(chef.PictureData)" alt="chef" class="chef-image" />
-                        @chef.Username
-                    </div>
+                    <p>Brak użytkowników</p>
+                }
+                else
+                {
+                    @foreach (var chef in users.Take(3))
+                    {
+                        <div class="chef" @onclick="() => change_baner(chef)">
+                            <span class="material-icons gold-crown">emoji_events</span>
+                            <img src="data:image/png;base64,@Convert.ToBase64String(chef.PictureData)" alt="chef" class="chef-image" />
+                            @chef.Username
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -111,14 +119,36 @@
 </div>
 
 @code {
-    List<Dish> allDishes = new List<Dish>();
 
+    // Zminne głównego bannera
+    private byte[] userImage;
+    private string userName;
+    private byte[] bannerImage;
+    private string bannerName;
+    private string bannerDescription;
+    private int bannerId;
+
+
+    List<Dish> allDishes = new List<Dish>();
     List<Account> users = new List<Account>();
 
     protected override async Task OnInitializedAsync()
     {
         users = await Http.GetFromJsonAsync<List<Account>>("api/account");
         allDishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
+
+        // Domyślne ustawienia bannera
+        userImage = users.FirstOrDefault(u => u.User_Id == 1)?.PictureData;
+        userName = users.FirstOrDefault(u => u.User_Id == 1)?.Username;
+        bannerImage = allDishes.FirstOrDefault(d => d.Dish_Id == 1)?.DishImage;
+        bannerName = allDishes.FirstOrDefault(d => d.Dish_Id == 1)?.Name;
+        bannerDescription = allDishes.FirstOrDefault(d => d.Dish_Id == 1)?.Description;
+        bannerId = 1;
+    }
+
+    private void NavigateToRecipe(int dish_id)
+    {
+        Navigation.NavigateTo($"/recipepage/{dish_id}");
     }
 
 
@@ -154,10 +184,18 @@
         }
     }
 
-
-    private void change_baner()
+    private void change_baner(Account account)
     {
-        Console.Out.WriteLine("asdinasodad");
+        userImage = account.PictureData;
+        userName = account.Username;
+
+        // Zmiana bannera
+        bannerImage = allDishes.FirstOrDefault(d => d.Dish_Id == account.User_Id)?.DishImage;
+        bannerName = allDishes.FirstOrDefault(d => d.Dish_Id == account.User_Id)?.Name;
+        bannerDescription = allDishes.FirstOrDefault(d => d.Dish_Id == account.User_Id)?.Description;
+        bannerId = account.User_Id;
+
+        StateHasChanged();
     }
 
 

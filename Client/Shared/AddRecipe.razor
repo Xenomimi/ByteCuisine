@@ -1,8 +1,10 @@
 ﻿@using System.Collections.Generic
 @using System.Linq
+@using ByteCuisine.Client.Services;
 @using ByteCuisine.Shared
 @using ByteCuisine.Shared.DTOs;
 @inject HttpClient Http
+@inject UserStateService UserState
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <div class="container mt-5">
@@ -75,6 +77,7 @@
     private List<ByteCuisine.Shared.Ingredient> products = new List<ByteCuisine.Shared.Ingredient>();
     private DishDTO dish = new DishDTO();
     private List<Category> categories = new List<Category>();
+    private LogDTO log = new LogDTO();
 
     private string uploadedFileBase64;
 
@@ -88,9 +91,6 @@
         var buffer = new byte[file.Size];
         await file.OpenReadStream().ReadAsync(buffer);
         uploadedFileBase64 = Convert.ToBase64String(buffer);
-
-        Console.WriteLine(uploadedFileBase64);
-
         dish.DishImage = Convert.FromBase64String(uploadedFileBase64);
     }
 
@@ -109,9 +109,6 @@
 
     private async Task HandleValidSubmit()
     {
-        // Debugowanie wartości CategoryId przed wysłaniem
-        Console.WriteLine($"Selected CategoryId: {dish.CategoryId}");
-
         await Http.PostAsJsonAsync("api/dish", dish);
         await Task.Delay(500);
 
@@ -126,6 +123,12 @@
 
             await Http.PostAsJsonAsync("api/dishingredient", dishIngredientDTO);
         }
+
+        // Dodanie logów
+        log.ActivityTime = DateTime.UtcNow;
+        log.ActivityName = $"Dodano przepis {lastDishId}";
+        log.AccountId = UserState.CurrentUser;
+        await Http.PostAsJsonAsync("api/log", log);
 
         StateHasChanged();
     }
