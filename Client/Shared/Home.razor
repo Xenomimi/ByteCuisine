@@ -7,8 +7,9 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 
-<div class="container mt-5">
+@* <div class="container mt-5">
     <h1>Witaj @users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser))?.Username!</h1>
     <h4>Potrawy, które jesteś w stanie zrobić:</h4>
     <div class="carousel-container">
@@ -34,21 +35,86 @@
                     <span class="material-symbols-outlined">arrow_forward_ios</span>
                 </button>
             }
-
-@*             @foreach (var przepis in WidocznePrzepisy)
-            {
-                <div class="card">@przepis</div>
-            } *@
         </div>
 
     </div>
     <button class="btn btn-success" @onclick="@NavigateToNewPage">Dodaj swoje własne przepisy!</button>
+</div> *@
+
+<div id="container">
+    <div id="top-section">
+        <div id="featured-recipe">
+            <div id="recipe-details">
+                <div id="user-profile">
+                    <img src="images/userimg.png" alt="Nick Patterson" id="user-image" />
+                    <div id="user-name">Nick Patterson</div>
+                </div>
+                <div id="recipe-info">
+                    <h1>Spaghetti</h1>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+                    <p class="bold-text">Estimated calories: 157,7 kcal</p>
+                    <div id="action-container">
+                        <button id="check-recipe-btn">Check recipe</button>
+                        <div id="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="recipe-image">
+                <img src="images/jedzenie.png" alt="Spaghetti" />
+            </div>
+        </div>
+
+        <div id="popular-chefs">
+            <div id="blur">
+                <h1 id="popularchef">Popular Chefs</h1>
+
+                @foreach (var chef in users)
+                {
+                    <div class="chef" @onclick="@change_baner">
+                        <span class="material-icons gold-crown">emoji_events</span>
+                        <img src="data:image/png;base64,@Convert.ToBase64String(chef.PictureData)" alt="chef" class="chef-image" />
+                        @chef.Username
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <h2>Recommended recipes based on your preferences</h2>
+
+    <button class="btn btn-success" @onclick="@NavigateToNewPage">Dodaj swoje własne przepisy!</button>
+
+    <div class="carousel-container">
+        <button @onclick="PrzewinWLewo" class="carousel-button left-button">
+            <span class="material-symbols-outlined">arrow_back_ios</span>
+        </button>
+        <div class="carousel">
+            @foreach (var przepis in allDishes)
+            {
+                <div class="card">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(przepis.DishImage)" alt="@przepis.Name" class="dish-image" />
+                    <div>@przepis.Name</div>
+                    <div>Potrzebujesz 8 składków</div>
+                </div>
+            }
+        </div>
+        <button @onclick="PrzewinWPrawo" class="carousel-button right-button">
+            <span class="material-symbols-outlined">arrow_forward_ios</span>
+        </button>
+    </div>
 </div>
 
 @code {
     List<Dish> allDishes = new List<Dish>();
 
     List<Account> users = new List<Account>();
+
     protected override async Task OnInitializedAsync()
     {
         users = await Http.GetFromJsonAsync<List<Account>>("api/account");
@@ -86,6 +152,12 @@
         {
             aktualnyIndeks++;
         }
+    }
+
+
+    private void change_baner()
+    {
+        Console.Out.WriteLine("asdinasodad");
     }
 
 

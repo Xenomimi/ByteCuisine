@@ -1,7 +1,7 @@
 ﻿#container {
     width: 90vw;
     margin: auto;
-    padding: 10px;
+    padding: 20px;
     display: flex; /* Potrzebne, aby flex-direction miał wpływ */
     flex-direction: column;
     justify-content: space-around;
@@ -12,27 +12,27 @@
     justify-content: space-between;
     height: 350px; /* Zachowana zwiększona wysokość sekcji */
 }
+
 #featured-recipe, #popular-chefs {
     background-color: #f5f5f5;
-    padding: 15px;
+    padding: 20px;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-right:20px;
+    margin-right: 20px;
 }
 
 #featured-recipe {
-    background-color: #f5f5f5;
-    padding: 0px 0px 0px 15px;
-    border-radius: 20px;
+    padding: 0px;
     display: flex; /* Flex jest używany tutaj do rozmieszczenia tekstu i obrazu */
     justify-content: space-between; /* Zapewnia odstęp między elementami */
     align-items: center; /* Centruje elementy wertykalnie */
     flex-direction: row; /* Elementy w jednym rzędzie zamiast kolumny */
     width: 100%;
-    border: 1px solid black;
-    
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 59vw;
 }
 
 #popular-chefs {
@@ -40,12 +40,11 @@
     background-image: url("/images/essa.jpg");
     background-size: cover;
     background-position: center;
-    padding: 0px;
-
-  
+    padding: 0;
 }
-#blur{
-    backdrop-filter:blur(5px);
+
+#blur {
+    backdrop-filter: blur(5px);
     width: 100%;
     height: 100%;
     padding: 20px;
@@ -58,18 +57,52 @@
 
 .chef {
     background-color: #fff;
-    margin-bottom: 5px;
+    margin-bottom: 20px;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 35px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     font-size: 1.2em;
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
 
+    .chef:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        background-color: #f0f0f0;
+    }
+
+
+
+.crown-image {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.gold-crown {
+    color: gold;
+    margin-right: 15px;
+}
+
+.silver-crown {
+    color: silver;
+    margin-right: 15px;
+}
+
+.bronze-crown {
+    color: #cd7f32; /* Brązowy kolor */
+    margin-right: 15px;
 }
 
 .carousel-container {
     position: relative;
     overflow: hidden;
+    padding: 20px;
 }
 
 .carousel {
@@ -81,131 +114,101 @@
 
 .card {
     flex: 0 0 auto;
-    width: 200px; /* Szerokość karty */
-    height: 200px; /* Wysokość karty */
-    margin: 0 15px;
+    width: 280px; /* Zwiększenie rozmiaru karty */
+    height: 310px; /* Zwiększenie rozmiaru karty */
+    margin: 0 15px; /* Odstęp między kartami */
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 1.2em;
+    text-align: center;
+    font-size: 1.2em; /* Zwiększenie wielkości czcionki */
     font-weight: bold;
+    padding: 15px; /* Większe odstępy wewnętrzne */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
     .card:last-child {
         margin-right: 0;
     }
 
-.carousel-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    padding: 2px;
-    cursor: pointer;
-    z-index: 10;
-}
-
-    .carousel-button.left-button {
-        left: 10px; /* Zwiększenie odstępu dla lewego przycisku */
+    .card:hover {
+        transform: translateY(-5px); /* Podnosi kartę do góry */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Zwiększa cień przy najechaniu */
     }
 
-    .carousel-button.right-button {
-        right: 10px; /* Zwiększenie odstępu dla prawego przycisku */
+    .card div {
+        font-size: 1em; /* Zwiększenie wielkości czcionki dla tekstu */
+        font-weight: normal; /* Normalna grubość czcionki */
+        color: #555; /* Kolor tekstu */
+        text-align: center; /* Wyśrodkowanie tekstu */
+        margin-top: 10px; /* Większy odstęp górny między elementami tekstowymi */
     }
+
+        .card div:first-child {
+            font-size: 1.2em; /* Wielkość czcionki dla nazwy potrawy */
+            font-weight: bold; /* Pogrubienie czcionki dla nazwy potrawy */
+            color: #333; /* Kolor tekstu dla nazwy potrawy */
+            margin-bottom: 10px; /* Odstęp dolny między nazwą potrawy a resztą tekstu */
+        }
+
+        .card div:last-child {
+            color: #888; /* Szary kolor dla tekstu o składnikach */
+            font-size: 0.9em; /* Większa wielkość czcionki dla tekstu o składnikach */
+            font-weight: 300; /* Cieńsza czcionka */
+            margin-top: 5px; /* Odstęp górny */
+        }
 
 h2 {
-    font-size: 1.5em;
+    font-size: 2em;
     color: #333;
-    padding: 20px 0;
+    padding: 55px 0;
 }
 
-/* Responsywność dla telefonów komórkowych (małe ekrany) */
-@media (max-width: 600px) {
-    #container {
-        width: 100vw;
-        padding: 5px;
-    }
-
-    #top-section {
-        flex-direction: column;
-        height: auto;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        display: flex;
-    }
-
-    #featured-recipe, #popular-chefs {
-        margin-right: 0;
-        flex-basis: 100%;
-        margin-bottom:10px;
-    }
-
-    .chef, .card {
-        margin-bottom: 10px;
-    }
-
-    .carousel-container, .carousel {
-        overflow-x: auto;
-    }
-
-    .card {
-        width: 50%;
-        height: auto;
-        margin: 10px;
-        padding-bottom: 50%; /* Wysokość jako padding-bottom, aby zachować proporcje */
-        box-sizing: border-box; /* Włącza box-sizing, aby padding był częścią wysokości */
-    }
-
-    .carousel-button {
-        display: none;
-    }
-
-    h2 {
-        font-size: 1.2em;
-        padding: 10px 0;
-    }
-}
 #recipe-text {
-    /* Style dla tekstu */
-    padding-right: 20px; /* Odstęp między tekstem a obrazem */
+    padding-right: 20px;
 }
 
 #recipe-image {
-    flex-grow: 1; /* Pozwala obrazowi na wypełnienie dostępnego miejsca */
+    flex-grow: 1;
     display: flex;
-    justify-content: flex-end; /* Umieszcza obraz na końcu kontenera */
-    height:100%;
+    justify-content: flex-end;
+    height: 100%;
+    padding: 0; /* Usuń wszelkie wypełnienie */
+    margin: 0; /* Usuń wszelkie marginesy */
 }
-
-    
-
 
     #recipe-image img {
-        width: auto; /* Dostosowuje szerokość do zawartości */
-        height: auto; /* Zachowuje proporcje obrazu */
-        max-height: 100%; /* Zapewnia, że obraz nie będzie większy niż kontener */
-        border-radius: 10px; /* Dodaje zaokrąglenie krawędzi jeśli potrzebujesz */
+        width: auto;
+        height: auto;
+        max-height: 100%;
+        max-width: 100%;
+        border-radius: 10px;
+        margin: 0; /* Usuń wszelkie marginesy */
     }
 
-@media (max-width: 600px) {
-    /* Styl responsywny pozostaje bez zmian */
-}
 #recipe-details {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     max-width: 50%; /* Aby tekst i obrazek użytkownika nie rozciągały się na całą szerokość */
     align-items: center;
+    padding-left: 50px;
 }
 
 #user-image {
     border-radius: 50%; /* Dla okrągłego zdjęcia */
     width: 80px; /* Przykładowa szerokość, dostosuj do swoich potrzeb */
     height: 80px; /* Przykładowa wysokość, dostosuj do swoich potrzeb */
+}
+
+#user-name {
+    margin-top: 8px; /* Odstęp od góry, dostosuj do swoich potrzeb */
+    font-size: 1.2em; /* Przykładowa wielkość czcionki, dostosuj do swoich potrzeb */
+    margin-bottom: 15px; /* Odstęp od dolnych elementów */
 }
 
 #recipe-info {
@@ -215,13 +218,14 @@ h2 {
     #recipe-info h1 {
         font-size: 2em; /* Wielkość czcionki dla tytułu */
         margin-bottom: 10px; /* Odstęp pomiędzy tytułem a opisem */
+        text-align: center;
     }
 
     #recipe-info p {
         font-size: 1em; /* Wielkość czcionki dla paragrafów */
         margin-bottom: 5px; /* Odstęp pomiędzy paragrafami */
+        margin-left: 20px;
     }
-
 
 #check-recipe-btn {
     color: #fff;
@@ -244,44 +248,30 @@ h2 {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         background-position: 0 0;
     }
+
 #rating {
     display: flex;
 }
 
-    #rating .material-symbols-outlined {
-        color: #FFD700; /* Ustawienie złotego koloru dla gwiazdek */
-        font-size: 24px; /* Dostosowanie rozmiaru gwiazdek */
+    #rating .fa {
+        color: #FFD700; /* Ustawienie ciemnego złotego koloru dla gwiazdek */
+        font-size: 20px;
     }
-
 
 #action-container {
     display: flex;
     align-items: center;
+    margin-left: 10px;
 }
+
 #user-profile {
     display: flex;
     flex-direction: column;
     align-items: center; /* Wycentruje obraz i tekst w poziomie */
 }
-#user-name {
-    margin-top: 8px; /* Odstęp od góry, dostosuj do swoich potrzeb */
-    font-size: 1.2em; /* Przykładowa wielkość czcionki, dostosuj do swoich potrzeb */
-    margin-bottom: 15px; /* Odstęp od dolnych elementów */
-}
 
 .bold-text {
     font-weight: bold; /* Pogrubienie tekstu dla tej klasy */
-}
-.chef {
-    display: flex;
-    align-items: center; /* Wyrównuje obraz i tekst w pionie */
-    margin-bottom: 10px; /* Odstęp między szefami kuchni */
-    background-color: white; /* Tło dla każdego szefa kuchni */
-    border-radius: 20px; /* Zaokrąglone rogi dla tła */
-    padding: 5px; /* Odstęp wewnątrz każdego szefa kuchni */
-    display: flex; 
-    flex-direction:row;
-    justify-content:center;
 }
 
 .chef-image {
@@ -291,9 +281,86 @@ h2 {
     margin-right: 10px; /* Odstęp między obrazem a tekstem */
 }
 
-#popularchef{
-    color:white;
-    text-align:center;
+#popularchef {
+    color: white;
+    text-align: center;
     font-family: 'Quicksand-Medium';
+}
 
+.dish-image {
+    width: 150px; /* Zwiększenie rozmiaru obrazu */
+    height: 150px; /* Zwiększenie rozmiaru obrazu */
+    border-radius: 50%; /* Zaokrągla obraz */
+    object-fit: cover; /* Dopasowuje obraz do elementu */
+    margin-bottom: 15px; /* Większy odstęp między obrazem a tekstem */
+}
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease; /* Dodanie przejścia dla zmiany koloru */
+}
+
+    .carousel-button.left-button {
+        left: 11rem; /* Zmniejszenie odstępu dla lewego przycisku */
+    }
+
+    .carousel-button.right-button {
+        right: 10rem; /* Zmniejszenie odstępu dla prawego przycisku */
+    }
+
+    .carousel-button:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+@media (max-width: 600px) {
+    #container {
+        width: 100vw;
+        padding: 5px;
+    }
+
+    #top-section {
+        flex-direction: column;
+        height: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+    }
+
+    #featured-recipe, #popular-chefs {
+        margin-right: 0;
+        flex-basis: 100%;
+        margin-bottom: 10px;
+    }
+
+    .chef, .card {
+        margin-bottom: 10px;
+    }
+
+    .carousel-container, .carousel {
+        overflow-x: auto;
+    }
+
+    .card {
+        width: 50%;
+        height: auto;
+        margin: 10px;
+        padding-bottom: 50%;
+        box-sizing: border-box;
+    }
+
+    .carousel-button {
+        display: none;
+    }
+
+    h2 {
+        font-size: 1.2em;
+        padding: 10px 0;
+    }
 }
