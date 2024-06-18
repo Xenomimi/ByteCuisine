@@ -1,0 +1,189 @@
+﻿
+
+
+/* Main Titles */
+.section-title {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    color: black;
+    font-size: 2rem;
+    font-family: 'Quicksand-Semibold';
+}
+
+.product-list, .ingredient-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Searchbars */
+.search-container {
+    position: relative;
+    display: inline-block;
+}
+
+#search-igri {
+    border-radius: 50px;
+    border: 0;
+    padding: 3px 10px;
+    outline: none;
+    width: 250px;
+    height: 38px;
+    font-family: 'Quicksand-Semibold';
+    font-size: 13px;
+    padding-left: 40px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #555;
+}
+
+/* Buttons */
+.search-button {
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-family: 'Quicksand-Medium';
+    font-size: 13px;
+    margin-left: 10px;
+    background: linear-gradient(120deg, #0f7909, #5DAB02);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 0.5s, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .search-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-position: 0 0;
+    }
+
+/* Lists */
+.list-back {
+    width: 100%;
+    margin: 20px 0px 20px 0px;
+    border-radius: 20px;
+    background-color: rgba(26, 26, 26, 0.85); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Background blur */
+    padding: 10px;
+}
+
+.product-list {
+    height: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.list-item {
+    display: flex;
+    height: 70px;
+    width: auto;
+    border-radius: 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px;
+    padding: 0 20px;
+    background-color: white;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+    .list-item:hover {
+        transform: scale(1.1);
+    }
+
+.checkmark-icon {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 25px;
+    height: 25px;
+    background-color: #80FF44;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.not-checkmark-icon {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 25px;
+    height: 25px;
+    background-color: #FF6464;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.list-item.selected {
+    background-color: #5DAB02;
+}
+
+.list-back::-webkit-scrollbar {
+    width: 50px;
+}
+
+.list-back::-webkit-scrollbar-thumb {
+    background-color: #5DAB02;
+    border-radius: 50px;
+}
+
+.list-back::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+::deep .avatar-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+}
+
+::deep .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+::deep .overlay-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    flex-direction: column;
+}
+
+.avatar-container:hover .overlay-button {
+    opacity: 1;
+}
+
+::deep .input-file {
+    display: none; /* Hide the input file */
+}

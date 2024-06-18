@@ -52,5 +52,38 @@ namespace ByteCuisine.Server.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        [HttpPut("{current_dish_id}")]
+        public async Task<IActionResult> UpdateDishIngredient(int current_dish_id, [FromBody] List<DishIngredientDTO> updatedDishIngredients)
+        {
+            try
+            {
+                var existingDishIngredients = await _dataContext.DishIngredients
+                    .Where(a => a.Dish_Id == current_dish_id)
+                    .ToListAsync();
+
+                if (existingDishIngredients == null || !existingDishIngredients.Any())
+                {
+                    return NotFound();
+                }
+
+                // Aktualizacja danych przepisu dla każdego znalezionego rekordu
+
+                for (int i = 0; i < updatedDishIngredients.Count; i++)
+                {
+                    existingDishIngredients[i].Ingredient_Id = updatedDishIngredients[i].Ingredient_Id;
+                    _dataContext.Entry(existingDishIngredients[i]).State = EntityState.Modified;
+                }
+
+                await _dataContext.SaveChangesAsync();
+
+                return Ok(existingDishIngredients);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
     }
 }

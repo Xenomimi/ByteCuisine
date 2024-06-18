@@ -1,13 +1,10 @@
-﻿@page "/recipepage/{RecipeId}"
+﻿@page "/editrecipe/{RecipeId}"
 @using ByteCuisine.Shared
 
-
-
-<div id="recipepage">
+<div class="editrecipe">
 	<MyNavigation />
-	<Recipe RecipeId="@RecipeId"/>
+	<EditRecipe RecipeId="@RecipeId" />
 </div>
-
 
 @code {
 	[Parameter]

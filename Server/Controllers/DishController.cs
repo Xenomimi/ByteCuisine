@@ -69,5 +69,33 @@ namespace ByteCuisine.Server.Controllers
             }
         }
 
+        [HttpPut("{current_dish_id}")]
+        public async Task<IActionResult> UpdateDish(int current_dish_id, [FromBody] DishDTO updatedDish)
+        {
+            try
+            {
+                var existingDish = await _dataContext.Dishes.FirstOrDefaultAsync(a => a.Dish_Id == current_dish_id);
+
+                if (existingDish == null)
+                {
+                    return NotFound();
+                }
+
+                // Aktualizacja danych przepisu
+                existingDish.Name = updatedDish.Name;
+                existingDish.Description = updatedDish.Description;
+                existingDish.DishImage = updatedDish.DishImage;
+                existingDish.CategoryId = updatedDish.CategoryId;
+
+                _dataContext.Entry(existingDish).State = EntityState.Modified;
+                await _dataContext.SaveChangesAsync();
+
+                return Ok(existingDish);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

@@ -94,25 +94,25 @@
         </div>
     </div>
 
-    <h2>Recommended recipes based on your preferences</h2>
+    <h2>Potrawy, które jesteś w stanie przyrządzić</h2>
 
     <button class="btn btn-success" @onclick="@NavigateToNewPage">Dodaj swoje własne przepisy!</button>
 
     <div class="carousel-container">
-        <button @onclick="PrzewinWLewo" class="carousel-button left-button">
+        <button @onclick="RollLeft" class="carousel-button left-button">
             <span class="material-symbols-outlined">arrow_back_ios</span>
         </button>
         <div class="carousel">
-            @foreach (var przepis in allDishes)
+            @foreach (var dish in allDishes)
             {
                 <div class="card">
-                    <img src="data:image/png;base64,@Convert.ToBase64String(przepis.DishImage)" alt="@przepis.Name" class="dish-image" />
-                    <div>@przepis.Name</div>
-                    <div>Potrzebujesz 8 składków</div>
+                    <img src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" class="dish-image" />
+                    <div>@dish.Name</div>
+                    <div>@categories.FirstOrDefault(c => c.Id == dish.CategoryId)?.CategoryName</div>
                 </div>
             }
         </div>
-        <button @onclick="PrzewinWPrawo" class="carousel-button right-button">
+        <button @onclick="RollRight" class="carousel-button right-button">
             <span class="material-symbols-outlined">arrow_forward_ios</span>
         </button>
     </div>
@@ -128,7 +128,7 @@
     private string bannerDescription;
     private int bannerId;
 
-
+    List<Category> categories = new List<Category>();
     List<Dish> allDishes = new List<Dish>();
     List<Account> users = new List<Account>();
 
@@ -136,6 +136,7 @@
     {
         users = await Http.GetFromJsonAsync<List<Account>>("api/account");
         allDishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
+        categories = await Http.GetFromJsonAsync<List<Category>>("api/category");
 
         // Domyślne ustawienia bannera
         userImage = users.FirstOrDefault(u => u.User_Id == 1)?.PictureData;
@@ -168,7 +169,7 @@
         .Take(widocznaIlosc)
         .ToList();
 
-    private void PrzewinWLewo()
+    private void RollLeft()
     {
         if (aktualnyIndeks > 0)
         {
@@ -176,7 +177,7 @@
         }
     }
 
-    private void PrzewinWPrawo()
+    private void RollRight()
     {
         if (aktualnyIndeks < WszystkiePrzepisy.Count - widocznaIlosc)
         {

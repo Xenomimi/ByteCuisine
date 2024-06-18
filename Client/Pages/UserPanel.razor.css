@@ -438,3 +438,143 @@ button, input, optgroup, select, textarea {
 ::deep input {
     display: none;
 }
+
+
+
+
+
+
+::deep .carousel-container {
+    position: relative;
+    overflow: hidden;
+    padding: 20px;
+}
+
+::deep .carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    scroll-behavior: smooth;
+}
+
+::deep .card {
+    flex: 0 0 auto;
+    width: 280px; /* Zwiększenie rozmiaru karty */
+    height: 310px; /* Zwiększenie rozmiaru karty */
+    margin: 0 15px; /* Odstęp między kartami */
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.2em; /* Zwiększenie wielkości czcionki */
+    font-weight: bold;
+    padding: 15px; /* Większe odstępy wewnętrzne */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:last-child {
+        margin-right: 0;
+    }
+
+    .card:hover {
+        transform: translateY(-5px); /* Podnosi kartę do góry */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Zwiększa cień przy najechaniu */
+    }
+
+    .card div {
+        font-size: 1em; /* Zwiększenie wielkości czcionki dla tekstu */
+        font-weight: normal; /* Normalna grubość czcionki */
+        color: #555; /* Kolor tekstu */
+        text-align: center; /* Wyśrodkowanie tekstu */
+        margin-top: 10px; /* Większy odstęp górny między elementami tekstowymi */
+    }
+
+        .card div:first-child {
+            font-size: 1.2em; /* Wielkość czcionki dla nazwy potrawy */
+            font-weight: bold; /* Pogrubienie czcionki dla nazwy potrawy */
+            color: #333; /* Kolor tekstu dla nazwy potrawy */
+            margin-bottom: 10px; /* Odstęp dolny między nazwą potrawy a resztą tekstu */
+        }
+
+        .card div:last-child {
+            color: #888; /* Szary kolor dla tekstu o składnikach */
+            font-size: 0.9em; /* Większa wielkość czcionki dla tekstu o składnikach */
+            font-weight: 300; /* Cieńsza czcionka */
+            margin-top: 5px; /* Odstęp górny */
+        }
+
+::deep .dish-image {
+    width: 150px; /* Zwiększenie rozmiaru obrazu */
+    height: 150px; /* Zwiększenie rozmiaru obrazu */
+    border-radius: 50%; /* Zaokrągla obraz */
+    object-fit: cover; /* Dopasowuje obraz do elementu */
+    margin-bottom: 15px; /* Większy odstęp między obrazem a tekstem */
+}
+
+::deep .carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease; /* Dodanie przejścia dla zmiany koloru */
+}
+
+    .carousel-button.left-button {
+        left: 11rem; /* Zmniejszenie odstępu dla lewego przycisku */
+    }
+
+    .carousel-button.right-button {
+        right: 10rem; /* Zmniejszenie odstępu dla prawego przycisku */
+    }
+
+    .carousel-button:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+@media (max-width: 600px) {
+    ::deep .carousel-container, .carousel {
+        overflow-x: auto;
+    }
+
+    ::deep .card {
+        width: 50%;
+        height: auto;
+        margin: 10px;
+        padding-bottom: 50%;
+        box-sizing: border-box;
+    }
+
+    ::deep .carousel-button {
+        display: none;
+    }
+}
+
+#edit-recipe-btn {
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-family: 'Quicksand-Medium';
+    font-size: 10px;
+    margin-left: 10px;
+    background: linear-gradient(120deg, #0f7909, #5DAB02);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 0.5s, transform 0.3s ease, box-shadow 0.3s ease;
+    margin-right: 20px;
+}
+
+    #edit-recipe-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-position: 0 0;
+    }

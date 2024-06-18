@@ -2,8 +2,10 @@
 @using System.Text
 @using ByteCuisine.Client.Services;
 @using ByteCuisine.Shared;
+@using System.Text.RegularExpressions;
 @inject HttpClient Http
 @inject UserStateService UserState
+@inject NavigationManager Navigation
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined">
 <MyNavigation />
@@ -27,136 +29,105 @@
                 <WykresAktywnosci />
             </div>
         </section>
-
-        <section class="my-kitchen">
-            <h2>Moja Kuchnia</h2>
-            <div class="scroll-buttons top">
-                <button class="scroll-control prev" @onclick="() => ScrollList(-1)">
-                    <span class="material-symbols-outlined">expand_less</span>
-                </button>
-            </div>
-
-            <ul class="recipe-list">
-                @foreach (var recipe in VisibleRecipes)
-                {
-                    <li class="recipe-item">
-                        <img src="ścieżka_do_obrazka_dania" alt="@recipe.Name" class="recipe-image">
-                        <div class="recipe-text">
-                            @recipe.Name
-                            <div class="recipe-rating">@DisplayStars(recipe.Rating)</div>
-                        </div>
-                    </li>
-                }
-            </ul>
-
-            <div class="scroll-buttons bottom">
-                <button class="scroll-control next" @onclick="() => ScrollList(1)">
-                    <span class="material-symbols-outlined">expand_more</span>
-                </button>
-            </div>
-        </section>
     </section>
-    <section class="favorites">
-        <h2>Ulubione</h2>
-        <div class="carousel">
-            <button class="carousel-control prev" @onclick="() => ScrollCarousel(-1)">
-                <span class="material-symbols-outlined">chevron_left</span>
+
+    @if (userDishes.Count > 0)
+    {
+        <h2 class="mt-4">Przepisy dodane przez ciebie: </h2>
+        <div class="carousel-container">
+            <button @onclick="RollLeft" class="carousel-button left-button">
+                <span class="material-symbols-outlined">arrow_back_ios</span>
             </button>
-            <div class="favorites-carousel">
-                @foreach (var dish in VisibleFavorites)
+            <div class="carousel">
+                @foreach (var dish in userDishes)
                 {
-                    <div class="carousel-item">
-                        <div class="carousel-image-wrapper">
-                            <img src="@dish.ImageUrl" alt="@dish.Name" class="favorite-image">
-                            <div class="carousel-text">@dish.Name</div>
+                    <div class="card">
+                        <img src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" class="dish-image" />
+                        <div>@dish.Name</div>
+                        <div>@categories.FirstOrDefault(c => c.Id == dish.CategoryId)?.CategoryName</div>
+                        <div>
+                            <button id="edit-recipe-btn" @onclick="() => NavigateToEditRecipe(dish.Dish_Id)">Edytuj</button>
                         </div>
                     </div>
                 }
             </div>
-
-            <button class="carousel-control next" @onclick="() => ScrollCarousel(1)">
-                <span class="material-symbols-outlined">chevron_right</span>
+            <button @onclick="RollRight" class="carousel-button right-button">
+                <span class="material-symbols-outlined">arrow_forward_ios</span>
             </button>
         </div>
-    </section>
+    }
+    else
+    {
+        <h2 class="mt-5">Jeszcze nie dodałeś swoich przepisów 🥺</h2>
+    }
 </div>
 
 @code {
+    List<Category> categories = new List<Category>();
+
+    List<Log> logs = new List<Log>();
+
+    List<Dish> dishes = new List<Dish>();
+
     List<Account> users = new List<Account>();
+
+    List<Dish> userDishes = new List<Dish>();
+
+    List<Log> userLogs = new List<Log>();
+
+
 
     protected override async Task OnInitializedAsync()
     {
         users = await Http.GetFromJsonAsync<List<Account>>("api/account");
+        dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
+        logs = await Http.GetFromJsonAsync<List<Log>>("api/log");
+        categories = await Http.GetFromJsonAsync<List<Category>>("api/category");
+
+        userLogs = logs.Where(l => l.AccountId == UserState.CurrentUser && l.ActivityName.Contains("Dodano przepis")).ToList();
+        userDishes = userLogs.Select(l => ExtractDishId(l.ActivityName)).Where(id => id != null).ToList();
+    }
+    private void NavigateToEditRecipe(int RecipeId)
+    {
+        Navigation.NavigateTo($"/editrecipe/{RecipeId}");
     }
 
-    private int currentFavoriteIndex = 0;
-    private int currentRecipeIndex = 0;
+    private Dish ExtractDishId(string activityName)
+	{
+		var match = Regex.Match(activityName, @"\d+");
+		if (match.Success)
+		{
+			var id = Convert.ToInt32(match.Value);
+			return dishes.FirstOrDefault(d => d.Dish_Id == id);
+		}
+		return null;
+	}
 
-    private List<FavoriteDish> Favorites = new List<FavoriteDish>
+    private List<string> WszystkiePrzepisy = new List<string>
     {
-        new FavoriteDish { Name = "Pasta" },
-        new FavoriteDish { Name = "Steak" },
-        new FavoriteDish { Name = "Ramen" },
-        new FavoriteDish { Name = "Curry" },
-        new FavoriteDish { Name = "Spaghetti" },
-        new FavoriteDish { Name = "Chicken Curry" },
-        new FavoriteDish { Name = "Pizza" },
-        new FavoriteDish { Name = "Sushi" },
+        "Stek", "Jedzenie Wegetariańskie", "Posiłek", "Stek", "Stek", "Stek", "Stek", "Stek"
     };
+    private int actualndex = 0;
+    private int seenObjects = 1;
+    private List<string> WidocznePrzepisy => WszystkiePrzepisy
+        .Skip(actualndex)
+        .Take(seenObjects)
+        .ToList();
 
-    private List<Recipe> Recipes = new List<Recipe>
+    private void RollLeft()
     {
-        new Recipe { Name = "Curry", Rating = 5 },
-        new Recipe { Name = "Spaghetti", Rating = 4 },
-        new Recipe { Name = "Chicken Curry", Rating = 5 },
-        new Recipe { Name = "Lasagna", Rating = 4 },
-        new Recipe { Name = "Burger", Rating = 5 },
-    };
-
-    private void ScrollCarousel(int direction)
-    {
-        int itemsPerScroll = 5;
-        int maxIndex = Favorites.Count - itemsPerScroll;
-        currentFavoriteIndex += direction * itemsPerScroll;
-
-        if (currentFavoriteIndex < 0)
+        if (actualndex > 0)
         {
-            currentFavoriteIndex = 0;
-        }
-        else if (currentFavoriteIndex > maxIndex)
-        {
-            currentFavoriteIndex = maxIndex;
+            actualndex--;
         }
     }
 
-    private void ScrollList(int direction)
+    private void RollRight()
     {
-        int itemsPerScroll = 3;
-        int maxIndex = Recipes.Count - itemsPerScroll;
-        currentRecipeIndex += direction * itemsPerScroll;
-
-        if (currentRecipeIndex < 0)
+        if (actualndex < WszystkiePrzepisy.Count - seenObjects)
         {
-            currentRecipeIndex = 0;
+            actualndex++;
         }
-        else if (currentRecipeIndex > maxIndex)
-        {
-            currentRecipeIndex = maxIndex;
-        }
-    }
-
-    private IEnumerable<FavoriteDish> VisibleFavorites => Favorites.Skip(currentFavoriteIndex).Take(5);
-
-    private IEnumerable<Recipe> VisibleRecipes => Recipes.Skip(currentRecipeIndex).Take(3);
-
-    private MarkupString DisplayStars(int rating)
-    {
-        var stars = new StringBuilder();
-        for (int i = 0; i < rating; i++)
-        {
-            stars.Append("<span class='material-symbols-outlined star'>star</span>");
-        }
-        return new MarkupString(stars.ToString());
     }
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
@@ -173,17 +144,5 @@
             currentUser.PictureData = Convert.FromBase64String(base64Image);
             await Http.PutAsJsonAsync("api/account/updatePicture", currentUser);
         }
-    }
-
-    public class FavoriteDish
-    {
-        public string Name { get; set; }
-        public string ImageUrl { get; set; }
-    }
-
-    public class Recipe
-    {
-        public string Name { get; set; }
-        public int Rating { get; set; }
     }
 }

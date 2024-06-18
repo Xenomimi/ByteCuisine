@@ -1,0 +1,224 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using ByteCuisine.Client.Services;
+@using ByteCuisine.Shared
+@using ByteCuisine.Shared.DTOs;
+@inject HttpClient Http
+@inject UserStateService UserState
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<div class="container mt-5">
+    <h3>Edytuj własny przepis 😄</h3>
+    <EditForm Model="@current_dish" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="name">Nazwa potrawy</label>
+            <InputText id="name" class="form-control" @bind-Value="current_dish.Name" />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Opis przyrządzenia</label>
+            <InputTextArea id="description" class="form-control" @bind-Value="current_dish.Description" />
+        </div>
+
+        <div class="form-group">
+            <label for="category">Kategoria przepisu</label>
+            <InputSelect id="category" class="form-control" @bind-Value="current_dish.CategoryId" @bind-Value:event="onchange">
+                @foreach (var category in categories)
+                {
+                    <option value="@category.Id">@category.CategoryName</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group mt-5">
+            <div class="avatar-container">
+                <img class="avatar" src="data:image/png;base64,@Convert.ToBase64String(current_dish.DishImage)" />
+                <label for="file-upload" class="overlay-button">
+                    Wybierz zdjęcie
+                </label>
+                <InputFile OnChange="OnInputFileChange" id="file-upload" class="input-file" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="search-section">
+                <h2 class="section-title">Wyszukaj składniki 📝</h2>
+                <div class="search-container">
+                    <i class="material-icons search-icon">search</i>
+                    <input type="text" id="search-igri" @bind="searchIngri" placeholder="Wyszukaj składniki" />
+                </div>
+                <button class="search-button" @onclick="SearchIngri">Search</button>
+
+                @* Lista składników *@
+
+                <div class="list-back">
+                    <ul class="product-list">
+                        @foreach (var ingri in products)
+                        {
+                            var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == ingri.Ingredient_Id);
+                            if (ingredient != null)
+                            {
+                                <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Dodaj przepis</button>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public string RecipeId { get; set; }
+
+    private int current_dish_id;
+    private DishIngredientDTO dishIngredientDTO = new DishIngredientDTO();
+
+    private List<DishIngredientDTO> dishIngredientDTOs = new List<DishIngredientDTO>();
+
+    private string searchIngri;
+    private List<ByteCuisine.Shared.Ingredient> ingredients = new List<ByteCuisine.Shared.Ingredient>();
+    private List<ByteCuisine.Shared.Ingredient> products = new List<ByteCuisine.Shared.Ingredient>();
+    private List<Category> categories = new List<Category>();
+    private LogDTO log = new LogDTO();
+    private Dish current_dish = new Dish();
+    private DishDTO current_dishDTO = new DishDTO();
+    private List<Dish> dishes = new List<Dish>();
+    private List<DishIngredient> dish_ingredients = new List<DishIngredient>();
+
+    private int selectedIngredientCounter = 0;
+    private int selectedIngredientCounterNew = 0;
+
+    private string uploadedFileBase64;
+    private HashSet<int> selectedIngredientIds = new HashSet<int>();
+    private byte[] uploadedFile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dishes = await Http.GetFromJsonAsync<List<Dish>>($"api/dish");
+        current_dish = dishes.FirstOrDefault(d => d.Dish_Id == int.Parse(RecipeId));
+        ingredients = await Http.GetFromJsonAsync<List<ByteCuisine.Shared.Ingredient>>("api/ingredient");
+        products = await Http.GetFromJsonAsync<List<ByteCuisine.Shared.Ingredient>>("api/ingredient");
+        categories = await Http.GetFromJsonAsync<List<Category>>("api/category");
+        dish_ingredients = await Http.GetFromJsonAsync<List<DishIngredient>>($"api/dishingredient");
+        dish_ingredients = dish_ingredients.Where(di => di.Dish_Id == current_dish.Dish_Id).ToList();
+
+        foreach (var dish_ingredient in dish_ingredients)
+        {
+            selectedIngredientIds.Add(dish_ingredient.Ingredient_Id);
+        }
+
+        selectedIngredientCounter = selectedIngredientIds.Count;
+
+    }
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        uploadedFileBase64 = Convert.ToBase64String(buffer);
+        current_dish.DishImage = Convert.FromBase64String(uploadedFileBase64);
+    }
+
+    private string GetItemClass(int ingredientId)
+    {
+        return selectedIngredientIds.Contains(ingredientId) ? "list-item selected" : "list-item";
+    }
+
+    private void ToggleIngredientSelection(int ingredientId)
+    {
+        if (!selectedIngredientIds.Add(ingredientId))
+        {
+            selectedIngredientIds.Remove(ingredientId);
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        current_dish_id = Convert.ToInt32(RecipeId);
+        current_dishDTO.Name = current_dish.Name;
+        current_dishDTO.Description = current_dish.Description;
+        current_dishDTO.DishImage = current_dish.DishImage;
+        current_dishDTO.CategoryId = current_dish.CategoryId;
+        await Http.PutAsJsonAsync($"api/dish/{current_dish_id}", current_dishDTO);
+        await Task.Delay(500);
+
+        selectedIngredientCounterNew = selectedIngredientIds.Count;
+
+        if (selectedIngredientCounter == selectedIngredientCounter)
+        {
+            foreach (var ingredientId in selectedIngredientIds)
+            {
+                dishIngredientDTO.Ingredient_Id = ingredientId;
+
+                dishIngredientDTOs.Add(dishIngredientDTO);
+            }
+            await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", dishIngredientDTOs);
+        }
+        else if (selectedIngredientCounter > selectedIngredientCounterNew)
+        {
+            foreach (var ingredientId in selectedIngredientIds)
+            {
+                if (!dish_ingredients.Any(di => di.Ingredient_Id == ingredientId))
+                {
+                    dishIngredientDTO.Ingredient_Id = ingredientId;
+                    await Http.PostAsJsonAsync("api/dishingredient", dishIngredientDTO);
+                }
+                else
+                {
+                    await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", dishIngredientDTO);
+                }
+            }
+        }
+        else
+        {
+            foreach (var dish_ingredient in dish_ingredients)
+            {
+                if (!selectedIngredientIds.Contains(dish_ingredient.Ingredient_Id))
+                {
+                    await Http.DeleteAsync($"api/dishingredient/{dish_ingredient.DishIngredient_Id}");
+                }
+            }
+        }
+
+        // Dodanie logów
+        log.ActivityTime = DateTime.UtcNow;
+        log.ActivityName = $"Edytowano przepis {current_dish.Dish_Id}";
+        log.AccountId = UserState.CurrentUser;
+        await Http.PostAsJsonAsync("api/log", log);
+
+        StateHasChanged();
+    }
+
+    private void SearchIngri()
+    {
+        products.Clear();
+
+        if (string.IsNullOrEmpty(searchIngri))
+        {
+            products = ingredients;
+        }
+        else
+        {
+            foreach (var ingredient in ingredients)
+            {
+                if (ingredient.Description.Contains(searchIngri, StringComparison.OrdinalIgnoreCase)
+                    || ingredient.Name.Contains(searchIngri, StringComparison.OrdinalIgnoreCase))
+                {
+                    products.Add(ingredient);
+                }
+            }
+        }
+
+        StateHasChanged();
+    }
+}
