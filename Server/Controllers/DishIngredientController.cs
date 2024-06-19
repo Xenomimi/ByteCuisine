@@ -54,7 +54,7 @@ namespace ByteCuisine.Server.Controllers
         }
 
         [HttpPut("{current_dish_id}")]
-        public async Task<IActionResult> UpdateDishIngredient(int current_dish_id, [FromBody] List<DishIngredientDTO> updatedDishIngredients)
+        public async Task<IActionResult> UpdateListDishIngredient(int current_dish_id, [FromBody] List<DishIngredientDTO> updatedDishIngredients)
         {
             try
             {

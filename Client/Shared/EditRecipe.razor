@@ -80,6 +80,7 @@
     public string RecipeId { get; set; }
 
     private int current_dish_id;
+    public int counter = 0;
 
     private List<DishIngredientDTO> dishIngredientDTOs = new List<DishIngredientDTO>();
 
@@ -153,7 +154,7 @@
 
         selectedIngredientCounterNew = selectedIngredientIds.Count;
 
-        if (selectedIngredientCounter == selectedIngredientCounter)
+        if (selectedIngredientCounter == selectedIngredientCounterNew)
         {
             foreach (var ingredientId in selectedIngredientIds)
             {
@@ -168,22 +169,30 @@
             }
             await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", dishIngredientDTOs);
         }
-        /*else if (selectedIngredientCounter > selectedIngredientCounterNew)
+        else if (selectedIngredientCounter < selectedIngredientCounterNew)
         {
+
             foreach (var ingredientId in selectedIngredientIds)
             {
-                if (!dish_ingredients.Any(di => di.Ingredient_Id == ingredientId))
+                var newDishIngredientDTO = new DishIngredientDTO
+                        {
+                            Ingredient_Id = ingredientId,
+                            Dish_Id = current_dish_id
+                        };
+                if (counter >= selectedIngredientCounter)
                 {
-                    newDishIngredientDTO.Ingredient_Id = ingredientId;
-                    await Http.PostAsJsonAsync("api/dishingredient", newDishIngredientDTO);
+                    await Http.PostAsJsonAsync("api/dishingredient/", newDishIngredientDTO);
                 }
                 else
                 {
-                    await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", newDishIngredientDTO);
+                    dishIngredientDTOs.Add(newDishIngredientDTO);
                 }
+                counter++;
+
             }
+            await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", dishIngredientDTOs);
         }
-        else
+        /*else
         {
             foreach (var dish_ingredient in dish_ingredients)
             {
