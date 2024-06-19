@@ -95,9 +95,6 @@
     </div>
 
     <h2>Potrawy, które jesteś w stanie przyrządzić</h2>
-
-    <button class="btn btn-success" @onclick="@NavigateToNewPage">Dodaj swoje własne przepisy!</button>
-
     <div class="carousel-container">
         <button @onclick="RollLeft" class="carousel-button left-button">
             <span class="material-symbols-outlined">arrow_back_ios</span>
@@ -116,7 +113,12 @@
             <span class="material-symbols-outlined">arrow_forward_ios</span>
         </button>
     </div>
+            <button class="btn btn-success" @onclick="@NavigateToNewPage">Dodaj swoje własne przepisy!</button>
+
 </div>
+
+
+
 
 @code {
 

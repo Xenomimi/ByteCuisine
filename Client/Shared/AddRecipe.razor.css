@@ -1,11 +1,20 @@
-﻿
-
+﻿body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 
 /* Main Titles */
 .section-title {
     margin-top: 50px;
     margin-bottom: 20px;
-    color: black;
+    color: white;
     font-size: 2rem;
     font-family: 'Quicksand-Semibold';
 }
@@ -145,4 +154,117 @@
 .list-back::-webkit-scrollbar-track {
     border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* New Styles */
+/* Background Image */
+.container {
+    background-image: url('/images/tlo.jpg'); /* Leaf background image */
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: white;
+    background-position: center;
+}
+
+/* Rounded Inputs */
+::deep .form-control, .rounded-input {
+    border-radius: 15px !important;
+    border: 1px solid #ddd;
+    padding: 6px;
+}
+
+/* Buttons */
+.custom-button {
+    background: linear-gradient(120deg, #555, #999);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    color: #fff;
+    border-radius: 15px;
+}
+
+    .custom-button:hover {
+        background-position: 0 0;
+    }
+
+.btn-success.custom-button {
+    background: linear-gradient(120deg, #0f7909, #5DAB02);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+}
+
+    .btn-success.custom-button:hover {
+        background-position: 0 0;
+    }
+
+.btn-secondary.custom-button {
+    background: linear-gradient(120deg, #555, #999);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+}
+
+    .btn-secondary.custom-button:hover {
+        background-position: 0 0;
+    }
+
+/* Adjusting the form elements */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+h3 {
+    color: white;
+}
+
+::deep .avatar-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+}
+
+::deep .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+::deep .overlay-button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    flex-direction: column;
+}
+
+.avatar-container:hover .overlay-button {
+    opacity: 1;
+}
+
+::deep .input-file {
+    display: none; /* Hide the input file */
 }

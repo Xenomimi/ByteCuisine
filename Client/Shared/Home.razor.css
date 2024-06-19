@@ -110,6 +110,7 @@
     justify-content: center;
     align-items: center;
     scroll-behavior: smooth;
+    padding-bottom: 15px;
 }
 
 .card {
@@ -315,9 +316,7 @@ h2 {
         right: 10rem; /* Zmniejszenie odstępu dla prawego przycisku */
     }
 
-    .carousel-button:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
+    
 
 @media (max-width: 600px) {
     #container {
@@ -364,3 +363,22 @@ h2 {
         padding: 10px 0;
     }
 }
+.btn-success {
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-family: 'Quicksand-Medium';
+    font-size: 15px;
+    background: linear-gradient(120deg, #0f7909, #5DAB02);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 0.5s, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .btn-success:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-position: 0 0;
+    }

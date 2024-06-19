@@ -557,7 +557,7 @@ button, input, optgroup, select, textarea {
     }
 }
 
-#edit-recipe-btn {
+::deep #edit-recipe-btn {
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -573,8 +573,8 @@ button, input, optgroup, select, textarea {
     margin-right: 20px;
 }
 
-    #edit-recipe-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        background-position: 0 0;
-    }
+::deep #edit-recipe-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    background-position: 0 0;
+}

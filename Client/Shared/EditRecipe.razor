@@ -5,10 +5,19 @@
 @using ByteCuisine.Shared.DTOs;
 @inject HttpClient Http
 @inject UserStateService UserState
+@inject NavigationManager Navigation
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <div class="container mt-5">
     <h3>Edytuj własny przepis 😄</h3>
+
+    @if (isRecipeUpdated)
+    {
+        <div class="alert alert-success">
+            Pomyślnie zapisano zmiany!
+        </div>
+    }
+
     <EditForm Model="@current_dish" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -71,9 +80,13 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-success">Dodaj przepis</button>
+        <div class="button-group">
+            <button type="submit" class="btn btn-success custom-button">Edytuj przepis</button>
+            <button type="button" class="btn btn-secondary custom-button" @onclick="NavigateToUserPage">Powrót</button>
+        </div>
     </EditForm>
 </div>
+
 
 @code {
     [Parameter]
@@ -100,6 +113,8 @@
     private string uploadedFileBase64;
     private HashSet<int> selectedIngredientIds = new HashSet<int>();
     private byte[] uploadedFile;
+
+    private bool isRecipeUpdated = false; // Flaga oznaczająca, czy przepis został zaktualizowany
 
     protected override async Task OnInitializedAsync()
     {
@@ -159,7 +174,6 @@
             foreach (var ingredientId in selectedIngredientIds)
             {
                 dishIngredientDTO.Ingredient_Id = ingredientId;
-
                 dishIngredientDTOs.Add(dishIngredientDTO);
             }
             await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", dishIngredientDTOs);
@@ -196,6 +210,7 @@
         log.AccountId = UserState.CurrentUser;
         await Http.PostAsJsonAsync("api/log", log);
 
+        isRecipeUpdated = true; // Ustawienie flagi na true
         StateHasChanged();
     }
 
@@ -220,5 +235,9 @@
         }
 
         StateHasChanged();
+    }
+    private void NavigateToUserPage()
+    {
+        Navigation.NavigateTo("/userpanel");
     }
 }
