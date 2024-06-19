@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-success">Dodaj przepis</button>
+        <button type="submit" class="btn btn-success">Edytuj przepis</button>
     </EditForm>
 </div>
 
@@ -80,7 +80,6 @@
     public string RecipeId { get; set; }
 
     private int current_dish_id;
-    private DishIngredientDTO dishIngredientDTO = new DishIngredientDTO();
 
     private List<DishIngredientDTO> dishIngredientDTOs = new List<DishIngredientDTO>();
 
@@ -99,6 +98,7 @@
 
     private string uploadedFileBase64;
     private HashSet<int> selectedIngredientIds = new HashSet<int>();
+    private HashSet<int> newSelectedIngredientIds = new HashSet<int>();
     private byte[] uploadedFile;
 
     protected override async Task OnInitializedAsync()
@@ -150,7 +150,6 @@
         current_dishDTO.DishImage = current_dish.DishImage;
         current_dishDTO.CategoryId = current_dish.CategoryId;
         await Http.PutAsJsonAsync($"api/dish/{current_dish_id}", current_dishDTO);
-        await Task.Delay(500);
 
         selectedIngredientCounterNew = selectedIngredientIds.Count;
 
@@ -158,24 +157,29 @@
         {
             foreach (var ingredientId in selectedIngredientIds)
             {
-                dishIngredientDTO.Ingredient_Id = ingredientId;
+                var newDishIngredientDTO = new DishIngredientDTO
+                    {
+                        Ingredient_Id = ingredientId,
+                        Dish_Id = current_dish_id
+                    };
 
-                dishIngredientDTOs.Add(dishIngredientDTO);
+                dishIngredientDTOs.Add(newDishIngredientDTO);
+
             }
             await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", dishIngredientDTOs);
         }
-        else if (selectedIngredientCounter > selectedIngredientCounterNew)
+        /*else if (selectedIngredientCounter > selectedIngredientCounterNew)
         {
             foreach (var ingredientId in selectedIngredientIds)
             {
                 if (!dish_ingredients.Any(di => di.Ingredient_Id == ingredientId))
                 {
-                    dishIngredientDTO.Ingredient_Id = ingredientId;
-                    await Http.PostAsJsonAsync("api/dishingredient", dishIngredientDTO);
+                    newDishIngredientDTO.Ingredient_Id = ingredientId;
+                    await Http.PostAsJsonAsync("api/dishingredient", newDishIngredientDTO);
                 }
                 else
                 {
-                    await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", dishIngredientDTO);
+                    await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", newDishIngredientDTO);
                 }
             }
         }
@@ -188,7 +192,7 @@
                     await Http.DeleteAsync($"api/dishingredient/{dish_ingredient.DishIngredient_Id}");
                 }
             }
-        }
+        }*/
 
         // Dodanie logów
         log.ActivityTime = DateTime.UtcNow;
