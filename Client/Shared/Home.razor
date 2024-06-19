@@ -81,12 +81,18 @@
                 }
                 else
                 {
-                    @foreach (var chef in users.Take(3))
+                    @for(int i = 0; i < users.Take(3).Count(); i++)
                     {
-                        <div class="chef" @onclick="() => change_baner(chef)">
-                            <span class="material-icons gold-crown">emoji_events</span>
-                            <img src="data:image/png;base64,@Convert.ToBase64String(chef.PictureData)" alt="chef" class="chef-image" />
-                            @chef.Username
+                        var chef = users[i];
+						<div class="chef" @onclick="() => change_baner(chef)">
+                            <span class="material-icons 
+                                @(i switch {
+								0 => "gold-crown",
+								1 => "silver-crown",
+								2 => "bronze-crown",
+								_ => ""
+							})">emoji_events</span>
+							<img src="data:image/png;base64,@Convert.ToBase64String(chef.PictureData)" alt="chef" class="chef-image"/>
                         </div>
                     }
                 }
@@ -129,6 +135,11 @@
     private string bannerName;
     private string bannerDescription;
     private int bannerId;
+
+    private enum Crowns
+	{
+		gold, silver, bronze
+	}
 
     List<Category> categories = new List<Category>();
     List<Dish> allDishes = new List<Dish>();
