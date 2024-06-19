@@ -164,7 +164,7 @@
         await Http.PostAsJsonAsync("api/log", log);
         StateHasChanged();
         Navigation.NavigateTo("/userpanel");
-	}
+    }
 
     private string GetItemClass(int ingredientId)
     {
@@ -228,16 +228,20 @@
             }
             await Http.PutAsJsonAsync($"api/dishingredient/{current_dish_id}", dishIngredientDTOs);
         }
-        /*else
+        else
         {
-            foreach (var dish_ingredient in dish_ingredients)
+            await Http.DeleteAsync($"api/dishingredient/{current_dish_id}");
+            foreach (var ingredientId in selectedIngredientIds)
             {
-                if (!selectedIngredientIds.Contains(dish_ingredient.Ingredient_Id))
+                var newDishIngredientDTO = new DishIngredientDTO
                 {
-                    await Http.DeleteAsync($"api/dishingredient/{dish_ingredient.DishIngredient_Id}");
-                }
+                    Ingredient_Id = ingredientId,
+                    Dish_Id = current_dish_id
+                };
+                await Http.PostAsJsonAsync("api/dishingredient/", newDishIngredientDTO);
             }
-        }*/
+        }
+
 
         // Dodanie logów
         log.ActivityTime = DateTime.UtcNow;
