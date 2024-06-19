@@ -85,5 +85,29 @@ namespace ByteCuisine.Server.Controllers
             }
         }
 
+        [HttpDelete("{dish_id}")]
+        public async Task<IActionResult> DeleteDishIngredient(int dish_id)
+        {
+            try
+            {
+                var existingDishIngredients = await _dataContext.DishIngredients
+                    .Where(a => a.Dish_Id == dish_id)
+                    .ToListAsync();
+
+                if (existingDishIngredients == null || !existingDishIngredients.Any())
+                {
+                    return NotFound();
+                }
+
+                _dataContext.DishIngredients.RemoveRange(existingDishIngredients);
+                await _dataContext.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

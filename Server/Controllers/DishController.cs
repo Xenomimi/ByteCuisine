@@ -97,5 +97,28 @@ namespace ByteCuisine.Server.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        [HttpDelete("{dishId}")]
+        public async Task<IActionResult> DeleteDish(int dishId)
+        {
+            try
+            {
+                var existingDish = await _dataContext.Dishes.FirstOrDefaultAsync(a => a.Dish_Id == dishId);
+
+                if (existingDish == null)
+                {
+                    return NotFound();
+                }
+
+                _dataContext.Dishes.Remove(existingDish);
+                await _dataContext.SaveChangesAsync();
+
+                return Ok(existingDish);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

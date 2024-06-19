@@ -9,7 +9,11 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <div class="container mt-5">
-    <h3>Edytuj własny przepis 😄</h3>
+
+    <div class="header">
+        <h3>Edytuj własny przepis 😄</h3>
+        <button type="button" class="btn btn-danger" @onclick="() => DeleteRecipe(current_dish.Dish_Id)">Usuń przepis</button>
+    </div>
 
     @if (isRecipeUpdated)
     {
@@ -144,6 +148,23 @@
         uploadedFileBase64 = Convert.ToBase64String(buffer);
         current_dish.DishImage = Convert.FromBase64String(uploadedFileBase64);
     }
+
+    // Usuwanie przepisu
+    private async Task DeleteRecipe(int dishId)
+    {
+        await Http.DeleteAsync($"api/dish/{dishId}");
+
+        // Usuwanie składników przepisu
+        await Http.DeleteAsync($"api/dishingredient/{dishId}");
+
+        // Dodanie logów
+        log.ActivityTime = DateTime.UtcNow;
+        log.ActivityName = $"Usunięto przepis {dishId}";
+        log.AccountId = UserState.CurrentUser;
+        await Http.PostAsJsonAsync("api/log", log);
+        StateHasChanged();
+        Navigation.NavigateTo("/userpanel");
+	}
 
     private string GetItemClass(int ingredientId)
     {
