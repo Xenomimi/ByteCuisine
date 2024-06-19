@@ -1,36 +1,23 @@
-﻿body, html {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* Main Titles */
-.section-title {
+﻿/* Main Titles */
+::deep .section-title {
     margin-top: 50px;
     margin-bottom: 20px;
     color: white;
     font-size: 2rem;
     font-family: 'Quicksand-Semibold';
 }
-
-.product-list, .ingredient-list {
+::deep .product-list, .ingredient-list {
     list-style-type: none;
     padding: 0;
 }
 
 /* Searchbars */
-.search-container {
+::deep .search-container {
     position: relative;
     display: inline-block;
 }
 
-#search-igri {
+::deep #search-igri {
     border-radius: 50px;
     border: 0;
     padding: 3px 10px;
@@ -44,7 +31,7 @@
     border-radius: 5px;
 }
 
-.search-icon {
+::deep .search-icon {
     position: absolute;
     top: 50%;
     left: 15px;
@@ -54,7 +41,7 @@
 }
 
 /* Buttons */
-.search-button {
+::deep .search-button {
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -76,7 +63,7 @@
     }
 
 /* Lists */
-.list-back {
+::deep .list-back {
     width: 100%;
     margin: 20px 0px 20px 0px;
     border-radius: 20px;
@@ -85,13 +72,13 @@
     padding: 10px;
 }
 
-.product-list {
+::deep .product-list {
     height: 100px;
     display: flex;
     align-items: center;
 }
 
-.list-item {
+::deep .list-item {
     display: flex;
     height: 70px;
     width: auto;
@@ -110,7 +97,7 @@
         transform: scale(1.1);
     }
 
-.checkmark-icon {
+::deep .checkmark-icon {
     position: absolute;
     top: -7px;
     right: -7px;
@@ -124,7 +111,7 @@
     color: white;
 }
 
-.not-checkmark-icon {
+::deep .not-checkmark-icon {
     position: absolute;
     top: -7px;
     right: -7px;
@@ -138,20 +125,20 @@
     color: white;
 }
 
-.list-item.selected {
+::deep .list-item.selected {
     background-color: #5DAB02;
 }
 
-.list-back::-webkit-scrollbar {
+::deep .list-back::-webkit-scrollbar {
     width: 50px;
 }
 
-.list-back::-webkit-scrollbar-thumb {
+::deep .list-back::-webkit-scrollbar-thumb {
     background-color: #5DAB02;
     border-radius: 50px;
 }
 
-.list-back::-webkit-scrollbar-track {
+::deep .list-back::-webkit-scrollbar-track {
     border-radius: 20px;
     background-color: rgba(255, 255, 255, 0.1);
 }
