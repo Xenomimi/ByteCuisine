@@ -19,6 +19,6 @@ namespace ByteCuisine.Shared
         public string ActivityName { get; set; }
 
         public int AccountId { get; set; }
-        public Account Account { get; set; }
+        public virtual Account Account { get; set; }
     }
 }

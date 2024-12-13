@@ -21,8 +21,8 @@ namespace ByteCuisine.Shared
         public bool IsDeleted { get; set; }
 
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
 
-        public ICollection<DishIngredient> DishIngredients { get; set; }
+        public virtual ICollection<DishIngredient> DishIngredients { get; set; }
     }
 }

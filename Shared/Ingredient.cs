@@ -20,7 +20,7 @@ namespace ByteCuisine.Shared
 
         public double Callories { get; set; }
 
-        public ICollection<IngredientsInFridge> IngredientsInFridge { get; set; }
-        public ICollection<DishIngredient> DishIngredients { get; set; }
+        public virtual ICollection<IngredientsInFridge> IngredientsInFridge { get; set; }
+        public virtual ICollection<DishIngredient> DishIngredients { get; set; }
     }
 }

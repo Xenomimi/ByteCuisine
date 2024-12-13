@@ -14,6 +14,6 @@ namespace ByteCuisine.Shared
         [MaxLength(100)]
         public string CategoryName { get; set; }
 
-        public ICollection<Dish> Dishes { get; set; }
+        public virtual ICollection<Dish> Dishes { get; set; }
     }
 }

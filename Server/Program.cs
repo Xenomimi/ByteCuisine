@@ -9,8 +9,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 
-builder.Services.AddDbContext<DataContext>(options =>
-   options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>(options =>
+   options.UseNpgsql(builder.Configuration.GetConnectionString("ByteCuisineConnection")));
 
 
 var app = builder.Build();

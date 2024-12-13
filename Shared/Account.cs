@@ -23,7 +23,7 @@ namespace ByteCuisine.Shared
         public string Role { get; set; }
         public bool IsDeleted { get; set; }
         public byte[] PictureData { get; set; }
-        public ICollection<IngredientsInFridge> IngredientsInFridge { get; set; }
-        public ICollection<Log> Logs { get; set; }
+        public virtual ICollection<IngredientsInFridge> IngredientsInFridge { get; set; }
+        public virtual ICollection<Log> Logs { get; set; }
     }
 }
