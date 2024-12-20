@@ -1,0 +1,316 @@
+﻿* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+/*
+   Tło
+*/
+
+.container-fluid {
+    background-image: url('/images/tlo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-bottom: 50px;
+}
+
+/*
+   Napisy główne
+*/
+
+.section-title {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    color: #E6E6E6;
+    font-size: 2rem;
+    font-family: 'Quicksand-Semibold';
+}
+
+.product-list, .ingredient-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+    .product-list li, .ingredient-list li {
+        margin-bottom: 5px;
+    }
+
+/*
+   Searchbary
+*/
+
+::deep .search-container {
+    position: relative;
+    display: inline-block;
+}
+
+::deep #search-igri {
+    border-radius: 50px;
+    border: 0;
+    padding: 3px 10px;
+    outline: none;
+    width: 250px;
+    height: 38px;
+    font-family: 'Quicksand-Semibold';
+    font-size: 13px;
+    padding-left: 40px;
+}
+
+::deep .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #555;
+}
+
+/*
+   Przyciski
+*/
+.search-button {
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-family: 'Quicksand-Medium';
+    font-size: 13px;
+    margin-left: 10px;
+    background: linear-gradient(120deg, #0f7909, #5DAB02);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    transition: background-position 0.5s, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .search-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-position: 0 0;
+    }
+
+/*
+   Listy
+*/
+
+.list-back {
+    width: 600px;
+    margin-top: 20px;
+    height: 120px;
+    overflow-x: scroll;
+    border-radius: 20px 20px 5px 5px;
+    background-color: rgba(26, 26, 26, 0.85); /* Półprzezroczyste tło */
+    backdrop-filter: blur(10px); /* Rozmycie tła */
+}
+
+.product-list {
+    height: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.list-item {
+    display: flex;
+    height: 70px;
+    width: auto;
+    border-radius: 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px;
+    padding: 0 20px;
+    background-color: white;
+    position: relative;
+    transition: transform 0.3s ease
+}
+
+    .list-item:hover {
+        transform: scale(1.1);
+    }
+
+.checkmark-icon {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 25px;
+    height: 25px;
+    background-color: #80FF44;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.not-checkmark-icon {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 25px;
+    height: 25px;
+    background-color: #FF6464;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.list-item.selected {
+    background-color: #5DAB02;
+}
+
+.list-back::-webkit-scrollbar {
+    width: 50px;
+}
+
+.list-back::-webkit-scrollbar-thumb {
+    background-color: #5DAB02;
+    border-radius: 50px;
+}
+
+.list-back::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/*
+   Listy pionowe
+*/
+
+.list-back-pion {
+    width: 600px;
+    height: 250px;
+    margin-top: 20px;
+    overflow-y: scroll;
+    border-radius: 20px 5px 5px 20px;
+    background-color: rgba(26, 26, 26, 0.85); /* Półprzezroczyste tło */
+    backdrop-filter: blur(10px); /* Rozmycie tła */
+    padding: 10px 15px;
+}
+
+.product-list-pion {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-item-pion {
+    display: flex;
+    height: auto;
+    width: 100%;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px 0;
+    padding: 20px 0;
+    background-color: white;
+    position: relative;
+    font-family: 'Quicksand-Semibold';
+    font-size: 16px;
+    color: #676767;
+    transition: transform 0.3s ease
+}
+
+    .list-item-pion.selected {
+        box-shadow: inset 0px 0px 0px 5px rgba(93, 171, 2, 1)
+    }
+
+    .list-item-pion:hover {
+        transform: scale(1.02);
+    }
+
+.list-back-pion::-webkit-scrollbar {
+    height: 50px;
+}
+
+.list-back-pion::-webkit-scrollbar-thumb {
+    background-color: #5DAB02;
+    border-radius: 50px;
+}
+
+.list-back-pion::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/*
+   Lista lodowki
+*/
+
+.list-back-fridge {
+    width: 600px;
+    height: 60vh;
+    margin-top: 20px;
+    overflow-y: scroll;
+    border-radius: 20px 5px 5px 20px;
+    background-color: rgba(26, 26, 26, 0.85); /* Półprzezroczyste tło */
+    backdrop-filter: blur(10px); /* Rozmycie tła */
+    padding: 10px 15px;
+}
+
+.product-list-fridge {
+    list-style-type: none;
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.product-fridge {
+    display: flex;
+    height: 75px;
+    width: 100%;
+    border-radius: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px 0;
+    padding: 20px 0;
+    background-color: white;
+    position: relative;
+    transition: transform 0.3s ease
+}
+
+    .product-fridge:hover {
+        transform: scale(1.1);
+    }
+
+.list-back-fridge::-webkit-scrollbar {
+    width: auto;
+}
+
+.product-fridge.selected {
+    background-color: #5DAB02;
+}
+
+.list-back-fridge::-webkit-scrollbar-thumb {
+    background-color: #5DAB02;
+    border-radius: 20px;
+}
+
+.list-back-fridge::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/*
+   Viewporty
+*/
+
+@media (max-width: 1260px) {
+    ::deep .row {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .container-fluid {
+        height: auto;
+        padding-bottom: 50px;
+    }
+}

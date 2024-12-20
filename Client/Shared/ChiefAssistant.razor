@@ -1,0 +1,131 @@
+﻿@using ByteCuisine.Client.Services;
+@using ByteCuisine.Shared;
+@inject HttpClient Http
+@inject UserStateService UserState
+@inject NavigationManager Navigation
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 d-flex flex-column align-items-center">
+            <div class="chat-section">
+                @* Chat *@
+
+            </div>
+            <div class="search-section">
+                <h2 class="section-title">Wyszukaj składniki</h2>
+                <div class="search-container">
+                    <i class="material-icons search-icon">search</i>
+                    <input type="text" id="search-igri" @bind="searchIngri" placeholder="Wyszukaj składniki" />
+                </div>
+                <button class="search-button" @onclick="SearchIngri">Wyszukaj</button>
+                @* Lista składników *@
+
+                <div class="list-back">
+                    <ul class="product-list">
+                        @foreach (var ingri in products)
+                        {
+                            var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == ingri.Ingredient_Id);
+                            if (ingredient != null)
+                            {
+                                <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private string searchIngri;
+    @* Ładowanie elementów z bazy *@
+    private List<Ingredient> ingredients = new List<Ingredient>();
+    private List<Ingredient> products = new List<Ingredient>();
+    private List<IngredientsInFridge> fridge = new List<IngredientsInFridge>();
+
+    private string GetItemClass(int ingredientId)
+    {
+        return selectedIngredientIds.Contains(ingredientId) ? "list-item selected" : "list-item";
+    }
+
+    private HashSet<int> selectedIngredientIds = new HashSet<int>();
+
+    private void ToggleIngredientSelection(int ingredientId)
+    {
+        if (!selectedIngredientIds.Add(ingredientId))
+        {
+            selectedIngredientIds.Remove(ingredientId);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ingredients = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
+        products = await Http.GetFromJsonAsync<List<Ingredient>>("api/ingredient");
+        // Pobranie z bazy produktów wirtualnej lodówki
+        int currentUser = UserState.CurrentUser;
+        fridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
+    }
+
+    // private async Task AddSelectedIngredients()
+    // {
+    //     var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
+
+    //     foreach (var ingredientId in selectedIngredientIds)
+    //     {
+    //         var fridgeModel = new IngredientsInFridgeDTO
+    //             {
+    //                 Ingredient_Id = ingredientId,
+    //                 Account_Id = currentUser,
+    //             };
+    //         using var response = await Http.PostAsJsonAsync($"api/ingredientsInFridge/user/{currentUser}", fridgeModel);
+    //         if (!response.IsSuccessStatusCode)
+    //         {
+    //             // Wypisz wiadomość z błędem
+    //             var errorMessage = response.ReasonPhrase;
+    //             Console.WriteLine($"There was an error! {errorMessage}");
+    //             return;
+    //         }
+    //     }
+    //     // Wyczyszczenie listy zaznaczonych składników
+    //     selectedIngredientIds.Clear();
+
+    //     // Odświeżenie listy produktów w wirtualnej lodówce
+    //     fridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
+
+    //     // Odświeżenie listy przepisów
+    //     dishesWithIngredientsFromFridge.Clear();
+    //     await LoadDishesWithIngredientsFromFridge();
+    // }
+
+    private void SearchIngri()
+    {
+        // Wyczyszczenie obecnej listy produktów
+        products.Clear();
+
+        if (string.IsNullOrEmpty(searchIngri))
+        {
+            // Jeśli pole wyszukiwania jest puste, wyświetl wszystkie składniki
+            products = ingredients;
+        }
+        else
+        {
+            // Filtrowanie składników według zapytania wyszukiwania
+            foreach (var ingredient in ingredients)
+            {
+                if (ingredient.Description.Contains(searchIngri, StringComparison.OrdinalIgnoreCase)
+                    || ingredient.Name.Contains(searchIngri, StringComparison.OrdinalIgnoreCase))
+                {
+                    products.Add(ingredient);
+                }
+            }
+        }
+
+        StateHasChanged(); // Aktualizacja stanu komponentu
+    }
+}
