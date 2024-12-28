@@ -1,17 +1,65 @@
 ﻿@using ByteCuisine.Client.Services;
 @using ByteCuisine.Shared;
+@using GroqApiLibrary;
+@using System.Text.Json.Nodes;
 @inject HttpClient Http
 @inject UserStateService UserState
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6 d-flex flex-column align-items-center">
+            <h2 class="section-title">Inteligentny asystent</h2>
             <div class="chat-section">
                 @* Chat *@
+                @foreach (var message in messages)
+                {
+                    @if (message.Role == "Użytkownik")
+                    {
+                        <div class="chat-role">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                            </svg>
+                            <strong> @message.Role</strong>
+                        </div>
+                        <div class="alert alert-primary message">@((MarkupString)FormatMessage(message.Message))</div>
+                    }
+                    else
+                    {
+                        <div class="chat-role">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
+                                <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                                <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2" />
+                            </svg>
+                            <strong> @message.Role</strong>
+                        </div>
+                        <div class="alert alert-success message">@((MarkupString)FormatMessage(message.Message))</div>
+                    }
+                }
+
+                @if (messages.Count() == 0)
+                {
+                    <div class="search-container">
+                        <i class="material-icons search-icon" b-8i1dlryfz2="">search</i>
+                        <input type="text" id="search-igri" placeholder="Napisz wiadomość" @bind="newMessage" />
+                        <button class="search-button" type="button" @onclick="AskChat">Zapytaj Chat</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="chat-search-container">
+                        <i class="material-icons search-icon" b-8i1dlryfz2="">search</i>
+                        <input type="text" id="search-igri" placeholder="Napisz wiadomość" @bind="newMessage" />
+                        <button class="search-button" type="button" @onclick="AskChat">Zapytaj Chat</button>
+                    </div>
+                }
 
             </div>
+
+        </div>
+        <div class="col-md-6 d-flex flex-column align-items-center">
             <div class="search-section">
                 <h2 class="section-title">Wyszukaj składniki</h2>
                 <div class="search-container">
@@ -21,7 +69,7 @@
                 <button class="search-button" @onclick="SearchIngri">Wyszukaj</button>
                 @* Lista składników *@
 
-                <div class="list-back">
+                <div class="list-back-pion">
                     <ul class="product-list">
                         @foreach (var ingri in products)
                         {
@@ -47,6 +95,80 @@
     private List<Ingredient> ingredients = new List<Ingredient>();
     private List<Ingredient> products = new List<Ingredient>();
     private List<IngredientsInFridge> fridge = new List<IngredientsInFridge>();
+    // Zmienne czatu
+    private List<ChatMessage> messages = new();
+    private string? newMessage;
+    private string? newPrompt;
+    private static string apiKey = "__API_KEY__";
+    private GroqApiClient groqApi = new GroqApiClient(apiKey);
+    private bool shouldHighlight = false;
+
+    @* Logika czatu *@
+
+    private async Task AskChat()
+    {
+        newPrompt = newMessage;
+        if (messages != null)
+        {
+            newPrompt = "Here is our conversation history: ";
+            foreach (var message in messages)
+            {
+                newPrompt += $"{message.Role}: {message.Message} ";
+            }
+
+            newPrompt += " Now I will send you a question. Answer for that question. " + newMessage;
+        }
+
+        var request = new JsonObject
+            {
+                ["model"] = "llama-3.2-3b-preview",
+                ["messages"] = new JsonArray
+            {
+                new JsonObject
+                {
+                    ["role"] = "user",
+                    ["content"] = newPrompt
+                }
+            }
+            };
+
+        var result = await groqApi.CreateChatCompletionAsync(request);
+        var fullAnswer = result?["choices"]?[0]?["message"]?["content"]?.ToString();
+
+        messages.Add(new ChatMessage { Message = newMessage, Role = "Użytkownik" });
+        messages.Add(new ChatMessage { Message = fullAnswer, Role = "Asystent" });
+
+        newMessage = string.Empty;
+
+        shouldHighlight = true;
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (shouldHighlight)
+        {
+            await JSRuntime.InvokeVoidAsync("hljs.highlightAll");
+            shouldHighlight = false;
+        }
+    }
+
+    private string FormatMessage(string? message)
+    {
+        if (string.IsNullOrEmpty(message)) return string.Empty;
+
+        // Wykrywanie kodu otoczonego ```
+        var formattedMessage = System.Text.RegularExpressions.Regex.Replace(
+            message,
+            "```(.*?)```",
+            match => $"<pre><code>{System.Net.WebUtility.HtmlEncode(match.Groups[1].Value)}</code></pre>",
+            System.Text.RegularExpressions.RegexOptions.Singleline
+        );
+
+        return formattedMessage;
+    }
+
+    @* Logika sładników *@
 
     private string GetItemClass(int ingredientId)
     {
