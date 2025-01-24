@@ -198,6 +198,8 @@
                     await Http.PostAsJsonAsync("api/account", registerModel);
                     await Http.PostAsJsonAsync("api/log", log);
 
+                    await Task.Delay(150);
+                    users = await Http.GetFromJsonAsync<List<Account>>("api/account");
                     // Czyszczenie formularza oraz przechodzenie do strony logowania
                     registerModel = new AccountDTO();
                     r_pass = "";
