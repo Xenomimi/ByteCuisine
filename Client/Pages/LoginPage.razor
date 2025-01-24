@@ -159,12 +159,12 @@
             log.ActivityName = "Logowanie";
             log.AccountId = user.User_Id;
 
-            if (user.Role == "User")
+            if (user.Role.ToLower() == "user")
             {
                 Navigation.NavigateTo("/index");
                 await Http.PostAsJsonAsync("api/log", log);
             }
-            else if (user.Role == "Admin")
+            else if (user.Role.ToLower() == "admin")
             {
                 Navigation.NavigateTo("/admin");
                 await Http.PostAsJsonAsync("api/log", log);

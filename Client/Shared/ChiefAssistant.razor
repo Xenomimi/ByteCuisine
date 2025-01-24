@@ -42,22 +42,11 @@
                 @if (messages.Count() == 0)
                 {
                     <div class="search-container">
-                        <i class="material-icons search-icon" b-8i1dlryfz2="">search</i>
-                        <input type="text" id="search-igri" placeholder="Napisz wiadomość" @bind="newMessage" />
-                        <button class="search-button" type="button" @onclick="AskChat">Zapytaj Chat</button>
-                    </div>
-                }
-                else
-                {
-                    <div class="chat-search-container">
-                        <i class="material-icons search-icon" b-8i1dlryfz2="">search</i>
-                        <input type="text" id="search-igri" placeholder="Napisz wiadomość" @bind="newMessage" />
-                        <button class="search-button" type="button" @onclick="AskChat">Zapytaj Chat</button>
+                        Podaj mi składniki, z których chcesz wykonać potrawę 😄 <br/>
                     </div>
                 }
 
             </div>
-
         </div>
         <div class="col-md-6 d-flex flex-column align-items-center">
             <div class="search-section">
@@ -84,6 +73,9 @@
                     </ul>
                 </div>
             </div>
+            <div>
+                <button style="margin-left: 0; margin-top: 20px" class="search-button" type="button" @onclick="GenerateRecipe">Generuj przepis</button>
+            </div>
         </div>
     </div>
 </div>
@@ -99,50 +91,160 @@
     private List<ChatMessage> messages = new();
     private string? newMessage;
     private string? newPrompt;
-    private static string apiKey = "__API_KEY__";
+    private static string apiKey = "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";
     private GroqApiClient groqApi = new GroqApiClient(apiKey);
     private bool shouldHighlight = false;
+    string productNames = "";
+
+    private void Zaznaczenia()
+    {
+        Console.WriteLine(string.Join(", ", selectedIngredientIds));
+    }
+
+    private void GiveProductNames()
+    {
+        var matchingProducts = products
+            .Where(p => selectedIngredientIds.Contains(p.Ingredient_Id))
+            .Select(p => p.Name);
+
+        // Łączymy nazwy w jeden string oddzielony przecinkami
+        productNames = string.Join(", ", matchingProducts);
+        Console.WriteLine(productNames);
+    }
 
     @* Logika czatu *@
 
-    private async Task AskChat()
+    private async Task AskChat(string prompt)
     {
-        newPrompt = newMessage;
-        if (messages != null)
-        {
-            newPrompt = "Here is our conversation history: ";
-            foreach (var message in messages)
-            {
-                newPrompt += $"{message.Role}: {message.Message} ";
-            }
-
-            newPrompt += " Now I will send you a question. Answer for that question. " + newMessage;
-        }
-
         var request = new JsonObject
             {
-                ["model"] = "llama-3.2-3b-preview",
+                ["model"] = "mixtral-8x7b-32768",
                 ["messages"] = new JsonArray
-            {
-                new JsonObject
-                {
-                    ["role"] = "user",
-                    ["content"] = newPrompt
-                }
-            }
+        {
+            new JsonObject { ["role"] = "user", ["content"] = prompt }
+        }
             };
 
         var result = await groqApi.CreateChatCompletionAsync(request);
         var fullAnswer = result?["choices"]?[0]?["message"]?["content"]?.ToString();
 
-        messages.Add(new ChatMessage { Message = newMessage, Role = "Użytkownik" });
+        messages.Clear(); // Usunięcie historii czatu
         messages.Add(new ChatMessage { Message = fullAnswer, Role = "Asystent" });
 
-        newMessage = string.Empty;
-
-        shouldHighlight = true;
         StateHasChanged();
     }
+
+
+    private async Task GenerateRecipe()
+    {
+        var selectedNames = products
+            .Where(p => selectedIngredientIds.Contains(p.Ingredient_Id))
+            .Select(p => p.Name)
+            .ToList();
+
+        if (!selectedNames.Any())
+        {
+            messages.Clear();
+            messages.Add(new ChatMessage { Message = "Nie wybrano żadnych składników do przepisu.", Role = "Asystent" });
+            return;
+        }
+
+        string ingredientList = string.Join(", ", selectedNames);
+        string prompt = $@"
+        Podaj przepis na danie, bazując na tych składnikach: {ingredientList} oraz innych składnikach potrzebnych do wykonania dania.
+
+        Format odpowiedzi musi być następujący:
+        - Pierwsza linia: Nazwa przepisu (pogrubiona) następnie nowa linia.
+        - Druga linia: `Lista składników:` (pogrubiona).
+        - Następne linijki lista składników, każdy zaczyna się od `- `.
+        - Kolejna część: `Sposób przyrządzenia:` (pogrubiona).
+        - Następnie numerowana lista kroków, gdzie każdy krok zaczyna się od `1. `.
+
+        Przykład:
+        
+        **Przepis na naleśniki**
+
+        **Lista składników:**
+        - 1 szklanka mąki
+        - 2 jajka
+        - 1 szklanka mleka
+        - 1 łyżka masła
+
+        **Sposób przyrządzenia:**
+        Wymieszaj składniki w misce.
+        Odstaw na 10 minut.
+        Smaż cienkie naleśniki na patelni.
+        Podawaj z ulubionymi dodatkami.
+
+        Odpowiedz w dokładnie takim formacie.
+        ";
+        await AskChat(prompt);
+    }
+
+
+
+    private string FormatMessage(string? message)
+    {
+        if (string.IsNullOrEmpty(message))
+            return string.Empty;
+
+        // 1) Pogrubienie: **tekst** → <b>tekst</b>
+        message = System.Text.RegularExpressions.Regex.Replace(
+            message,
+            @"\*\*(.*?)\*\*",
+            "<b>$1</b>",
+            System.Text.RegularExpressions.RegexOptions.Singleline
+        );
+
+        // 2) (opcjonalnie) Wstaw <br> po zamknięciu taga <b>,
+        //    aby "Nazwa przepisu" była w oddzielnej linii
+        //    Możesz to pominąć, jeśli nie chcesz łamać linii.
+        message = message.Replace("</b>", "</b><br>");
+
+        // 3) Po "Lista składników:" wstaw <b>Lista składników:</b>\n<ul>
+        //    - Uwaga na poprawny HTML – przyda się /b w drugim znaczniku
+        message = message.Replace(
+            "Lista składników:",
+            "<b>Lista składników:</b><ul>"
+        );
+
+        // 4) Zamień "- składnik" na <li>składnik</li> (bez kolejnego <ul>)
+        message = System.Text.RegularExpressions.Regex.Replace(
+            message,
+            @"(^|\n)- (.+)",
+            "$1<li>$2</li>"
+        );
+
+        // 5) "Sposób przyrządzenia:" – zamknij <ul>, otwórz <ol>
+        message = message.Replace(
+            "Sposób przyrządzenia:",
+            "</ul>Sposób przyrządzenia:<ol>"
+        );
+
+        // 6) Numerowane kroki:
+        //    Jeżeli chcesz **usunąć** numer z tekstu (1. krok → <li>krok</li>),
+        //    użyj wzorca:  $1<li>$3</li>
+        //    Jeżeli chcesz **zachować** numer (1. krok → <li>1. krok</li>),
+        //    użyj wzorca:  $1<li>$2. $3</li>
+        message = System.Text.RegularExpressions.Regex.Replace(
+            message,
+            @"(^|\n)(\d+)\.\s+(.+)",
+            "$1<li>$3</li>"
+        );
+
+        // 7) Zamykamy <ol>, o ile faktycznie je otworzyliśmy
+        if (message.Contains("<ol>"))
+            message += "</ol>";
+
+        // 8) Jeżeli wstawiliśmy <ul>, ale nie pojawił się "Sposób przyrządzenia:"
+        //    (np. przepis to same składniki bez kroku przyrządzania),
+        //    to musimy domknąć listę:
+        if (message.Contains("<ul>") && !message.Contains("</ul>"))
+            message += "</ul>";
+
+        return message;
+    }
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -151,21 +253,6 @@
             await JSRuntime.InvokeVoidAsync("hljs.highlightAll");
             shouldHighlight = false;
         }
-    }
-
-    private string FormatMessage(string? message)
-    {
-        if (string.IsNullOrEmpty(message)) return string.Empty;
-
-        // Wykrywanie kodu otoczonego ```
-        var formattedMessage = System.Text.RegularExpressions.Regex.Replace(
-            message,
-            "```(.*?)```",
-            match => $"<pre><code>{System.Net.WebUtility.HtmlEncode(match.Groups[1].Value)}</code></pre>",
-            System.Text.RegularExpressions.RegexOptions.Singleline
-        );
-
-        return formattedMessage;
     }
 
     @* Logika sładników *@
@@ -193,37 +280,6 @@
         int currentUser = UserState.CurrentUser;
         fridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
     }
-
-    // private async Task AddSelectedIngredients()
-    // {
-    //     var currentUser = UserState.CurrentUser;    // Zalogowany użytkownik
-
-    //     foreach (var ingredientId in selectedIngredientIds)
-    //     {
-    //         var fridgeModel = new IngredientsInFridgeDTO
-    //             {
-    //                 Ingredient_Id = ingredientId,
-    //                 Account_Id = currentUser,
-    //             };
-    //         using var response = await Http.PostAsJsonAsync($"api/ingredientsInFridge/user/{currentUser}", fridgeModel);
-    //         if (!response.IsSuccessStatusCode)
-    //         {
-    //             // Wypisz wiadomość z błędem
-    //             var errorMessage = response.ReasonPhrase;
-    //             Console.WriteLine($"There was an error! {errorMessage}");
-    //             return;
-    //         }
-    //     }
-    //     // Wyczyszczenie listy zaznaczonych składników
-    //     selectedIngredientIds.Clear();
-
-    //     // Odświeżenie listy produktów w wirtualnej lodówce
-    //     fridge = await Http.GetFromJsonAsync<List<IngredientsInFridge>>($"api/ingredientsInFridge/user/{currentUser}");
-
-    //     // Odświeżenie listy przepisów
-    //     dishesWithIngredientsFromFridge.Clear();
-    //     await LoadDishesWithIngredientsFromFridge();
-    // }
 
     private void SearchIngri()
     {
