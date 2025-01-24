@@ -12,7 +12,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>(options =>
    options.UseNpgsql(builder.Configuration.GetConnectionString("ByteCuisineConnection")));
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

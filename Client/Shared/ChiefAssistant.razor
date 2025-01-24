@@ -91,8 +91,7 @@
     private List<ChatMessage> messages = new();
     private string? newMessage;
     private string? newPrompt;
-    private static string apiKey = "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";
-    private GroqApiClient groqApi = new GroqApiClient(apiKey);
+    private GroqApiClient groqApi = new GroqApiClient("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");
     private bool shouldHighlight = false;
     string productNames = "";
 
@@ -181,8 +180,6 @@
         await AskChat(prompt);
     }
 
-
-
     private string FormatMessage(string? message)
     {
         if (string.IsNullOrEmpty(message))
@@ -196,55 +193,45 @@
             System.Text.RegularExpressions.RegexOptions.Singleline
         );
 
-        // 2) (opcjonalnie) Wstaw <br> po zamknięciu taga <b>,
-        //    aby "Nazwa przepisu" była w oddzielnej linii
-        //    Możesz to pominąć, jeśli nie chcesz łamać linii.
+        // 2) Wstawanie <br> po zamknięciu taga <b>,
         message = message.Replace("</b>", "</b><br>");
 
         // 3) Po "Lista składników:" wstaw <b>Lista składników:</b>\n<ul>
-        //    - Uwaga na poprawny HTML – przyda się /b w drugim znaczniku
         message = message.Replace(
             "Lista składników:",
             "<b>Lista składników:</b><ul>"
         );
 
-        // 4) Zamień "- składnik" na <li>składnik</li> (bez kolejnego <ul>)
+        // 4) Zamiana "- składnik" na <li>składnik</li> (bez kolejnego <ul>)
         message = System.Text.RegularExpressions.Regex.Replace(
             message,
             @"(^|\n)- (.+)",
             "$1<li>$2</li>"
         );
 
-        // 5) "Sposób przyrządzenia:" – zamknij <ul>, otwórz <ol>
+        // 5) "Sposób przyrządzenia:" – zamknięcie <ul>, otwórz <ol>
         message = message.Replace(
             "Sposób przyrządzenia:",
             "</ul>Sposób przyrządzenia:<ol>"
         );
 
         // 6) Numerowane kroki:
-        //    Jeżeli chcesz **usunąć** numer z tekstu (1. krok → <li>krok</li>),
-        //    użyj wzorca:  $1<li>$3</li>
-        //    Jeżeli chcesz **zachować** numer (1. krok → <li>1. krok</li>),
-        //    użyj wzorca:  $1<li>$2. $3</li>
         message = System.Text.RegularExpressions.Regex.Replace(
             message,
             @"(^|\n)(\d+)\.\s+(.+)",
             "$1<li>$3</li>"
         );
 
-        // 7) Zamykamy <ol>, o ile faktycznie je otworzyliśmy
+        // 7) Zamykamęcie <ol>
         if (message.Contains("<ol>"))
             message += "</ol>";
 
-        // 8) Jeżeli wstawiliśmy <ul>, ale nie pojawił się "Sposób przyrządzenia:"
-        //    (np. przepis to same składniki bez kroku przyrządzania),
-        //    to musimy domknąć listę:
+        // 8) Domknięcie <ul>
         if (message.Contains("<ul>") && !message.Contains("</ul>"))
             message += "</ul>";
 
         return message;
     }
-
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
