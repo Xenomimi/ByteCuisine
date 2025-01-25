@@ -18,8 +18,8 @@ namespace ByteCuisine.Server.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpPost]
-        public async Task<IActionResult> AddIngredient(Ingredient model)
+        [HttpPost("add-initializer")]
+        public async Task<IActionResult> AddIngredientInitializer(Ingredient model)
         {
             try
             {

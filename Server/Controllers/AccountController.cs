@@ -45,8 +45,8 @@ namespace ByteCuisine.Server.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddAccount(Account model)
+        [HttpPost("add-initializer")]
+        public async Task<IActionResult> AddAccountInitializer(Account model)
         {
             try
             { 

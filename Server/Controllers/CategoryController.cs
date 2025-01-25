@@ -19,8 +19,8 @@ namespace ByteCuisine.Server.Controllers
             _dataContext = dataContext;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddCategory(Category model)
+        [HttpPost("add-initializer")]
+        public async Task<IActionResult> AddCategoryInitializer(Category model)
         {
             try
             {

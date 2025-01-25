@@ -34,7 +34,7 @@
 
         <div class="form-group">
             <label for="category" class="text-white">Kategoria przepisu</label>
-            <InputSelect id="category" class="form-control rounded-input" @bind-Value="dish.CategoryId" @bind-Value:event="onchange">
+            <InputSelect id="category" class="form-control rounded-input" @bind-Value="dish.CategoryId">
                 @foreach (var category in categories)
                 {
                     <option value="@category.Id">@category.CategoryName</option>
@@ -102,8 +102,21 @@
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
         var file = e.File;
+
+        // Zwiększenie limitu do 5 MB
+        var maxAllowedSize = 5242880;
+
+        if (file.Size > maxAllowedSize)
+        {
+            Console.WriteLine("Plik jest za duży! Maksymalny rozmiar to 5MB.");
+            return;
+        }
+
         var buffer = new byte[file.Size];
-        await file.OpenReadStream().ReadAsync(buffer);
+
+        // Ustawienie maksymalnego rozmiaru w OpenReadStream
+        await file.OpenReadStream(maxAllowedSize).ReadAsync(buffer);
+
         uploadedFileBase64 = Convert.ToBase64String(buffer);
         dish.DishImage = Convert.FromBase64String(uploadedFileBase64);
     }
@@ -123,8 +136,16 @@
 
     private async Task HandleValidSubmit()
     {
-        await Http.PostAsJsonAsync("api/dish", dish);
-        await Task.Delay(500);
+        var response = await Http.PostAsJsonAsync("api/dish", dish);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            // Jeśli serwer zwrócił błąd, nie wykonujemy dalszych operacji
+            Console.WriteLine("Błąd podczas dodawania przepisu. Operacja została przerwana.");
+            return;
+        }
+
+        await Task.Delay(200);
 
         var lastDish = (await Http.GetFromJsonAsync<List<Dish>>("api/dish")).Last();
 

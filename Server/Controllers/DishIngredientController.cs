@@ -32,8 +32,8 @@ namespace ByteCuisine.Server.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
-        [HttpPost]
-        public async Task<IActionResult> AddDishIngredient(DishIngredient model)
+        [HttpPost("add-initializer")]
+        public async Task<IActionResult> AddDishIngredientInitializer(DishIngredient model)
         {
             try
             {

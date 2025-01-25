@@ -17,8 +17,8 @@ namespace ByteCuisine.Server.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpPost]
-        public async Task<IActionResult> AddDish(Dish model)
+        [HttpPost("add-initializer")]
+        public async Task<IActionResult> AddDishInitializer(Dish model)
         {
             try
             {
@@ -41,6 +41,7 @@ namespace ByteCuisine.Server.Controllers
                     Name = model.Name,
                     Description = model.Description,
                     DishImage = model.DishImage,
+                    IsDeleted = false,
                     CategoryId = model.CategoryId
                 };
                 _dataContext.Dishes.Add(newDish);

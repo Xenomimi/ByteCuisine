@@ -38,7 +38,7 @@
 
         <div class="form-group">
             <label for="category">Kategoria przepisu</label>
-            <InputSelect id="category" class="form-control" @bind-Value="current_dish.CategoryId" @bind-Value:event="onchange">
+            <InputSelect id="category" class="form-control" @bind-Value="current_dish.CategoryId">
                 @foreach (var category in categories)
                 {
                     <option value="@category.Id">@category.CategoryName</option>
@@ -76,6 +76,7 @@
                             {
                                 <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
                                     <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
+                                    <span class="ingredient-name">@ingredient.Name</span>
                                 </li>
                             }
                         }
@@ -143,8 +144,21 @@
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
         var file = e.File;
+
+        // Zwiększenie limitu do 5 MB
+        var maxAllowedSize = 5242880;
+
+        if (file.Size > maxAllowedSize)
+        {
+            Console.WriteLine("Plik jest za duży! Maksymalny rozmiar to 5MB.");
+            return;
+        }
+
         var buffer = new byte[file.Size];
-        await file.OpenReadStream().ReadAsync(buffer);
+
+        // Ustawienie maksymalnego rozmiaru w OpenReadStream
+        await file.OpenReadStream(maxAllowedSize).ReadAsync(buffer);
+
         uploadedFileBase64 = Convert.ToBase64String(buffer);
         current_dish.DishImage = Convert.FromBase64String(uploadedFileBase64);
     }

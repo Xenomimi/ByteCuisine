@@ -14,7 +14,7 @@
         <section class="user-section">
             <div class="user-profile-block">
                 <div class="avatar-container">
-                    <img class="avatar" src="data:image/png;base64,@Convert.ToBase64String(users.FirstOrDefault(u => u.User_Id == Convert.ToInt32(UserState.CurrentUser))?.PictureData)" />
+                    <img class="avatar" src="data:image/png;base64,@Convert.ToBase64String(currentUser.PictureData)" />
                     <label for="file-upload" class="overlay-button">
                         Wybierz zdjęcie
                     </label>
@@ -75,6 +75,10 @@
 
     List<Log> userLogs = new List<Log>();
 
+    Account currentUser;
+
+    int userId;
+
 
 
     protected override async Task OnInitializedAsync()
@@ -83,6 +87,9 @@
         dishes = await Http.GetFromJsonAsync<List<Dish>>("api/dish");
         logs = await Http.GetFromJsonAsync<List<Log>>("api/log");
         categories = await Http.GetFromJsonAsync<List<Category>>("api/category");
+
+        currentUser = users.FirstOrDefault(u => u.User_Id == UserState.CurrentUser);
+        userId = currentUser.User_Id;
 
         userLogs = logs.Where(l => l.AccountId == UserState.CurrentUser && l.ActivityName.Contains("Dodano przepis")).ToList();
         userDishes = userLogs.Select(l => ExtractDishId(l.ActivityName)).Where(id => id != null).ToList();
@@ -133,12 +140,21 @@
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         var file = e.File;
+
+        // Zwiększenie limitu do 5 MB
+        var maxAllowedSize = 5242880;
+        if (file.Size > maxAllowedSize)
+        {
+            Console.WriteLine("Plik jest za duży! Maksymalny rozmiar to 5MB.");
+            return;
+        }
+
         var buffer = new byte[file.Size];
-        await file.OpenReadStream().ReadAsync(buffer);
+        await file.OpenReadStream(maxAllowedSize).ReadAsync(buffer);
         var base64Image = Convert.ToBase64String(buffer);
 
 
-        var currentUser = users.FirstOrDefault(u => u.User_Id == UserState.CurrentUser);
+        currentUser = users.FirstOrDefault(u => u.User_Id == UserState.CurrentUser);
         if (currentUser != null)
         {
             currentUser.PictureData = Convert.FromBase64String(base64Image);
