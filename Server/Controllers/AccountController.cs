@@ -46,6 +46,21 @@ namespace ByteCuisine.Server.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> AddAccount(Account model)
+        {
+            try
+            { 
+                _dataContext.Accounts.Add(model);
+                await _dataContext.SaveChangesAsync();
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
         public async Task<IActionResult> AddAccount([FromBody] AccountDTO model)
         {
             try

@@ -24,5 +24,18 @@ namespace ByteCuisine.Shared
         public virtual Category Category { get; set; }
 
         public virtual ICollection<DishIngredient> DishIngredients { get; set; }
+
+        public Dish(string name,string description, byte[] image, int catId)
+        {
+            Name = name;
+            Description = description;
+            DishImage = image;
+            IsDeleted = false;
+            CategoryId = catId;
+        }
+        public Dish()
+        {
+
+        }
     }
 }

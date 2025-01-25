@@ -15,5 +15,11 @@ namespace ByteCuisine.Shared
         public string CategoryName { get; set; }
 
         public virtual ICollection<Dish> Dishes { get; set; }
+        
+        public Category() { }
+        public Category(string name)
+        {
+            CategoryName = name;
+        }
     }
 }

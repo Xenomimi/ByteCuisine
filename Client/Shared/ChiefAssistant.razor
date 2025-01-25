@@ -91,7 +91,8 @@
     private List<ChatMessage> messages = new();
     private string? newMessage;
     private string? newPrompt;
-    private GroqApiClient groqApi = new GroqApiClient("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");
+    private static string apiKey = "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";
+    private GroqApiClient groqApi = new GroqApiClient(apiKey);
     private bool shouldHighlight = false;
     string productNames = "";
 

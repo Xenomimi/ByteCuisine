@@ -1,4 +1,5 @@
 using ByteCuisine.Server.Controllers.Data;
+using ByteCuisine.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,11 @@ builder.Services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>(options =>
    options.UseNpgsql(builder.Configuration.GetConnectionString("ByteCuisineConnection")));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    DbInitializer.Seed(app);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

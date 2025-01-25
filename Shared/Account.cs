@@ -7,6 +7,7 @@ namespace ByteCuisine.Shared
     [Table("Account", Schema = "ByteCuisine")]
     public class Account
     {
+       
         [Key]  
         public int User_Id { get; set; }
 
@@ -25,5 +26,17 @@ namespace ByteCuisine.Shared
         public byte[] PictureData { get; set; }
         public virtual ICollection<IngredientsInFridge> IngredientsInFridge { get; set; }
         public virtual ICollection<Log> Logs { get; set; }
+
+        public Account(string email, string username, string password, string role, byte[] picture) 
+        {
+            Email = email;
+            Username = username;
+            Password = password;
+            Role = role;
+            IsDeleted = false;
+            PictureData = picture;
+        }
+
+        public Account() { }
     }
 }

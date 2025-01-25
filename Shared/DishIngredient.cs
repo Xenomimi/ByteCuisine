@@ -12,5 +12,11 @@ namespace ByteCuisine.Shared
 
         public int Ingredient_Id { get; set; }
         public virtual Ingredient Ingredient { get; set; }
+        public DishIngredient(int dishId, int ingredientId)
+        {
+            Dish_Id = dishId;
+            Ingredient_Id = ingredientId;
+        }
+        public DishIngredient() { }
     }
 }

@@ -13,12 +13,24 @@ namespace ByteCuisine.Server.Controllers
     {
         private readonly DataContext _dataContext;
 
-
         public DishController(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
-
+        [HttpPost]
+        public async Task<IActionResult> AddDish(Dish model)
+        {
+            try
+            {
+                _dataContext.Dishes.Add(model);
+                await _dataContext.SaveChangesAsync();
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> AddDish([FromBody] DishDTO model)
         {

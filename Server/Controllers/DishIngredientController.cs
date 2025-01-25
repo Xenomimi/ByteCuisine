@@ -32,6 +32,20 @@ namespace ByteCuisine.Server.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> AddDishIngredient(DishIngredient model)
+        {
+            try
+            {
+                _dataContext.DishIngredients.Add(model);
+                await _dataContext.SaveChangesAsync();
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddDishIngredient ([FromBody] DishIngredientDTO model)

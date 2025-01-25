@@ -19,6 +19,21 @@ namespace ByteCuisine.Server.Controllers
             _dataContext = dataContext;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddCategory(Category model)
+        {
+            try
+            {
+                _dataContext.Categories.Add(model);
+                await _dataContext.SaveChangesAsync();
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<Category>>> Get()
         {

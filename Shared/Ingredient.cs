@@ -22,5 +22,16 @@ namespace ByteCuisine.Shared
 
         public virtual ICollection<IngredientsInFridge> IngredientsInFridge { get; set; }
         public virtual ICollection<DishIngredient> DishIngredients { get; set; }
+
+        public Ingredient(string name, string description, byte[] image, double callories)
+        {
+            Name = name;
+            Description = description;
+            Image = image;
+            Callories = callories;
+        }
+        public Ingredient() 
+        {
+        }
     }
 }
