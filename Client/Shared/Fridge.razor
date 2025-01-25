@@ -16,11 +16,12 @@
                 <ul class="product-list-fridge">
                     @foreach (var product in fridge)
                     {
-                        var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == product.Ingredient_Id)?.Image;
-                        <li class="@GetFridgeItemClass(product.IngredientsInFridge_Id)" @onclick="() => ToggleFridgeProductSelection(product.IngredientsInFridge_Id)">
+                        var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == product.Ingredient_Id);
+                        <li class="product-fridge @GetFridgeItemClass(product.IngredientsInFridge_Id)" @onclick="() => ToggleFridgeProductSelection(product.IngredientsInFridge_Id)">
                             @if (ingredient != null)
                             {
-                                <img src="data:image/png;base64,@Convert.ToBase64String(ingredient)" />
+                                <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" />
+                                <span class="ingredient-name">@ingredient.Name</span>
                             }
                             else
                             {

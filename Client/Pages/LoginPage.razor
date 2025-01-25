@@ -13,19 +13,19 @@
 
 <div class="login-page">
     <div class="login-container">
-        <div class="login-brand">
-            <img src="images/logo.png" alt="ByteCuisine Logo" />
-        </div>
         <div class="login-form">
-            <div class="welcome">
-                <h3>Welcome!</h3>
-            </div>
-            <div class="log-or-regi">
-                <button type="button" onclick="@LoginForm" class="btn-login">Login</button>
-                <button type="button" onclick="@RegisterForm" class="btn-login">Rejestracja</button>
+            <div class="login-brand">
+                <img src="images/logo.png" alt="ByteCuisine Logo" />
             </div>
             @if (formState)
             {
+                <div class="welcome">
+                    <h3>Logowanie</h3>
+                </div>
+                <div class="log-or-regi">
+                    <button type="button" onclick="@LoginForm" class="btn-login">Login</button>
+                    <button type="button" onclick="@RegisterForm" class="btn-login">Rejestracja</button>
+                </div>
                 <EditForm Model="@loginModel" OnValidSubmit="Login">
                     <div class="form-group">
                         <span class="material-symbols-outlined">
@@ -44,6 +44,13 @@
             }
             else
             {
+                <div class="welcome">
+                    <h3>Rejestracja</h3>
+                </div>
+                <div class="log-or-regi">
+                    <button type="button" onclick="@LoginForm" class="btn-login">Login</button>
+                    <button type="button" onclick="@RegisterForm" class="btn-login">Rejestracja</button>
+                </div>
                 <EditForm Model="@registerModel" OnValidSubmit="@Register">
                     <div class="form-group">
                         <span class="material-symbols-outlined">
@@ -121,10 +128,6 @@
             </div>
         </div>
     </div>
-    <div class="login-side">
-        <img src="images/side1.png" alt="Side Image" />
-    </div>
-
 </div>
 
 @code {

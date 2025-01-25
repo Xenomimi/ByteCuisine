@@ -13,6 +13,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     padding-bottom: 50px;
+    height: calc(100vh - 60px);
 }
 
 /*
@@ -301,7 +302,7 @@
     padding: 20px 0;
     background-color: white;
     position: relative;
-    transition: transform 0.3s ease
+    transition: transform 0.3s ease;
 }
 
     .product-fridge:hover {
@@ -311,6 +312,11 @@
     .list-back-fridge::-webkit-scrollbar {
         width: auto;
     }
+/* Pokazuje nazwę składnika po najechaniu */
+.product-fridge:hover .ingredient-name {
+    display: block;
+}
+
 
 .product-fridge.selected {
     background-color: #5DAB02;
