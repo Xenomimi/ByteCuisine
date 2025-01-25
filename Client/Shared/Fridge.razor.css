@@ -36,6 +36,35 @@
         margin-bottom: 5px;
     }
 
+    .product-list li {
+        position: relative;
+        cursor: pointer;
+        text-align: center;
+    }
+
+        .product-list li img {
+            display: block;
+            width: 32px; /* Możesz dostosować rozmiar obrazka */
+            height: auto;
+        }
+
+::deep .ingredient-name {
+    display: none;
+    position: absolute;
+    bottom: -15px; /* Ustawienie wyświetlania tuż pod obrazkiem */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+::deep .product-list li:hover .ingredient-name {
+    display: block;
+}
 /*
    Searchbary
 */
@@ -97,7 +126,7 @@
 .list-back {
     width: 600px;
     margin-top: 20px;
-    height: 120px;
+    height: 130px;
     overflow-x: scroll;
     border-radius: 20px 20px 5px 5px;
     background-color: rgba(26, 26, 26, 0.85); /* Półprzezroczyste tło */

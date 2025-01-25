@@ -52,6 +52,7 @@
                             {
                                 <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
                                     <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
+                                    <span class="ingredient-name">@ingredient.Name</span>
                                 </li>
                             }
                         }
