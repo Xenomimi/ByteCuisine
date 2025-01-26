@@ -1,8 +1,10 @@
 using ByteCuisine.Server.Controllers.Data;
 using ByteCuisine.Shared;
 using ByteCuisine.Shared.DTOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 
 namespace ByteCuisine.Server.Controllers
@@ -12,11 +14,13 @@ namespace ByteCuisine.Server.Controllers
     public class AccountController : ControllerBase
     {
         private readonly DataContext _dataContext;
+        private readonly IPasswordHasher<Account> _passwordHasher;
 
 
-        public AccountController(DataContext dataContext)
+        public AccountController(DataContext dataContext, IPasswordHasher<Account> passwordHasher)
         {
             _dataContext = dataContext;
+            _passwordHasher = passwordHasher;
         }
 
         [HttpPut("{userEmail}")]
@@ -69,7 +73,7 @@ namespace ByteCuisine.Server.Controllers
                 {
                     Email = model.Email,
                     Username = model.Username,
-                    Password = model.Password,
+                    Password = _passwordHasher.HashPassword(null, model.Password),
                     Role = model.Role,
                     PictureData = model.PictureData
                 };
@@ -122,6 +126,36 @@ namespace ByteCuisine.Server.Controllers
             {
                 return BadRequest(new { error = ex.Message });
             }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginAccountDTO loginModel)
+        {
+            if (loginModel == null || string.IsNullOrEmpty(loginModel.Username) || string.IsNullOrEmpty(loginModel.Password))
+            {
+                return BadRequest("Niepoprawne dane logowania.");
+            }
+
+            var user = await _dataContext.Accounts.FirstOrDefaultAsync(u => u.Username == loginModel.Username);
+            if (user == null)
+            {
+                return Unauthorized("Nieprawid³owa nazwa u¿ytkownika lub has³o.");
+            }
+
+            // Weryfikacja has³a
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, loginModel.Password);
+
+            if (result == PasswordVerificationResult.Success)
+            {
+                return Ok(new
+                {
+                    message = "Zalogowano pomyœlnie",
+                    userId = user.User_Id,
+                    role = user.Role
+                });
+            }
+
+            return Unauthorized("Nieprawid³owa nazwa u¿ytkownika lub has³o.");
         }
     }
 }

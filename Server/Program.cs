@@ -1,5 +1,7 @@
 using ByteCuisine.Server.Controllers.Data;
 using ByteCuisine.Server.Data;
+using ByteCuisine.Shared;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +14,8 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>(options =>
    options.UseNpgsql(builder.Configuration.GetConnectionString("ByteCuisineConnection")));
+
+builder.Services.AddScoped<IPasswordHasher<Account>, PasswordHasher<Account>>();
 
 var app = builder.Build();
 

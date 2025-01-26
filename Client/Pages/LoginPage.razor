@@ -134,7 +134,7 @@
     private short formErrorMessage = -1;
     private string r_pass = "";
     private bool formState = true;
-    private AccountDTO loginModel = new AccountDTO();
+    private LoginAccountDTO loginModel = new LoginAccountDTO();
     private AccountDTO registerModel = new AccountDTO();
     private LogDTO log = new LogDTO();
     private List<Account> users = new List<Account>();
@@ -153,27 +153,32 @@
 
     private async Task Login()
     {
-        var user = users.FirstOrDefault(u => u.Username == loginModel.Username);
-        if (user != null && user.Password == loginModel.Password)
+        var response = await Http.PostAsJsonAsync("api/account/login", loginModel);
+
+        if (response.IsSuccessStatusCode)
         {
+            var result = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
+            Task.Delay(500);
             log.ActivityTime = DateTime.UtcNow;
             log.ActivityName = "Logowanie";
-            log.AccountId = user.User_Id;
-
-            if (user.Role.ToLower() == "user")
+            log.AccountId = result.UserId;
+            if (result.Role.ToLower() == "user")
             {
                 Navigation.NavigateTo("/index");
-                await Http.PostAsJsonAsync("api/log", log);
             }
-            else if (user.Role.ToLower() == "admin")
+            else if (result.Role.ToLower() == "admin")
             {
                 Navigation.NavigateTo("/admin");
-                await Http.PostAsJsonAsync("api/log", log);
             }
-
-            UserState.SetCurrentUser(user.User_Id, user.Role);
+            await Http.PostAsJsonAsync("api/log", log);
+            UserState.SetCurrentUser(result.UserId, result.Role);
+        }
+        else
+        {
+            formErrorMessage = 3; // Nieprawidłowe dane logowania
         }
     }
+
 
     private async Task Register()
     {
