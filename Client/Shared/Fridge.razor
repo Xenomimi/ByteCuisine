@@ -46,17 +46,12 @@
 
                 <div class="list-back">
                     <ul class="product-list">
-                        @foreach (var ingri in products)
-                        {
-                            var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == ingri.Ingredient_Id);
-                            if (ingredient != null)
-                            {
-                                <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
-                                    <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
-                                    <span class="ingredient-name">@ingredient.Name</span>
-                                </li>
-                            }
-                        }
+                        <Virtualize Items="@products" Context="ingri">
+                            <li class="@GetItemClass(ingri.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingri.Ingredient_Id)">
+                                <img src="data:image/png;base64,@Convert.ToBase64String(ingredients.First(i => i.Ingredient_Id == ingri.Ingredient_Id).Image)" alt="@ingredients.First(i => i.Ingredient_Id == ingri.Ingredient_Id).Name" />
+                                <span class="ingredient-name">@ingredients.First(i => i.Ingredient_Id == ingri.Ingredient_Id).Name</span>
+                            </li>
+                        </Virtualize>
                     </ul>
                 </div>
             </div>
@@ -75,29 +70,25 @@
                     <ul class="product-list-pion">
                         @if (filteredDishes.Any())
                         {
-                            @* Znaleziono wyszukane produkty *@
-                            foreach (var di in filteredDishes)
-                            {
-                                var dish = filteredDishes.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
+                            @* Lazy Loading dla wyszukanych przepisów *@
+                            <Virtualize Items="@filteredDishes" Context="dish">
                                 <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
                                     <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
                                     @dish.Name
-                                    <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Przejdź do przepisu</button>
+                                    <button class="search-button" @onclick="() => NavigateToRecipe(dish.Dish_Id)">Przejdź do przepisu</button>
                                 </li>
-                            }
+                            </Virtualize>
                         }
                         else if (filteredDishes.Count == 0)
                         {
-                            @* Jeśli niczego nie szukano to załaduj przepisy pasujące do lodówki *@
-                            foreach (var di in dishesWithIngredientsFromFridge)
-                            {
-                                var dish = dishesWithIngredientsFromFridge.FirstOrDefault(i => i.Dish_Id == di.Dish_Id);
+                            @* Lazy Loading dla przepisów pasujących do lodówki *@
+                            <Virtualize Items="@dishesWithIngredientsFromFridge" Context="dish">
                                 <li class="@GetDishClass(dish.Dish_Id)" @onclick="() => ToggleDishSelection(dish.Dish_Id)">
                                     <img width="48" height="48" src="data:image/png;base64,@Convert.ToBase64String(dish.DishImage)" alt="@dish.Name" />
                                     @dish.Name
-                                    <button class="search-button" @onclick="() => NavigateToRecipe(di.Dish_Id)">Przejdź do przepisu</button>
+                                    <button class="search-button" @onclick="() => NavigateToRecipe(dish.Dish_Id)">Przejdź do przepisu</button>
                                 </li>
-                            }
+                            </Virtualize>
                         }
                         else
                         {
@@ -105,6 +96,7 @@
                         }
                     </ul>
                 </div>
+
             </div>
 
             <div class="search-section">
@@ -114,8 +106,8 @@
 
                 <div class="list-back">
                     <ul class="product-list">
-                        @foreach(var product in owned_products)
-                        {
+                        @* Lazy loading dla posiadanych produktów *@
+                        <Virtualize Items="@owned_products" Context="product">
                             <li class="list-item">
                                 <img src="data:image/png;base64,@Convert.ToBase64String(product.Image)" alt="@product.Name" />
                                 <span class="checkmark-icon">
@@ -124,9 +116,10 @@
                                     </svg>
                                 </span>
                             </li>
-                        }
-                        @foreach (var product in missing_products)
-                        {
+                        </Virtualize>
+
+                        @* Lazy loading dla brakujących produktów *@
+                        <Virtualize Items="@missing_products" Context="product">
                             <li class="list-item">
                                 <img src="data:image/png;base64,@Convert.ToBase64String(product.Image)" alt="@product.Name" />
                                 <span class="not-checkmark-icon">
@@ -135,7 +128,7 @@
                                     </svg>
                                 </span>
                             </li>
-                        }
+                        </Virtualize>
                     </ul>
                 </div>
             </div>

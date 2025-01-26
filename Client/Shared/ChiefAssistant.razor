@@ -60,17 +60,18 @@
 
                 <div class="list-back-pion">
                     <ul class="product-list">
-                        @foreach (var ingri in products)
-                        {
-                            var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == ingri.Ingredient_Id);
-                            if (ingredient != null)
-                            {
-                                <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
-                                    <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
-                                    <span class="ingredient-name">@ingredient.Name</span>
-                                </li>
+                        <Virtualize Items="@products" Context="ingri">
+                            @{
+                                var ingredient = ingredients.FirstOrDefault(i => i.Ingredient_Id == ingri.Ingredient_Id);
+                                if (ingredient != null)
+                                {
+                                    <li class="@GetItemClass(ingredient.Ingredient_Id)" @onclick="() => ToggleIngredientSelection(ingredient.Ingredient_Id)">
+                                        <img src="data:image/png;base64,@Convert.ToBase64String(ingredient.Image)" alt="@ingredient.Name" />
+                                        <span class="ingredient-name">@ingredient.Name</span>
+                                    </li>
+                                }
                             }
-                        }
+                        </Virtualize>
                     </ul>
                 </div>
             </div>
