@@ -1,11 +1,69 @@
 
 ![ByteCuisineBanner](https://github.com/Xenomimi/ByteCuisine/assets/59377533/9a2d87dd-d3fd-40bc-b46b-858cf76141a9)
 
-<h1 align="center">A revolution in the digital culinary world</h1>
-Our digital platform is not just another recipe website. It's a culinary experience tailored to individual preferences and resources. Recognizing the unique tastes of each user and the contents of their kitchen, we aspire to create a space where meal planning becomes intuitive, enjoyable, and personalized.
+# ByteCuisine
 
-Ever stood in front of an open fridge, pondering what to whip up for dinner based on what's available? Our new digital platform is the answer to that conundrum, merging technology with a love for cooking.
+**Rewolucja w cyfrowym świecie kulinarnym**
 
-Introducing an innovative culinary space that doesn't just offer thousands of recipes but tailors them to your individual needs and resources. With our 'Virtual Fridge' feature, users can input their available ingredients, and our system smartly suggests the perfect recipes for them. Moreover, the platform takes into account culinary preferences and cooking skill levels, ensuring each recipe feels custom-made for you.
+ByteCuisine to innowacyjna platforma kulinarna, która umożliwia użytkownikom wyszukiwanie i organizowanie przepisów, dostosowując je do dostępnych składników i preferencji.
 
-Our vision goes beyond just a recipe site; it's about making meal planning a straightforward, intuitive, and delightful experience. Join our culinary revolution and discover a new dimension of digital cooking!
+## Wymagania systemowe
+
+- [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)  
+- PostgreSQL
+- Przeglądarka obsługująca WebAssembly
+
+## Szybka instalacja i uruchomienie (VS Code)
+
+1. **Klonowanie repozytorium**
+
+   ```bash
+   git clone https://github.com/Xenomimi/ByteCuisine.git
+   cd ByteCuisine
+   ```
+
+2. **Instalacja zależności**
+
+   ```bash
+   cd ByteCuisine
+   dotnet restore
+   ```
+
+3. **Migracja bazy danych**
+
+   Upewnij się, że plik `appsettings.json` zawiera poprawne dane do połączenia z bazą, a następnie uruchom:
+
+   ```bash
+   dotnet ef database update
+   ```
+   lub
+   ```bash
+   update database
+   ```
+
+   Polecenie stworzy odpowiednią strukruę bazy danych.
+
+4. **Uruchomienie serwera**
+
+   ```bash
+   dotnet run
+   ```
+
+   Dzięki `DbInitializer.cs` podczasu uruchomienia do bazy zostaną dodane przykładowe dane.
+
+5. **Dostęp do aplikacji**
+
+   Po uruchomieniu serwera otwórz przeglądarkę i przejdź do:
+
+   ```
+   http://localhost:5114
+   ```
+
+## Struktura projektu
+
+- **Client/** – Blazor WebAssembly (interfejs użytkownika).
+- **Server/** – ASP.NET Core Web API (logika backendowa).
+- **Shared/** – Wspólne modele i logika między klientem a serwerem.
+- **ByteCuisine.sln** – Plik rozwiązania dla Visual Studio.
+
+
