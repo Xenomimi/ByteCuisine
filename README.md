@@ -43,7 +43,15 @@ ByteCuisine to innowacyjna platforma kulinarna, która umożliwia użytkownikom 
 
    Polecenie stworzy odpowiednią strukruę bazy danych.
 
-4. **Uruchomienie serwera**
+4. **Zmiana klucza API**
+
+   W celu poprawnego działania generatora przepisów wymagana jest zmiana klucza API znajdującego się w pliku `Client/Shared/ChiefAssistant.razor`.
+
+   ```c#
+      private static string apiKey = "__API_KEY___"
+   ```
+
+5. **Uruchomienie serwera**
 
    ```bash
    dotnet run
